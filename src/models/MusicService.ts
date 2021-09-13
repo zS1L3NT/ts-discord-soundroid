@@ -18,7 +18,6 @@ export default class MusicService {
 	public queueLock = false
 	public readyLock = false
 
-	public previousSong?: Song
 	public loop = false
 	public queue_loop = false
 
@@ -93,6 +92,15 @@ export default class MusicService {
 
 		this.player.on("stateChange", (oldState, newState) => {
 			if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle) {
+				if (this.queue_loop) {
+					this.queue.push(this.queue.shift()!)
+				}
+				else if (this.loop) {
+
+				}
+				else {
+					this.queue.shift()
+				}
 				void this.processQueue()
 			}
 		})
@@ -106,8 +114,8 @@ export default class MusicService {
 	 * @param song The song to add to the queue
 	 */
 	public enqueue(song: Song) {
-		this.queue.push(song);
-		void this.processQueue();
+		this.queue.push(song)
+		void this.processQueue()
 	}
 
 	/**
@@ -124,34 +132,22 @@ export default class MusicService {
 	 */
 	private async processQueue(): Promise<void> {
 		// If the queue is locked (already being processed), is empty, or the audio player is already playing something, return
-		if (this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle || (this.queue.length === 0 && !this.previousSong)) {
-			return;
+		if (this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle || this.queue.length === 0) {
+			return
 		}
 		// Lock the queue to guarantee safe access
-		this.queueLock = true;
+		this.queueLock = true
 
-		let song: Song
-		if (this.loop) {
-			song = this.previousSong!
-		}
-		else if (this.queue_loop) {
-			this.queue.push(this.previousSong!)
-			song = this.queue.shift()!
-			this.previousSong = song
-		} else {
-			song = this.queue.shift()!
-			this.previousSong = song
-		}
-
+		const song = this.queue[0]
 		try {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
-			const resource = await song.createAudioResource();
-			this.player.play(resource);
-			this.queueLock = false;
+			const resource = await song.createAudioResource()
+			this.player.play(resource)
+			this.queueLock = false
 		} catch (error) {
 			// If an error occurred, try the next item of the queue instead
-			this.queueLock = false;
-			return this.processQueue();
+			this.queueLock = false
+			return this.processQueue()
 		}
 	}
 }

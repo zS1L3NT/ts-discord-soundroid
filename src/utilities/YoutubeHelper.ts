@@ -13,7 +13,7 @@ export default class YoutubeHelper {
 		const songs: Song[] = results.map((result: any) => new Song(
 				result.name,
 				Array.isArray(result.artist) ? result.artist.map((a: any) => a.name).join(", ") : result.artist.name,
-				`https://i.ytimg.com/vi/${result.videoId}/maxresdefault.jpg`,
+				result.thumbnails[result.thumbnails.length - 1].url,
 				`https://youtu.be/${result.videoId}`
 			))
 
