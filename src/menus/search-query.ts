@@ -26,7 +26,7 @@ module.exports = {
 		}
 
 		try {
-			const song = await Song.from(helper.cache.youtube, url)
+			const song = await Song.from(helper.cache.youtube, url, member.id)
 			helper.cache.service!.enqueue(song)
 			helper.respond("✅ Enqueued song")
 		} catch {

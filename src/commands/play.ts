@@ -39,14 +39,14 @@ module.exports = {
 			}
 
 			try {
-				const song = await Song.from(helper.cache.youtube, query)
+				const song = await Song.from(helper.cache.youtube, query, member.id)
 				helper.cache.service!.enqueue(song)
 				helper.respond("✅ Enqueued song")
 			} catch {
 				helper.respond("❌ Error playing song from url")
 			}
 		} catch {
-			const results = await helper.cache.youtube.search(query)
+			const results = await helper.cache.youtube.search(query, member.id)
 			const emojis: string[] = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 			helper.respond({

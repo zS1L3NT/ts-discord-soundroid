@@ -7,16 +7,20 @@ export default class Song {
 	public artiste: string
 	public cover: string
 	public url: string
+	public duration: number
+	public requester: string
 
-	public constructor(title: string, artiste: string, cover: string, url: string) {
+	public constructor(title: string, artiste: string, cover: string, url: string, duration: number, requester: string) {
 		this.title = title
 		this.artiste = artiste
 		this.cover = cover
 		this.url = url
+		this.duration = duration
+		this.requester = requester
 	}
 
-	public static async from(youtube: YoutubeHelper, url: string) {
-		return (await youtube.search(url, 1))[0]
+	public static async from(youtube: YoutubeHelper, url: string, requester: string) {
+		return (await youtube.search(url, requester, 1))[0]
 	}
 
 	public createAudioResource(): Promise<AudioResource<Song>> {
