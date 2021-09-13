@@ -5,7 +5,7 @@ import { GuildMember } from "discord.js"
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("resume")
-		.setDescription("Resume the current track"),
+		.setDescription("Resume the current song"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (member.voice.channel === null) {
@@ -14,7 +14,7 @@ module.exports = {
 
 		if (helper.cache.service) {
 			helper.cache.service.player.unpause()
-			helper.respond("✅ Resumed track")
+			helper.respond("✅ Resumed song")
 		} else {
 			helper.respond("❌ I am not currently in a voice channel")
 		}

@@ -50,7 +50,7 @@ module.exports = {
 			const emojis: string[] = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 			helper.respond({
-				content: "📃 Choose a song from the search results below!",
+				content: `📃 Search results for: \`${query}\``,
 				components: [
 					new MessageActionRow()
 						.addComponents(

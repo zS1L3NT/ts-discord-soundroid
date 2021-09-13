@@ -36,12 +36,14 @@ module.exports = {
 					if (ending <= starting || ending >= helper.cache.service.queue.length) {
 						helper.respond("❌ Invalid ending position in queue, ensure the end position is greater than the start position")
 					} else {
-						helper.cache.service.queue.splice(starting, (ending - starting) + 1)
+						const delete_count = (ending - starting) + 1
+						helper.cache.service.queue.splice(starting, delete_count)
+						helper.respond(`✅ Removed ${delete_count} songs from the queue`)
 					}
 				}
 				else {
-					helper.cache.service.queue.splice(starting, 1)
-					helper.respond("✅ Removed song from queue")
+					const song = helper.cache.service.queue.splice(starting, 1)[0]
+					helper.respond(`✅ Removed 1 song from queue: \`${song.title} = ${song.artiste}\``)
 				}
 			}
 		}
