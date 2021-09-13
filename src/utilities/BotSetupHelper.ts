@@ -119,13 +119,11 @@ export default class BotSetupHelper {
 
 		this.bot.on("guildCreate", async guild => {
 			console.log(`Added to Guild(${guild.name})`)
-			await this.cache.createGuildCache(guild)
 			await this.deploySlashCommands(guild)
 		})
 
 		this.bot.on("guildDelete", async guild => {
 			console.log(`Removed from Guild(${guild.name})`)
-			await this.cache.deleteGuildCache(guild.id)
 		})
 	}
 
