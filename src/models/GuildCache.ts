@@ -1,21 +1,21 @@
 import { Client, Guild } from "discord.js"
 import MusicService from "./MusicService"
-import YoutubeHelper from "../utilities/YoutubeHelper"
+import ApiHelper from "../utilities/ApiHelper"
 
 export default class GuildCache {
 	public bot: Client
 	public guild: Guild
 
-	public youtube: YoutubeHelper
+	public apiHelper: ApiHelper
 	public service?: MusicService
 
 	public constructor(
 		bot: Client,
 		guild: Guild,
-		youtube: YoutubeHelper,
+		youtube: ApiHelper,
 	) {
 		this.bot = bot
 		this.guild = guild
-		this.youtube = youtube
+		this.apiHelper = youtube
 	}
 }

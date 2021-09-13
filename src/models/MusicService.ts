@@ -8,12 +8,14 @@ import {
 	VoiceConnectionStatus
 } from "@discordjs/voice"
 import Song from "./Song"
+import ApiHelper from "../utilities/ApiHelper"
 
 const time = async (ms: number) => new Promise(res => setTimeout(res, ms))
 
 export default class MusicService {
 	public readonly connection: VoiceConnection
 	public readonly player: AudioPlayer
+	public readonly apiHelper: ApiHelper
 	public queue: Song[]
 	public queueLock = false
 	public readyLock = false
@@ -21,9 +23,10 @@ export default class MusicService {
 	public loop = false
 	public queue_loop = false
 
-	public constructor(connection: VoiceConnection, destroy: () => void) {
+	public constructor(connection: VoiceConnection, apiHelper: ApiHelper, destroy: () => void) {
 		this.connection = connection
 		this.player = createAudioPlayer()
+		this.apiHelper = apiHelper
 		this.queue = []
 
 		this.connection.on("stateChange", async (_, newState) => {
@@ -141,7 +144,7 @@ export default class MusicService {
 		const song = this.queue[0]
 		try {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
-			const resource = await song.createAudioResource()
+			const resource = await song.createAudioResource(this.apiHelper)
 			this.player.play(resource)
 			this.queueLock = false
 		} catch (error) {

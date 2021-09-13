@@ -21,12 +21,13 @@ module.exports = {
 					guildId: channel.guild.id,
 					adapterCreator: channel.guild.voiceAdapterCreator
 				}),
+				helper.cache.apiHelper,
 				() => delete helper.cache.service
 			)
 		}
 
 		try {
-			const song = await Song.from(helper.cache.youtube, url, member.id)
+			const song = await Song.from(helper.cache.apiHelper, url, member.id)
 			helper.cache.service!.enqueue(song)
 			helper.respond(`✅ Enqueued song: \`${song.title} - ${song.artiste}\``)
 		} catch {

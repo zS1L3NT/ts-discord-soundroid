@@ -13,6 +13,7 @@ module.exports = {
 			return helper.respond("❌ You have to be in a voice channel to use this command")
 		}
 
-		helper.respond(await new QueueFormatter(helper.cache, helper.interaction).getMessagePayload())
+		helper.interaction.channel!.send(await new QueueFormatter(helper.cache, helper.interaction).getMessagePayload())
+		helper.respond("✅ Showing queue")
 	}
 } as iInteractionFile

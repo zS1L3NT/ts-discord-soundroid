@@ -139,9 +139,8 @@ export default class BotSetupHelper {
 		try {
 			await deployer.deploy()
 		} catch (err) {
-			console.error(
-				`Failed to deploy slash commands for Guild(${guild.name}): ${err.message}`
-			)
+			// @ts-ignore
+			console.error(`Failed to deploy slash commands for Guild(${guild.name}): ${err.message}`			)
 		}
 	}
 

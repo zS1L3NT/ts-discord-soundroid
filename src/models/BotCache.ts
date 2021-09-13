@@ -1,16 +1,16 @@
 import { Client, Collection, Guild } from "discord.js"
 import GuildCache from "./GuildCache"
-import YoutubeHelper from "../utilities/YoutubeHelper"
+import ApiHelper from "../utilities/ApiHelper"
 
 export default class BotCache {
 	public bot: Client
 	private guilds: Collection<string, GuildCache>
-	private readonly youtube: YoutubeHelper
+	private readonly apiHelper: ApiHelper
 
 	public constructor(bot: Client) {
 		this.bot = bot
 		this.guilds = new Collection<string, GuildCache>()
-		this.youtube = new YoutubeHelper()
+		this.apiHelper = new ApiHelper()
 	}
 
 	public getGuildCache(guild: Guild): GuildCache {
@@ -19,7 +19,7 @@ export default class BotCache {
 			this.guilds.set(guild.id, new GuildCache(
 				this.bot,
 				guild,
-				this.youtube
+				this.apiHelper
 			))
 		}
 

@@ -87,7 +87,7 @@ export default class QueueFormatter {
 	public song_format(song: Song): [string, string] {
 		return [
 			`${song.title} - ${song.artiste} | ${new DurationHelper(song.duration).format()}`,
-			`Requested by <@!${song.requester}> | ${song.url}`
+			`Requested by <@!${song.requester}> | [Open song](${song.url})`
 		]
 	}
 }

@@ -25,7 +25,7 @@ module.exports = {
 		const query = helper.string("query", true)!
 
 		try {
-			new URL(query)
+			const urlObject = new URL(query)
 
 			if (!helper.cache.service) {
 				helper.cache.service = new MusicService(
@@ -34,19 +34,40 @@ module.exports = {
 						guildId: channel.guild.id,
 						adapterCreator: channel.guild.voiceAdapterCreator
 					}),
+					helper.cache.apiHelper,
 					() => delete helper.cache.service
 				)
 			}
 
-			try {
-				const song = await Song.from(helper.cache.youtube, query, member.id)
-				helper.cache.service!.enqueue(song)
-				helper.respond("✅ Enqueued song")
-			} catch {
-				helper.respond("❌ Error playing song from url")
+			const playlistMatch = urlObject.pathname.match(/^\/playlist\/(.*)$/)
+			if (playlistMatch) {
+				try {
+					const [, playlistId] = playlistMatch
+					const songs = await helper.cache.apiHelper.findSpotifyPlaylist(playlistId, member.id)
+					if (songs.length > 0) {
+						helper.cache.service!.enqueue(songs.shift()!)
+						helper.cache.service!.queue.push(...songs)
+						helper.respond(`✅ Enqueued ${songs.length + 1} songs`)
+					} else {
+						helper.respond("❌ Playlist is empty")
+					}
+				} catch (err) {
+					console.error(err)
+					helper.respond("❌ Error playing playlist from url")
+				}
+			}
+			else {
+				try {
+					const song = await Song.from(helper.cache.apiHelper, query, member.id)
+					helper.cache.service!.enqueue(song)
+					helper.respond(`✅ Enqueued: \`${song.title} - ${song.artiste}\``)
+				} catch (err) {
+					console.error(err)
+					helper.respond("❌ Error playing song from url")
+				}
 			}
 		} catch {
-			const results = await helper.cache.youtube.search(query, member.id)
+			const results = await helper.cache.apiHelper.searchYoutubeSongs(query, member.id)
 			const emojis: string[] = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 			helper.respond({

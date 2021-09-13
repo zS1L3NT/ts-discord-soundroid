@@ -14,7 +14,8 @@ module.exports = {
 		const pageInfo = embed.fields.find(field => field.name === `Page`)!.value
 		const currentPage = parseInt(pageInfo.split("/")[0])
 
-		await helper.interaction.editReply(
+		helper.respond("✅ Showing previous page")
+		await message.edit(
 			await new QueueFormatter(helper.cache, helper.interaction).getMessagePayload(currentPage - 1)
 		)
 	}
