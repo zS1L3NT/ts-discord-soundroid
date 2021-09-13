@@ -16,7 +16,7 @@ module.exports = {
 			helper.cache.service.player.unpause()
 			helper.respond("✅ Resumed track")
 		} else {
-			helper.respond("❌ I am not currently playing anything")
+			helper.respond("❌ I am not currently in a voice channel")
 		}
 	}
 } as iInteractionFile

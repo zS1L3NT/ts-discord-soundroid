@@ -18,6 +18,10 @@ export default class MusicService {
 	public queueLock = false
 	public readyLock = false
 
+	public previousSong?: Song
+	public loop = false
+	public queue_loop = false
+
 	public constructor(connection: VoiceConnection, destroy: () => void) {
 		this.connection = connection
 		this.player = createAudioPlayer()
@@ -120,17 +124,28 @@ export default class MusicService {
 	 */
 	private async processQueue(): Promise<void> {
 		// If the queue is locked (already being processed), is empty, or the audio player is already playing something, return
-		if (this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle || this.queue.length === 0) {
+		if (this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle || (this.queue.length === 0 && !this.previousSong)) {
 			return;
 		}
 		// Lock the queue to guarantee safe access
 		this.queueLock = true;
 
-		// Take the first item from the queue. This is guaranteed to exist due to the non-empty check above.
-		const nextSong = this.queue.shift()!;
+		let song: Song
+		if (this.loop) {
+			song = this.previousSong!
+		}
+		else if (this.queue_loop) {
+			this.queue.push(this.previousSong!)
+			song = this.queue.shift()!
+			this.previousSong = song
+		} else {
+			song = this.queue.shift()!
+			this.previousSong = song
+		}
+
 		try {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
-			const resource = await nextSong.createAudioResource();
+			const resource = await song.createAudioResource();
 			this.player.play(resource);
 			this.queueLock = false;
 		} catch (error) {

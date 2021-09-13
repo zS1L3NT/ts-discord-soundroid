@@ -4,8 +4,8 @@ import { GuildMember } from "discord.js"
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("next")
-		.setDescription("Play the next song in queue"),
+		.setName("loop")
+		.setDescription("Loop the current song in the queue, disables queue-loop mode"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (member.voice.channel === null) {
@@ -13,10 +13,15 @@ module.exports = {
 		}
 
 		if (helper.cache.service) {
-			helper.cache.service.player.stop()
-			helper.respond("✅ Skipped to the next song")
-		}
-		else {
+			helper.cache.service.queue_loop = false
+			if (helper.cache.service.loop) {
+				helper.cache.service.loop = false
+				helper.respond("✅ Loop disabled")
+			} else {
+				helper.cache.service.loop = true
+				helper.respond("✅ Loop enabled")
+			}
+		} else {
 			helper.respond("❌ I am not currently in a voice channel")
 		}
 	}
