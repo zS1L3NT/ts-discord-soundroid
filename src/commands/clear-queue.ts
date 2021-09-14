@@ -1,19 +1,23 @@
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
+import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { GuildMember, VoiceChannel } from "discord.js"
-import QueueFormatter from "../utilities/QueueFormatter"
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("queue")
-		.setDescription("Show the queue of songs playing"),
+		.setName("clear-queue")
+		.setDescription("Clear the queue and the current song"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!(member.voice.channel instanceof VoiceChannel)) {
 			return helper.respond("❌ You have to be in a voice channel to use this command")
 		}
 
-		helper.interaction.channel!.send(await new QueueFormatter(helper.cache, helper.interaction).getMessagePayload())
-		helper.respond("✅ Showing queue")
+		if (helper.cache.service) {
+			helper.cache.service.queue.length = 0
+			helper.cache.service.player.stop()
+			helper.respond("✅ Cleared queue")
+		} else {
+			helper.respond("❌ I am not currently in a voice channel")
+		}
 	}
 } as iInteractionFile

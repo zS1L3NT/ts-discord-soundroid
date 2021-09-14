@@ -67,7 +67,6 @@ export default class MusicService {
 				/*
 					Once destroyed, stop the subscription
 				*/
-				this.stop()
 				destroy()
 			}
 			else if (
@@ -119,15 +118,6 @@ export default class MusicService {
 	public enqueue(song: Song) {
 		this.queue.push(song)
 		void this.processQueue()
-	}
-
-	/**
-	 * Stops audio playback and empties the queue
-	 */
-	public stop() {
-		this.queueLock = true
-		this.queue = []
-		this.player.stop(true)
 	}
 
 	/**

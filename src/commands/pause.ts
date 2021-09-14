@@ -1,6 +1,6 @@
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { GuildMember } from "discord.js"
+import { GuildMember, VoiceChannel } from "discord.js"
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,7 +8,7 @@ module.exports = {
 		.setDescription("Pause the current song"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
-		if (member.voice.channel === null) {
+		if (!(member.voice.channel instanceof VoiceChannel)) {
 			return helper.respond("❌ You have to be in a voice channel to use this command")
 		}
 

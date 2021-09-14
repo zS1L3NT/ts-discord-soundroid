@@ -1,6 +1,6 @@
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { GuildMember, MessageEmbed } from "discord.js"
+import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
 import DurationHelper from "../utilities/DurationHelper"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
 
@@ -13,7 +13,7 @@ module.exports = {
 		.setDescription("Shows what's currently playing, along with the time"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
-		if (member.voice.channel === null) {
+		if (!(member.voice.channel instanceof VoiceChannel)) {
 			return helper.respond("❌ You have to be in a voice channel to use this command")
 		}
 
