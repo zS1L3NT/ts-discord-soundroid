@@ -140,14 +140,20 @@ export default class BotSetupHelper {
 			await deployer.deploy()
 		} catch (err) {
 			// @ts-ignore
-			console.error(`Failed to deploy slash commands for Guild(${guild.name}): ${err.message}`			)
+			console.error(`Failed to deploy slash commands for Guild(${guild.name}): ${err.message}`)
 		}
 	}
 
 	private setupMessageCommands() {
-		const fileNames = fs
-			.readdirSync(path.join(__dirname, "../messages"))
-			.filter(f => BotSetupHelper.isFile(f))
+		let fileNames: string[]
+
+		try {
+			fileNames = fs
+				.readdirSync(path.join(__dirname, "../messages"))
+				.filter(f => BotSetupHelper.isFile(f))
+		} catch {
+			return
+		}
 
 		for (const messageFileName of fileNames) {
 			const file = require(`../messages/${messageFileName}`) as iMessageFile
@@ -156,8 +162,13 @@ export default class BotSetupHelper {
 	}
 
 	private setupInteractionCommands() {
-		const units = fs
-			.readdirSync(path.join(__dirname, "../commands"))
+		let units: string[]
+
+		try {
+			units = fs.readdirSync(path.join(__dirname, "../commands"))
+		} catch {
+			return
+		}
 
 		// Slash subcommands
 		for (const interactionFolderName of units
@@ -196,9 +207,15 @@ export default class BotSetupHelper {
 	}
 
 	private setupButtonCommands() {
-		const fileNames = fs
-			.readdirSync(path.join(__dirname, "../buttons"))
-			.filter(f => BotSetupHelper.isFile(f))
+		let fileNames: string[]
+
+		try {
+			fileNames = fs
+				.readdirSync(path.join(__dirname, "../buttons"))
+				.filter(f => BotSetupHelper.isFile(f))
+		} catch {
+			return
+		}
 
 		for (const buttonFileName of fileNames) {
 			const buttonFile = require(`../buttons/${buttonFileName}`) as iButtonFile
@@ -207,9 +224,15 @@ export default class BotSetupHelper {
 	}
 
 	private setupMenuCommands() {
-		const fileNames = fs
-			.readdirSync(path.join(__dirname, "../menus"))
-			.filter(f => BotSetupHelper.isFile(f))
+		let fileNames: string[]
+
+		try {
+			fileNames = fs
+				.readdirSync(path.join(__dirname, "../menus"))
+				.filter(f => BotSetupHelper.isFile(f))
+		} catch {
+			return
+		}
 
 		for (const menuFileName of fileNames) {
 			const menuFile = require(`../menus/${menuFileName}`) as iMenuFile
@@ -219,7 +242,6 @@ export default class BotSetupHelper {
 }
 
 export interface iMessageFile {
-	data: string
 	condition: (helper: MessageHelper) => boolean
 	execute: (helper: MessageHelper) => Promise<void>
 }
