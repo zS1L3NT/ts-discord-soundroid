@@ -2,7 +2,7 @@ export default class DurationHelper {
 	private readonly duration: number
 
 	public constructor(duration: number) {
-		this.duration = duration
+		this.duration = Math.round(duration)
 	}
 
 	public format() {
