@@ -8,13 +8,13 @@ module.exports = {
 		.setDescription("Remove a song from the queue. If ending is set, removes songs from start to end")
 		.addIntegerOption(option =>
 			option
-				.setName("starting")
-				.setDescription("Starting position of the song in the queue to remove")
+				.setName("from")
+				.setDescription("Starting position of the song in the queue to remove. If \"to\" is not defined, removes this song only")
 				.setRequired(true)
 		)
 		.addIntegerOption(option =>
 			option
-				.setName("ending")
+				.setName("to")
 				.setDescription("Ending position of the songs in the queue to remove.")
 				.setRequired(false)
 		),
@@ -27,27 +27,27 @@ module.exports = {
 			})
 		}
 
-		const starting = helper.integer("starting", true)!
-		const ending = helper.integer("ending")
+		const from = helper.integer("from", true)!
+		const to = helper.integer("to")
 
 		if (helper.cache.service) {
-			if (starting < 1 || starting >= helper.cache.service.queue.length) {
+			if (from < 1 || from >= helper.cache.service.queue.length) {
 				helper.respond({
 					emoji: Emoji.BAD,
 					message: "No such starting position in the queue"
 				})
 			}
 			else {
-				if (ending) {
-					if (ending <= starting || ending >= helper.cache.service.queue.length) {
+				if (to) {
+					if (to <= from || to >= helper.cache.service.queue.length) {
 						helper.respond({
 							emoji: Emoji.BAD,
 							message: "Invalid ending position in queue, ensure the end position is greater than the start position"
 						})
 					}
 					else {
-						const delete_count = (ending - starting) + 1
-						helper.cache.service.queue.splice(starting, delete_count)
+						const delete_count = (to - from) + 1
+						helper.cache.service.queue.splice(from, delete_count)
 						helper.respond({
 							emoji: Emoji.GOOD,
 							message: `Removed ${delete_count} songs from the queue`
@@ -55,7 +55,7 @@ module.exports = {
 					}
 				}
 				else {
-					const song = helper.cache.service.queue.splice(starting, 1)[0]
+					const song = helper.cache.service.queue.splice(from, 1)[0]
 					helper.respond({
 						emoji: Emoji.GOOD,
 						message: `Removed 1 song from queue: "${song.title} - ${song.artiste}"`
