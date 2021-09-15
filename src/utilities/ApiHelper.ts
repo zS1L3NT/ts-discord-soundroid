@@ -2,8 +2,6 @@ import Song from "../models/Song"
 import ytdl from "ytdl-core"
 import SpotifyWebApi from "spotify-web-api-node"
 
-const config = require("../../config.json")
-
 export default class ApiHelper {
 	private youtubeMusicApi: any
 	private spotifyApi: SpotifyWebApi
@@ -12,9 +10,9 @@ export default class ApiHelper {
 	public constructor() {
 		this.youtubeMusicApi = new (require("youtube-music-api"))()
 		this.youtubeMusicApi.initalize()
-		this.spotifyApi = new SpotifyWebApi(config.spotify)
-		this.spotifyApi.setAccessToken(config.spotify.accessToken)
-		this.geniusApi = new (require("node-genius-api"))(config.genius)
+		this.spotifyApi = new SpotifyWebApi(JSON.parse(process.env.spotify!))
+		this.spotifyApi.setAccessToken(JSON.parse(process.env.spotify!).accessToken)
+		this.geniusApi = new (require("node-genius-api"))(process.env.genius)
 	}
 
 	public async searchYoutubeSongs(query: string, requester: string, limit: number = 10): Promise<Song[]> {

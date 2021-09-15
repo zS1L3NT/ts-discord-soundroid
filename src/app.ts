@@ -2,7 +2,7 @@ import { Client, Intents } from "discord.js"
 import BotSetupHelper from "./utilities/BotSetupHelper"
 import http from "http"
 
-const config = require("../config.json")
+require("dotenv").config()
 
 // region Configure heroku http server
 http.createServer((req, res) => {
@@ -18,7 +18,7 @@ const bot = new Client({
 const botSetupHelper = new BotSetupHelper(bot)
 // endregion
 
-void bot.login(config.discord.token)
+void bot.login(JSON.parse(process.env.discord!).token)
 bot.on("ready", async () => {
 	console.log("Logged in as SounDroid Bot#5566")
 
