@@ -3,6 +3,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
 import DurationHelper from "../utilities/DurationHelper"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
+import DominantColorGetter from "../utilities/DominantColorGetter"
 
 const thumb = "🔘"
 const track = "▬"
@@ -35,6 +36,7 @@ module.exports = {
 					new MessageEmbed()
 						.setTitle("Now Playing")
 						.setThumbnail(song.cover)
+						.setColor(await new DominantColorGetter(song.cover).getColor())
 						.addField(`**${song.title} - ${song.artiste}**`, `Requested by <@!${song.requester}>`)
 						.addField(
 							`\`${seekbar}\``,

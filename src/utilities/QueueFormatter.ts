@@ -9,6 +9,7 @@ import {
 } from "discord.js"
 import DurationHelper from "./DurationHelper"
 import Song from "../models/Song"
+import DominantColorGetter from "./DominantColorGetter"
 
 export default class QueueFormatter {
 	private cache: GuildCache
@@ -28,13 +29,14 @@ export default class QueueFormatter {
 			const queue = this.cache.service.queue.slice(1).slice(page_offset, page_offset + 10)
 
 			embed.setTitle(`Queue for ${this.interaction.guild!.name}`)
-			embed.setColor("#0534D4")
 
-			const currentSong = this.cache.service.queue[0]
+			const song = this.cache.service.queue[0]
 			embed.addField(`\u200B`, `__Now Playing:__`)
-			if (currentSong) {
-				embed.addField(...this.song_format(currentSong))
-				embed.setThumbnail(currentSong.cover)
+
+			if (song) {
+				embed.addField(...this.song_format(song))
+				embed.setThumbnail(song.cover)
+				embed.setColor(await new DominantColorGetter(song.cover).getColor())
 			}
 			else {
 				embed.addField(`Not playing anything at the moment`, `\u200B`)

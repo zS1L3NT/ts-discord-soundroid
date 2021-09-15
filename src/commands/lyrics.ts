@@ -1,6 +1,7 @@
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
+import DominantColorGetter from "../utilities/DominantColorGetter"
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -31,6 +32,7 @@ module.exports = {
 				embeds: [
 					new MessageEmbed()
 						.setTitle(`${song.title} - ${song.artiste}`)
+						.setColor(await new DominantColorGetter(song.cover).getColor())
 						.setThumbnail(song.cover)
 						.setDescription(lyrics.join("\n"))
 						.setFooter(`Requested by @${member.displayName}`, helper.interaction.user.displayAvatarURL())
