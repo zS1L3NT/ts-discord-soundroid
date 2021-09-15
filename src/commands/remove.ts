@@ -1,4 +1,4 @@
-import { iInteractionFile } from "../utilities/BotSetupHelper"
+import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { GuildMember, VoiceChannel } from "discord.js"
 
@@ -21,7 +21,10 @@ module.exports = {
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!(member.voice.channel instanceof VoiceChannel)) {
-			return helper.respond("❌ You have to be in a voice channel to use this command")
+			return helper.respond({
+				emoji: Emoji.BAD,
+				message: "You have to be in a voice channel to use this command"
+			})
 		}
 
 		const starting = helper.integer("starting", true)!
@@ -29,26 +32,42 @@ module.exports = {
 
 		if (helper.cache.service) {
 			if (starting < 1 || starting >= helper.cache.service.queue.length) {
-				helper.respond("❌ No such starting position in the queue")
+				helper.respond({
+					emoji: Emoji.BAD,
+					message: "No such starting position in the queue"
+				})
 			}
 			else {
 				if (ending) {
 					if (ending <= starting || ending >= helper.cache.service.queue.length) {
-						helper.respond("❌ Invalid ending position in queue, ensure the end position is greater than the start position")
-					} else {
+						helper.respond({
+							emoji: Emoji.BAD,
+							message: "Invalid ending position in queue, ensure the end position is greater than the start position"
+						})
+					}
+					else {
 						const delete_count = (ending - starting) + 1
 						helper.cache.service.queue.splice(starting, delete_count)
-						helper.respond(`✅ Removed ${delete_count} songs from the queue`)
+						helper.respond({
+							emoji: Emoji.GOOD,
+							message: `Removed ${delete_count} songs from the queue`
+						})
 					}
 				}
 				else {
 					const song = helper.cache.service.queue.splice(starting, 1)[0]
-					helper.respond(`✅ Removed 1 song from queue: \`${song.title} = ${song.artiste}\``)
+					helper.respond({
+						emoji: Emoji.GOOD,
+						message: `Removed 1 song from queue: "${song.title} - ${song.artiste}"`
+					})
 				}
 			}
 		}
 		else {
-			helper.respond("❌ I am not currently in a voice channel")
+			helper.respond({
+				emoji: Emoji.BAD,
+				message: "I am not currently in a voice channel"
+			})
 		}
 	}
 } as iInteractionFile

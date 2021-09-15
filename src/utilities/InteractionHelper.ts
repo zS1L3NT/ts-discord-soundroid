@@ -1,9 +1,6 @@
-import {
-	CommandInteraction,
-	InteractionReplyOptions,
-	MessagePayload
-} from "discord.js"
+import { CommandInteraction, InteractionReplyOptions, MessageEmbed, MessagePayload } from "discord.js"
 import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionEmbed } from "./BotSetupHelper"
 
 export default class InteractionHelper {
 	public cache: GuildCache
@@ -14,8 +11,21 @@ export default class InteractionHelper {
 		this.interaction = interaction
 	}
 
-	public respond(options: string | MessagePayload | InteractionReplyOptions) {
-		this.interaction.followUp(options).catch()
+	public respond(options: MessagePayload | InteractionReplyOptions | iInteractionEmbed) {
+		const interactionEmbed = options as iInteractionEmbed
+		if (interactionEmbed.emoji) {
+			this.interaction.followUp({
+				embeds: [
+					new MessageEmbed()
+						.setAuthor(interactionEmbed.message, interactionEmbed.emoji)
+						.setColor(interactionEmbed.emoji === Emoji.GOOD ? "#77B255" : "#DD2E44")
+				]
+			}).catch()
+		} else {
+			this.interaction.followUp(
+				options as MessagePayload | InteractionReplyOptions
+			).catch()
+		}
 	}
 
 	public mentionable(name: string, required?: boolean) {

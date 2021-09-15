@@ -1,6 +1,6 @@
-import { iInteractionFile } from "../utilities/BotSetupHelper"
+import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { GuildMember, MessageActionRow, MessageSelectMenu, VoiceChannel } from "discord.js"
+import { GuildMember, MessageActionRow, MessageEmbed, MessageSelectMenu, VoiceChannel } from "discord.js"
 import MusicService from "../models/MusicService"
 import { joinVoiceChannel } from "@discordjs/voice"
 import Song from "../models/Song"
@@ -17,9 +17,12 @@ module.exports = {
 		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
-		const channel =  member.voice.channel
+		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
-			return helper.respond("❌ You have to be in a voice channel to use this command")
+			return helper.respond({
+				emoji: Emoji.BAD,
+				message: "You have to be in a voice channel to use this command"
+			})
 		}
 
 		const query = helper.string("query", true)!
@@ -47,23 +50,39 @@ module.exports = {
 					if (songs.length > 0) {
 						helper.cache.service!.enqueue(songs.shift()!)
 						helper.cache.service!.queue.push(...songs)
-						helper.respond(`✅ Enqueued ${songs.length + 1} songs`)
-					} else {
-						helper.respond("❌ Playlist is empty")
+						helper.respond({
+							emoji: Emoji.GOOD,
+							message: `Enqueued ${songs.length + 1} songs`
+						})
+					}
+					else {
+						helper.respond({
+							emoji: Emoji.BAD,
+							message: "Playlist is empty"
+						})
 					}
 				} catch (err) {
 					console.error(err)
-					helper.respond("❌ Error playing playlist from url")
+					helper.respond({
+						emoji: Emoji.BAD,
+						message: "Error playing playlist from url"
+					})
 				}
 			}
 			else {
 				try {
 					const song = await Song.from(helper.cache.apiHelper, query, member.id)
 					helper.cache.service!.enqueue(song)
-					helper.respond(`✅ Enqueued: \`${song.title} - ${song.artiste}\``)
+					helper.respond({
+						emoji: Emoji.GOOD,
+						message: `Enqueued: "${song.title} - ${song.artiste}"`
+					})
 				} catch (err) {
 					console.error(err)
-					helper.respond("❌ Error playing song from url")
+					helper.respond({
+						emoji: Emoji.BAD,
+						message: "Error playing song from url"
+					})
 				}
 			}
 		} catch {
@@ -71,7 +90,11 @@ module.exports = {
 			const emojis: string[] = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 			helper.respond({
-				content: `📃 YouTube search results for: \`${query}\``,
+				embeds: [
+					new MessageEmbed()
+						.setAuthor(`YouTube search results for: "${query}"`, `https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`)
+						.setColor("#FF0000")
+				],
 				components: [
 					new MessageActionRow()
 						.addComponents(

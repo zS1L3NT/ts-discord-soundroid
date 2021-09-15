@@ -1,5 +1,6 @@
-import { InteractionReplyOptions, Message, MessagePayload } from "discord.js"
+import { InteractionReplyOptions, Message, MessageEmbed, MessagePayload } from "discord.js"
 import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionEmbed } from "./BotSetupHelper"
 
 const time = (ms: number) => new Promise(res => setTimeout(res, ms))
 
@@ -9,7 +10,7 @@ export default class MessageHelper {
 
 	public constructor(
 		cache: GuildCache,
-		message: Message,
+		message: Message
 	) {
 		this.cache = cache
 		this.message = message
@@ -43,10 +44,26 @@ export default class MessageHelper {
 	}
 
 	public respond(
-		options: string | MessagePayload | InteractionReplyOptions,
+		options: MessagePayload | InteractionReplyOptions | iInteractionEmbed,
 		ms: number
 	) {
-		this.message.channel.send(options).then(async temporary => {
+		const interactionEmbed = options as iInteractionEmbed
+		let message: Promise<Message>
+
+		if (interactionEmbed.emoji) {
+			message = this.message.channel.send({
+				embeds: [
+					new MessageEmbed()
+						.setAuthor(interactionEmbed.message, interactionEmbed.emoji)
+						.setColor(interactionEmbed.emoji === Emoji.GOOD ? "#77B255" : "#DD2E44")
+				]
+			})
+		}
+		else {
+			message = this.message.channel.send(options as MessagePayload | InteractionReplyOptions)
+		}
+
+		message.then(async temporary => {
 			await time(ms)
 			await temporary.delete().catch(() => {})
 		})

@@ -10,6 +10,7 @@ import {
 import DurationHelper from "./DurationHelper"
 import Song from "../models/Song"
 import DominantColorGetter from "./DominantColorGetter"
+import { Emoji } from "./BotSetupHelper"
 
 export default class QueueFormatter {
 	private cache: GuildCache
@@ -20,7 +21,7 @@ export default class QueueFormatter {
 		this.interaction = interaction
 	}
 
-	public async getMessagePayload(page: number = 1): Promise<string | InteractionReplyOptions> {
+	public async getMessagePayload(page: number = 1): Promise<InteractionReplyOptions> {
 		const member = this.interaction.member as GuildMember
 
 		if (this.cache.service) {
@@ -82,7 +83,13 @@ export default class QueueFormatter {
 			}
 		}
 		else {
-			return "❌ I am not currently in a voice channel"
+			return {
+				embeds: [
+					new MessageEmbed()
+						.setAuthor("I am not currently in a voice channel", Emoji.BAD)
+						.setColor("#DD2E44")
+				]
+			}
 		}
 	}
 

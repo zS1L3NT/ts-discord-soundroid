@@ -241,6 +241,16 @@ export default class BotSetupHelper {
 	}
 }
 
+export enum Emoji {
+	GOOD = "https://firebasestorage.googleapis.com/v0/b/zectan-projects.appspot.com/o/good.png?alt=media&token=4b833fc2-b8ff-4d5c-add2-f5a6029664fb",
+	BAD = "https://firebasestorage.googleapis.com/v0/b/zectan-projects.appspot.com/o/bad.png?alt=media&token=cbd48c77-784c-4f86-8de1-7335b452a894"
+}
+
+export interface iInteractionEmbed {
+	emoji: Emoji,
+	message: string
+}
+
 export interface iMessageFile {
 	condition: (helper: MessageHelper) => boolean
 	execute: (helper: MessageHelper) => Promise<void>

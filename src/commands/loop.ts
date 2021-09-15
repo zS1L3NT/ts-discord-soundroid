@@ -1,4 +1,4 @@
-import { iInteractionFile } from "../utilities/BotSetupHelper"
+import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { GuildMember, VoiceChannel } from "discord.js"
 
@@ -9,20 +9,34 @@ module.exports = {
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!(member.voice.channel instanceof VoiceChannel)) {
-			return helper.respond("❌ You have to be in a voice channel to use this command")
+			return helper.respond({
+				emoji: Emoji.BAD,
+				message: "You have to be in a voice channel to use this command"
+			})
 		}
 
 		if (helper.cache.service) {
 			helper.cache.service.queue_loop = false
 			if (helper.cache.service.loop) {
 				helper.cache.service.loop = false
-				helper.respond("✅ Loop disabled")
-			} else {
-				helper.cache.service.loop = true
-				helper.respond("✅ Loop enabled")
+				helper.respond({
+					emoji: Emoji.GOOD,
+					message: "Loop disabled"
+				})
 			}
-		} else {
-			helper.respond("❌ I am not currently in a voice channel")
+			else {
+				helper.cache.service.loop = true
+				helper.respond({
+					emoji: Emoji.GOOD,
+					message: "Loop enabled"
+				})
+			}
+		}
+		else {
+			helper.respond({
+				emoji: Emoji.BAD,
+				message: "I am not currently in a voice channel"
+			})
 		}
 	}
 } as iInteractionFile

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
+import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import { GuildMember, VoiceChannel } from "discord.js"
 
 module.exports = {
@@ -21,7 +21,10 @@ module.exports = {
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!(member.voice.channel instanceof VoiceChannel)) {
-			return helper.respond("❌ You have to be in a voice channel to use this command")
+			return helper.respond({
+				emoji: Emoji.BAD,
+				message: "You have to be in a voice channel to use this command"
+			})
 		}
 
 		if (helper.cache.service) {
@@ -32,17 +35,30 @@ module.exports = {
 			const song = queue[from]
 
 			if (from < 1 || from >= queue.length) {
-				return helper.respond(`❌ Invalid \`from\` position: ${from}`)
+				return helper.respond({
+					emoji: Emoji.BAD,
+					message: `Invalid "from" position: ${from}`
+				})
 			}
 
 			if (to && (to < 1 || to > queue.length)) {
-				return helper.respond(`❌ Invalid \`to\` position: ${to}`)
+				return helper.respond({
+					emoji: Emoji.BAD,
+					message: `Invalid "to" position: ${to}`
+				})
 			}
 
 			queue.splice(to || 1, 0, ...queue.splice(from, 1))
-			helper.respond(`✅ Moved \`${song.title} - ${song.artiste}\` from ${from} to ${to ?? `top of the queue`}`)
-		} else {
-			helper.respond("❌ I am not currently in a voice channel")
+			helper.respond({
+				emoji: Emoji.GOOD,
+				message: `Moved "${song.title} - ${song.artiste}" from ${from} to ${to ?? `top of the queue`}`
+			})
+		}
+		else {
+			helper.respond({
+				emoji: Emoji.BAD,
+				message: "I am not currently in a voice channel"
+			})
 		}
 	}
 } as iInteractionFile
