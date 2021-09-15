@@ -12,7 +12,7 @@ module.exports = {
 		.addStringOption(option =>
 			option
 				.setName("query")
-				.setDescription("Search query")
+				.setDescription("Can be a YouTube link, Spotify Song/Playlist link or a youtube search query")
 				.setRequired(true)
 		),
 	execute: async helper => {
@@ -71,7 +71,7 @@ module.exports = {
 			const emojis: string[] = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 			helper.respond({
-				content: `📃 Search results for: \`${query}\``,
+				content: `📃 YouTube search results for: \`${query}\``,
 				components: [
 					new MessageActionRow()
 						.addComponents(
