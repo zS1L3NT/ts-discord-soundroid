@@ -1,4 +1,4 @@
-import {Client, Intents} from "discord.js"
+import { Client, Intents } from "discord.js"
 import BotSetupHelper from "./utilities/BotSetupHelper"
 import http from "http"
 

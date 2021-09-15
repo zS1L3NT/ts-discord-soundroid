@@ -7,12 +7,14 @@ const config = require("../../config.json")
 export default class ApiHelper {
 	private youtubeMusicApi: any
 	private spotifyApi: SpotifyWebApi
+	private geniusApi: any
 
 	public constructor() {
 		this.youtubeMusicApi = new (require("youtube-music-api"))()
 		this.youtubeMusicApi.initalize()
 		this.spotifyApi = new SpotifyWebApi(config.spotify)
 		this.spotifyApi.setAccessToken(config.spotify.accessToken)
+		this.geniusApi = new (require("node-genius-api"))(config.genius)
 	}
 
 	public async searchYoutubeSongs(query: string, requester: string, limit: number = 10): Promise<Song[]> {
@@ -78,6 +80,21 @@ export default class ApiHelper {
 			Math.floor(result.duration_ms / 1000),
 			requester
 		)
+	}
+
+	public async findGeniusLyrics(query: string): Promise<string[]> {
+		const song = (await this.geniusApi.search(query))[0]?.result
+		if (!song) throw new Error("")
+
+		const lyrics = (await this.geniusApi.lyrics(song.id)).slice(1) as { part: string, content: string[] }[]
+		const lines: string[] = []
+
+		for (const lyric of lyrics) {
+			lines.push(`\u200B`)
+			lines.push(...lyric.content)
+		}
+
+		return lines.slice(1)
 	}
 
 }
