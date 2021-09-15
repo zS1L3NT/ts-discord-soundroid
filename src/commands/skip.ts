@@ -4,8 +4,8 @@ import { GuildMember, VoiceChannel } from "discord.js"
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("next")
-		.setDescription("Play the next song in queue"),
+		.setName("skip")
+		.setDescription("Skip to the next song in queue"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!(member.voice.channel instanceof VoiceChannel)) {
