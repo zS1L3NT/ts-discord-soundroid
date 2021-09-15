@@ -1,7 +1,15 @@
 import {Client, Intents} from "discord.js"
 import BotSetupHelper from "./utilities/BotSetupHelper"
+import http from "http"
 
 const config = require("../config.json")
+
+// region Configure heroku http server
+http.createServer((req, res) => {
+	res.writeHead(200)
+	res.end(`Server running`)
+}).listen(process.env.PORT || 5000)
+// endregion
 
 // region Initialize bot
 const bot = new Client({
