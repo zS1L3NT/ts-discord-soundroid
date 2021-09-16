@@ -70,14 +70,16 @@ export default class QueueFormatter {
 								.setCustomId("queue-previous-page")
 								.setStyle("PRIMARY")
 								.setLabel("Previous page")
-								.setDisabled(page === 1)
-						])
-						.addComponents([
+								.setDisabled(page === 1),
 							new MessageButton()
 								.setCustomId("queue-next-page")
 								.setStyle("PRIMARY")
 								.setLabel("Next page")
-								.setDisabled(page === max_pages)
+								.setDisabled(page === max_pages),
+							new MessageButton()
+								.setCustomId("refresh")
+								.setStyle("SUCCESS")
+								.setLabel("Refresh queue")
 						])
 				]
 			}
