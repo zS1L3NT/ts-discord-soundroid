@@ -3,6 +3,7 @@ import { GuildMember, VoiceChannel } from "discord.js"
 import MusicService from "../models/MusicService"
 import { joinVoiceChannel } from "@discordjs/voice"
 import Song from "../models/Song"
+import EmbedResponse from "../utilities/EmbedResponse"
 
 module.exports = {
 	id: "search-query",
@@ -10,10 +11,10 @@ module.exports = {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
-			return helper.respond({
-				emoji: Emoji.BAD,
-				message: "You have to be in a voice channel to use this command"
-			})
+			return helper.respond(new EmbedResponse(
+				Emoji.BAD,
+				"You have to be in a voice channel to use this command"
+			))
 		}
 
 		const url = helper.value()!
@@ -32,15 +33,15 @@ module.exports = {
 		try {
 			const song = await Song.from(helper.cache.apiHelper, url, member.id)
 			helper.cache.service!.enqueue(song)
-			helper.respond({
-				emoji: Emoji.GOOD,
-				message: `Enqueued song: "${song.title} - ${song.artiste}"`
-			})
+			helper.respond(new EmbedResponse(
+				Emoji.GOOD,
+				`Enqueued song: "${song.title} - ${song.artiste}"`
+			))
 		} catch {
-			helper.respond({
-				emoji: Emoji.BAD,
-				message: "Error playing song from url"
-			})
+			helper.respond(new EmbedResponse(
+				Emoji.BAD,
+				"Error playing song from url"
+			))
 		}
 	}
 } as iMenuFile

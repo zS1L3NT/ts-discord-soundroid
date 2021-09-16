@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import { GuildMember, VoiceChannel } from "discord.js"
+import EmbedResponse from "../utilities/EmbedResponse"
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,10 +10,10 @@ module.exports = {
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!(member.voice.channel instanceof VoiceChannel)) {
-			return helper.respond({
-				emoji: Emoji.BAD,
-				message: "You have to be in a voice channel to use this command"
-			})
+			return helper.respond(new EmbedResponse(
+				Emoji.BAD,
+				"You have to be in a voice channel to use this command"
+			))
 		}
 
 		if (helper.cache.service) {
@@ -25,16 +26,16 @@ module.exports = {
 					.sort((a, b) => a.sort - b.sort)
 					.map(({ value }) => value)
 			]
-			helper.respond({
-				emoji: Emoji.GOOD,
-				message: "Shuffled queue"
-			})
+			helper.respond(new EmbedResponse(
+				Emoji.GOOD,
+				"Shuffled queue"
+			))
 		}
 		else {
-			helper.respond({
-				emoji: Emoji.BAD,
-				message: "I am not currently in a voice channel"
-			})
+			helper.respond(new EmbedResponse(
+				Emoji.BAD,
+				"I am not currently in a voice channel"
+			))
 		}
 	}
 } as iInteractionFile

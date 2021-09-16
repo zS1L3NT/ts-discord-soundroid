@@ -4,6 +4,7 @@ import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
 import DurationHelper from "../utilities/DurationHelper"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
 import DominantColorGetter from "../utilities/DominantColorGetter"
+import EmbedResponse from "../utilities/EmbedResponse"
 
 const thumb = "🔘"
 const track = "▬"
@@ -15,19 +16,19 @@ module.exports = {
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!(member.voice.channel instanceof VoiceChannel)) {
-			return helper.respond({
-				emoji: Emoji.BAD,
-				message: "You have to be in a voice channel to use this command"
-			})
+			return helper.respond(new EmbedResponse(
+				Emoji.BAD,
+				"You have to be in a voice channel to use this command"
+			))
 		}
 
 		if (helper.cache.service) {
 			const service = helper.cache.service
 			if (service.queue.length === 0) {
-				return helper.respond({
-					emoji: Emoji.BAD,
-					message: "I am not playing anything right now"
-				})
+				return helper.respond(new EmbedResponse(
+					Emoji.BAD,
+					"I am not playing anything right now"
+				))
 			}
 
 			const song = service.queue[0]
@@ -53,10 +54,10 @@ module.exports = {
 			})
 		}
 		else {
-			helper.respond({
-				emoji: Emoji.BAD,
-				message: "I am not currently in a voice channel"
-			})
+			helper.respond(new EmbedResponse(
+				Emoji.BAD,
+				"I am not currently in a voice channel"
+			))
 		}
 	}
 } as iInteractionFile

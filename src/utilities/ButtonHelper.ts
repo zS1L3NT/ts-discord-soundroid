@@ -1,6 +1,6 @@
 import GuildCache from "../models/GuildCache"
-import { ButtonInteraction, InteractionReplyOptions, MessageEmbed, MessagePayload } from "discord.js"
-import { Emoji, iInteractionEmbed } from "./BotSetupHelper"
+import { ButtonInteraction, InteractionReplyOptions, MessagePayload } from "discord.js"
+import EmbedResponse from "./EmbedResponse"
 
 export default class ButtonHelper {
 	public cache: GuildCache
@@ -11,20 +11,14 @@ export default class ButtonHelper {
 		this.interaction = interaction
 	}
 
-	public respond(options: MessagePayload | InteractionReplyOptions | iInteractionEmbed) {
-		const interactionEmbed = options as iInteractionEmbed
-		if (interactionEmbed.emoji) {
+	public respond(options: MessagePayload | InteractionReplyOptions | EmbedResponse) {
+		if (options instanceof EmbedResponse) {
 			this.interaction.followUp({
-				embeds: [
-					new MessageEmbed()
-						.setAuthor(interactionEmbed.message, interactionEmbed.emoji)
-						.setColor(interactionEmbed.emoji === Emoji.GOOD ? "#77B255" : "#DD2E44")
-				]
+				embeds: [options.create()]
 			}).catch()
-		} else {
-			this.interaction.followUp(
-				options as MessagePayload | InteractionReplyOptions
-			).catch()
+		}
+		else {
+			this.interaction.followUp(options).catch()
 		}
 	}
 }
