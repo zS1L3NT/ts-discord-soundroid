@@ -90,7 +90,8 @@ export default class QueueFormatter {
 					new MessageEmbed()
 						.setAuthor("I am not currently in a voice channel", Emoji.BAD)
 						.setColor("#DD2E44")
-				]
+				],
+				components: []
 			}
 		}
 	}
