@@ -43,6 +43,9 @@ export default class QueueFormatter {
 				embed.addField(`Not playing anything at the moment`, `\u200B`)
 			}
 
+			const playing_duration = this.cache.service.queue.slice(1).map(song => song.duration).reduce((t, d) => t + d, 0)
+			const max_pages = Math.ceil((this.cache.service.queue.length - 1) / 10) || 1
+
 			if (queue.length > 0) {
 				embed.addField(`\u200B`, `__Queue:__`)
 				queue.forEach((song, i) => {
@@ -50,12 +53,9 @@ export default class QueueFormatter {
 					const field_format = this.song_format(song)
 					embed.addField(song_index + field_format[0], field_format[1])
 				})
+				embed.addField(`\u200B`, `**${this.cache.service.queue.length - 1} songs in queue | ${new DurationHelper(playing_duration).format()} total length**`)
 			}
 
-			const playing_duration = this.cache.service.queue.slice(1).map(song => song.duration).reduce((t, d) => t + d, 0)
-			const max_pages = Math.ceil((this.cache.service.queue.length - 1) / 10) || 1
-
-			embed.addField(`\u200B`, `**${this.cache.service.queue.length - 1} songs in queue | ${new DurationHelper(playing_duration).format()} total length**`)
 			embed.addField(`Page`, `${page}/${max_pages}`, true)
 			embed.addField(`Loop`, this.cache.service.loop ? "✅" : "❌", true)
 			embed.addField(`Queue Loop`, this.cache.service.queue_loop ? "✅" : "❌", true)
