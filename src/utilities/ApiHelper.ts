@@ -22,7 +22,7 @@ export default class ApiHelper {
 		const songs: Promise<Song>[] = results.map(async (result: any) => new Song(
 			result.name,
 			Array.isArray(result.artist) ? result.artist.map((a: any) => a.name).join(", ") : result.artist.name,
-			result.thumbnails[result.thumbnails.length - 1].url,
+			result.thumbnails.at(-1).url,
 			`https://youtu.be/${result.videoId}`,
 			0,
 			requester
@@ -43,9 +43,21 @@ export default class ApiHelper {
 		return new Song(
 			result.name,
 			Array.isArray(result.artist) ? result.artist.map((a: any) => a.name).join(", ") : result.artist.name,
-			result.thumbnails[result.thumbnails.length - 1].url,
+			result.thumbnails.at(-1).url,
 			`https://youtu.be/${result.videoId}`,
 			duration,
+			requester
+		)
+	}
+
+	public async findYoutubeVideo(url: string, requester: string): Promise<Song> {
+		const info = (await ytdl.getBasicInfo(url)).videoDetails
+		return new Song(
+			info.title,
+			info.author.name,
+			info.thumbnails.at(-1)?.url || "",
+			info.video_url,
+			parseInt(info.lengthSeconds) || 0,
 			requester
 		)
 	}
@@ -58,13 +70,13 @@ export default class ApiHelper {
 		return results
 			.filter(result => result !== null)
 			.map(result => new Song(
-			result.name,
-			result.artists.map(a => a.name).join(", "),
-			result.album.images[0].url,
-			`https://open.spotify.com/track/${result.id}`,
-			Math.floor(result.duration_ms / 1000),
-			requester
-		))
+				result.name,
+				result.artists.map(a => a.name).join(", "),
+				result.album.images[0].url,
+				`https://open.spotify.com/track/${result.id}`,
+				Math.floor(result.duration_ms / 1000),
+				requester
+			))
 	}
 
 	public async findSpotifySong(trackId: string, requester: string): Promise<Song> {
@@ -96,5 +108,4 @@ export default class ApiHelper {
 
 		return lines.slice(1)
 	}
-
 }

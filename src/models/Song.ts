@@ -24,7 +24,11 @@ export default class Song {
 		if (urlObject.host === "open.spotify.com") {
 			return await apiHelper.findSpotifySong(urlObject.pathname.slice(7), requester)
 		} else {
-			return await apiHelper.findYoutubeSong(url, requester)
+			try {
+				return await apiHelper.findYoutubeSong(url, requester)
+			} catch {
+				return await apiHelper.findYoutubeVideo(url, requester)
+			}
 		}
 	}
 
