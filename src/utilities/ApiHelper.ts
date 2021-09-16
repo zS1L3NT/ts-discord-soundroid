@@ -55,7 +55,9 @@ export default class ApiHelper {
 		this.spotifyApi.setAccessToken(accessToken)
 
 		const results = (await this.spotifyApi.getPlaylist(playlistId)).body.tracks.items.map(i => i.track)
-		return results.map(result => new Song(
+		return results
+			.filter(result => result !== null)
+			.map(result => new Song(
 			result.name,
 			result.artists.map(a => a.name).join(", "),
 			result.album.images[0].url,
