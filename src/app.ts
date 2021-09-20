@@ -1,6 +1,8 @@
 import { Client, Intents } from "discord.js"
 import BotSetupHelper from "./utilities/BotSetupHelper"
 import http from "http"
+import AfterEvery from "after-every"
+import GuildCache from "./models/GuildCache"
 
 require("dotenv").config()
 
@@ -13,19 +15,30 @@ http.createServer((req, res) => {
 
 // region Initialize bot
 const bot = new Client({
-	intents: [Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS]
+	intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS]
 })
 const botSetupHelper = new BotSetupHelper(bot)
+const {cache: botCache} = botSetupHelper
 // endregion
 
 void bot.login(JSON.parse(process.env.discord!).token)
 bot.on("ready", async () => {
 	console.log("Logged in as SounDroid Bot#5566")
 
+	let debugCount = 0
+
 	let i = 0
 	let count = bot.guilds.cache.size
 	for (const guild of bot.guilds.cache.toJSON()) {
 		const tag = `${(++i).toString().padStart(count.toString().length, "0")}/${count}`
+		let cache: GuildCache | undefined
+		try {
+			cache = await botCache.getGuildCache(guild)
+		} catch (err) {
+			console.error(`${tag} ❌ Couldn't find a Firebase Document for Guild(${guild.name})`)
+			guild.leave()
+			continue
+		}
 
 		try {
 			await botSetupHelper.deploySlashCommands(guild)
@@ -35,7 +48,18 @@ bot.on("ready", async () => {
 			continue
 		}
 
-		console.log(`${tag} ✅ Updated slash commands for Guild(${guild.name})`)
+		cache.updateMinutely(debugCount).then()
+
+		console.log(`${tag} ✅ Restored cache for Guild(${guild.name})`)
 	}
-	console.log(`✅ Updated all slash commands`)
+	console.log(`✅ All bot cache restored`)
+	console.log("|")
+
+	AfterEvery(1).minutes(async () => {
+		debugCount++
+		for (const guild of bot.guilds.cache.toJSON()) {
+			const cache = await botCache.getGuildCache(guild)
+			cache.updateMinutely(debugCount).then()
+		}
+	})
 })
