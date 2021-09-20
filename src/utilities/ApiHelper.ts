@@ -1,18 +1,17 @@
 import Song from "../models/Song"
 import ytdl from "ytdl-core"
+import axios from "axios"
 import SpotifyWebApi from "spotify-web-api-node"
 
 export default class ApiHelper {
 	private youtubeMusicApi: any
 	private spotifyApi: SpotifyWebApi
-	private geniusApi: any
 
 	public constructor() {
 		this.youtubeMusicApi = new (require("youtube-music-api"))()
 		this.youtubeMusicApi.initalize()
 		this.spotifyApi = new SpotifyWebApi(JSON.parse(process.env.spotify!))
 		this.spotifyApi.setAccessToken(JSON.parse(process.env.spotify!).accessToken)
-		this.geniusApi = new (require("node-genius-api"))(process.env.genius)
 	}
 
 	public async searchYoutubeSongs(query: string, requester: string, limit: number = 10): Promise<Song[]> {
@@ -95,17 +94,6 @@ export default class ApiHelper {
 	}
 
 	public async findGeniusLyrics(query: string): Promise<string[]> {
-		const song = (await this.geniusApi.search(query))[0]?.result
-		if (!song) throw new Error("")
-
-		const lyrics = (await this.geniusApi.lyrics(song.id)).slice(1) as { part: string, content: string[] }[]
-		const lines: string[] = []
-
-		for (const lyric of lyrics) {
-			lines.push(`\u200B`)
-			lines.push(...lyric.content)
-		}
-
-		return lines.slice(1)
+		return (await axios.get(`http://lyricserver.zectan.com/${encodeURIComponent(query)}`)).data
 	}
 }
