@@ -11,11 +11,13 @@ export default class DurationHelper {
 		if (this.duration >= 3600) {
 			const minutes = `${Math.floor(this.duration / 60) % 60}`
 			const hours = `${Math.floor(this.duration / 3600)}`
-			return `${hours.padStart(2, `0`)}:${minutes.padStart(2, `0`)}:${seconds.padStart(2, `0`)}`
+			return `${hours.padStart(2, `0`)}:${minutes.padStart(2, `0`)}:${seconds.padStart(
+				2,
+				`0`
+			)}`
 		} else {
 			const minutes = `${Math.floor(this.duration / 60)}`
 			return `${minutes.padStart(2, `0`)}:${seconds.padStart(2, `0`)}`
 		}
 	}
-
 }

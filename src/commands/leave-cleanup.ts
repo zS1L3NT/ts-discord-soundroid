@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import { GuildMember, VoiceChannel } from "discord.js"
+import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import EmbedResponse from "../utilities/EmbedResponse"
 
 module.exports = {
@@ -10,10 +10,12 @@ module.exports = {
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!(member.voice.channel instanceof VoiceChannel)) {
-			return helper.respond(new EmbedResponse(
-				Emoji.BAD,
-				"You have to be in a voice channel to use this command"
-			))
+			return helper.respond(
+				new EmbedResponse(
+					Emoji.BAD,
+					"You have to be in a voice channel to use this command"
+				)
+			)
 		}
 
 		if (helper.cache.service) {
@@ -23,16 +25,15 @@ module.exports = {
 				(song, i) => i === 0 || !!members.get(song.requester)
 			)
 			const newLength = helper.cache.service.queue.length
-			helper.respond(new EmbedResponse(
-				Emoji.GOOD,
-				`Cleared ${oldLength - newLength} songs from the queue`
-			))
-		}
-		else {
-			helper.respond(new EmbedResponse(
-				Emoji.BAD,
-				"I am not currently in a voice channel"
-			))
+			helper.cache.updateMusicChannel()
+			helper.respond(
+				new EmbedResponse(
+					Emoji.GOOD,
+					`Cleared ${oldLength - newLength} songs from the queue`
+				)
+			)
+		} else {
+			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
 } as iInteractionFile

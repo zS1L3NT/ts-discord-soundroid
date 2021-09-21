@@ -1,9 +1,15 @@
-import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { GuildMember, MessageActionRow, MessageEmbed, MessageSelectMenu, VoiceChannel } from "discord.js"
-import MusicService from "../models/MusicService"
 import { joinVoiceChannel } from "@discordjs/voice"
+import {
+	GuildMember,
+	MessageActionRow,
+	MessageEmbed,
+	MessageSelectMenu,
+	VoiceChannel
+} from "discord.js"
+import MusicService from "../models/MusicService"
 import Song from "../models/Song"
+import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import EmbedResponse from "../utilities/EmbedResponse"
 
 module.exports = {
@@ -13,17 +19,21 @@ module.exports = {
 		.addStringOption(option =>
 			option
 				.setName("query")
-				.setDescription("Can be a YouTube link, Spotify Song/Playlist link or a youtube search query")
+				.setDescription(
+					"Can be a YouTube link, Spotify Song/Playlist link or a youtube search query"
+				)
 				.setRequired(true)
 		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
-			return helper.respond(new EmbedResponse(
-				Emoji.BAD,
-				"You have to be in a voice channel to use this command"
-			))
+			return helper.respond(
+				new EmbedResponse(
+					Emoji.BAD,
+					"You have to be in a voice channel to use this command"
+				)
+			)
 		}
 
 		const query = helper.string("query", true)!
@@ -38,8 +48,7 @@ module.exports = {
 						guildId: channel.guild.id,
 						adapterCreator: channel.guild.voiceAdapterCreator
 					}),
-					helper.cache.apiHelper,
-					() => delete helper.cache.service
+					helper.cache
 				)
 			}
 
@@ -47,43 +56,35 @@ module.exports = {
 			if (playlistMatch) {
 				try {
 					const [, playlistId] = playlistMatch
-					const songs = await helper.cache.apiHelper.findSpotifyPlaylist(playlistId, member.id)
+					const songs = await helper.cache.apiHelper.findSpotifyPlaylist(
+						playlistId,
+						member.id
+					)
 					if (songs.length > 0) {
 						helper.cache.service!.enqueue(songs.shift()!)
 						helper.cache.service!.queue.push(...songs)
-						helper.respond(new EmbedResponse(
-							Emoji.GOOD,
-							`Enqueued ${songs.length + 1} songs`
-						))
-					}
-					else {
-						helper.respond(new EmbedResponse(
-							Emoji.BAD,
-							"Playlist is empty"
-						))
+						helper.cache.updateMusicChannel()
+						helper.respond(
+							new EmbedResponse(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`)
+						)
+					} else {
+						helper.respond(new EmbedResponse(Emoji.BAD, "Playlist is empty"))
 					}
 				} catch (err) {
 					console.error(err)
-					helper.respond(new EmbedResponse(
-						Emoji.BAD,
-						"Error playing playlist from url"
-					))
+					helper.respond(new EmbedResponse(Emoji.BAD, "Error playing playlist from url"))
 				}
-			}
-			else {
+			} else {
 				try {
 					const song = await Song.from(helper.cache.apiHelper, query, member.id)
 					helper.cache.service!.enqueue(song)
-					helper.respond(new EmbedResponse(
-						Emoji.GOOD,
-						`Enqueued: "${song.title} - ${song.artiste}"`
-					))
+					helper.cache.updateMusicChannel()
+					helper.respond(
+						new EmbedResponse(Emoji.GOOD, `Enqueued: "${song.title} - ${song.artiste}"`)
+					)
 				} catch (err) {
 					console.error(err)
-					helper.respond(new EmbedResponse(
-						Emoji.BAD,
-						"Error playing song from url"
-					))
+					helper.respond(new EmbedResponse(Emoji.BAD, "Error playing song from url"))
 				}
 			}
 		} catch {
@@ -93,21 +94,23 @@ module.exports = {
 			helper.respond({
 				embeds: [
 					new MessageEmbed()
-						.setAuthor(`YouTube search results for: "${query}"`, `https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`)
+						.setAuthor(
+							`YouTube search results for: "${query}"`,
+							`https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
+						)
 						.setColor("#FF0000")
 				],
 				components: [
-					new MessageActionRow()
-						.addComponents(
-							new MessageSelectMenu()
-								.setCustomId("search-query")
-								.addOptions(results.map((result, i) => ({
-									emoji: emojis[i],
-									label: result.title,
-									value: result.url,
-									description: result.artiste
-								})))
+					new MessageActionRow().addComponents(
+						new MessageSelectMenu().setCustomId("search-query").addOptions(
+							results.map((result, i) => ({
+								emoji: emojis[i],
+								label: result.title,
+								value: result.url,
+								description: result.artiste
+							}))
 						)
+					)
 				]
 			})
 		}

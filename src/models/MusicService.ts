@@ -7,15 +7,15 @@ import {
 	VoiceConnectionDisconnectReason,
 	VoiceConnectionStatus
 } from "@discordjs/voice"
+import GuildCache from "./GuildCache"
 import Song from "./Song"
-import ApiHelper from "../utilities/ApiHelper"
 
 const time = async (ms: number) => new Promise(res => setTimeout(res, ms))
 
 export default class MusicService {
 	public readonly connection: VoiceConnection
 	public readonly player: AudioPlayer
-	public readonly apiHelper: ApiHelper
+	public readonly cache: GuildCache
 	public queue: Song[]
 	public queueLock = false
 	public readyLock = false
@@ -23,15 +23,18 @@ export default class MusicService {
 	public loop = false
 	public queue_loop = false
 
-	public constructor(connection: VoiceConnection, apiHelper: ApiHelper, destroy: () => void) {
+	public constructor(connection: VoiceConnection, cache: GuildCache) {
 		this.connection = connection
 		this.player = createAudioPlayer()
-		this.apiHelper = apiHelper
+		this.cache = cache
 		this.queue = []
 
 		this.connection.on("stateChange", async (_, newState) => {
 			if (newState.status === VoiceConnectionStatus.Disconnected) {
-				if (newState.reason === VoiceConnectionDisconnectReason.WebSocketClose && newState.closeCode === 4014) {
+				if (
+					newState.reason === VoiceConnectionDisconnectReason.WebSocketClose &&
+					newState.closeCode === 4014
+				) {
 					/*
 						If the WebSocket closed with a 4014 code, this means that we should not manually attempt to reconnect,
 						but there is a chance the connection will recover itself if the reason of the disconnect was due to
@@ -44,34 +47,31 @@ export default class MusicService {
 						// Probably moved voice channel
 					} catch {
 						this.connection.destroy()
-						destroy()
+						this.destroy()
 						// Probably removed from voice channel
 					}
-				}
-				else if (this.connection.rejoinAttempts < 5) {
+				} else if (this.connection.rejoinAttempts < 5) {
 					/*
 						The disconnect in this case is recoverable, and we also have <5 repeated attempts so we will reconnect.
 					*/
 					await time((this.connection.rejoinAttempts + 1) * 5_000)
 					this.connection.rejoin()
-				}
-				else {
+				} else {
 					/*
 						The disconnect in this case may be recoverable, but we have no more remaining attempts - destroy.
 					*/
 					this.connection.destroy()
-					destroy()
+					this.destroy()
 				}
-			}
-			else if (newState.status === VoiceConnectionStatus.Destroyed) {
+			} else if (newState.status === VoiceConnectionStatus.Destroyed) {
 				/*
 					Once destroyed, stop the subscription
 				*/
-				destroy()
-			}
-			else if (
+				this.destroy()
+			} else if (
 				!this.readyLock &&
-				(newState.status === VoiceConnectionStatus.Connecting || newState.status === VoiceConnectionStatus.Signalling)
+				(newState.status === VoiceConnectionStatus.Connecting ||
+					newState.status === VoiceConnectionStatus.Signalling)
 			) {
 				/*
 					In the Signalling or Connecting states, we set a 20 second time limit for the connection to become ready
@@ -84,7 +84,7 @@ export default class MusicService {
 				} catch {
 					if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
 						this.connection.destroy()
-						destroy()
+						this.destroy()
 					}
 				} finally {
 					this.readyLock = false
@@ -93,14 +93,14 @@ export default class MusicService {
 		})
 
 		this.player.on("stateChange", (oldState, newState) => {
-			if (newState.status === AudioPlayerStatus.Idle && oldState.status !== AudioPlayerStatus.Idle) {
+			if (
+				newState.status === AudioPlayerStatus.Idle &&
+				oldState.status !== AudioPlayerStatus.Idle
+			) {
 				if (this.queue_loop) {
 					this.queue.push(this.queue.shift()!)
-				}
-				else if (this.loop) {
-
-				}
-				else {
+				} else if (this.loop) {
+				} else {
 					this.queue.shift()
 				}
 				void this.processQueue()
@@ -108,6 +108,10 @@ export default class MusicService {
 		})
 
 		this.connection.subscribe(this.player)
+	}
+
+	public destroy() {
+		delete this.cache.service
 	}
 
 	/**
@@ -125,16 +129,20 @@ export default class MusicService {
 	 */
 	private async processQueue(): Promise<void> {
 		// If the queue is locked (already being processed), is empty, or the audio player is already playing something, return
-		if (this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle || this.queue.length === 0) {
+		if (
+			this.queueLock ||
+			this.player.state.status !== AudioPlayerStatus.Idle ||
+			this.queue.length === 0
+		) {
 			return
 		}
 		// Lock the queue to guarantee safe access
 		this.queueLock = true
-
 		const song = this.queue[0]
 		try {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
-			const resource = await song.createAudioResource(this.apiHelper)
+			const resource = await song.createAudioResource(this.cache.apiHelper)
+			this.cache.updateMusicChannel()
 			this.player.play(resource)
 			this.queueLock = false
 		} catch (error) {

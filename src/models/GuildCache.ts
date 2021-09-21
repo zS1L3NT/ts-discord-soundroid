@@ -1,9 +1,10 @@
-import Document, { iDocument } from "./Document"
 import { Client, Guild } from "discord.js"
-import MusicService from "./MusicService"
-import ApiHelper from "../utilities/ApiHelper"
 import { useTryAsync } from "no-try"
+import ApiHelper from "../utilities/ApiHelper"
 import ChannelCleaner from "../utilities/ChannelCleaner"
+import QueueFormatter from "../utilities/QueueFormatter"
+import Document, { iDocument } from "./Document"
+import MusicService from "./MusicService"
 
 export default class GuildCache {
 	public bot: Client
@@ -61,14 +62,12 @@ export default class GuildCache {
 			return cleaner.getMessages().get(newMusicMessageId)!
 		})
 		if (err) {
-			console.warn(
-				`Guild(${this.guild.name}) has no Channel(${musicChannelId})`
-			)
+			console.warn(`Guild(${this.guild.name}) has no Channel(${musicChannelId})`)
 			await this.setMusicChannelId("")
 			return
 		}
 
-		// Edit the message with the payload
+		message.edit(await new QueueFormatter(this).getMessagePayload())
 	}
 
 	public getMusicChannelId() {

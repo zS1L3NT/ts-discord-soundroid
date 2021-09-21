@@ -1,7 +1,7 @@
+import { GuildMember, Message } from "discord.js"
 import { Emoji, iButtonFile } from "../utilities/BotSetupHelper"
-import { Message } from "discord.js"
-import QueueFormatter from "../utilities/QueueFormatter"
 import EmbedResponse from "../utilities/EmbedResponse"
+import QueueFormatter from "../utilities/QueueFormatter"
 
 module.exports = {
 	id: "queue-previous-page",
@@ -10,20 +10,19 @@ module.exports = {
 		const embed = message.embeds[0]
 
 		if (!embed) {
-			helper.respond(new EmbedResponse(
-				Emoji.BAD,
-				"Failed to get information about queue page number"
-			))
+			helper.respond(
+				new EmbedResponse(Emoji.BAD, "Failed to get information about queue page number")
+			)
 		}
 		const pageInfo = embed.fields.find(field => field.name === `Page`)!.value
 		const currentPage = parseInt(pageInfo.split("/")[0])
 
-		helper.respond(new EmbedResponse(
-			Emoji.GOOD,
-			"Showing previous page"
-		))
+		helper.respond(new EmbedResponse(Emoji.GOOD, "Showing previous page"))
 		await message.edit(
-			await new QueueFormatter(helper.cache, helper.interaction).getMessagePayload(currentPage - 1)
+			await new QueueFormatter(
+				helper.cache,
+				helper.interaction.member as GuildMember
+			).getMessagePayload(currentPage - 1)
 		)
 	}
 } as iButtonFile

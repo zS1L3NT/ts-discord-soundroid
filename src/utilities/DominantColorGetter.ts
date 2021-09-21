@@ -9,7 +9,7 @@ export default class DominantColorGetter {
 
 	public async getColor(): Promise<`#${string}`> {
 		try {
-			const [r, g, b] = await ColorThief.getColor(this.url) as number[]
+			const [r, g, b] = (await ColorThief.getColor(this.url)) as number[]
 
 			let rs = r.toString(16)
 			let gs = g.toString(16)
@@ -19,11 +19,10 @@ export default class DominantColorGetter {
 			if (gs.length == 1) gs = "0" + gs
 			if (bs.length == 1) bs = "0" + bs
 
-			return `#${rs +gs + bs}`
+			return `#${rs + gs + bs}`
 		} catch (err) {
 			console.error(err)
 			return "#FFFFFF"
 		}
 	}
-
 }

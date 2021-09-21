@@ -40,18 +40,14 @@ export default class MessageHelper {
 		void this.message.react("❌")
 	}
 
-	public respond(
-		options: MessagePayload | InteractionReplyOptions | EmbedResponse,
-		ms: number
-	) {
+	public respond(options: MessagePayload | InteractionReplyOptions | EmbedResponse, ms: number) {
 		let message: Promise<Message>
 
 		if (options instanceof EmbedResponse) {
 			message = this.message.channel.send({
 				embeds: [options.create()]
 			})
-		}
-		else {
+		} else {
 			message = this.message.channel.send(options as MessagePayload | InteractionReplyOptions)
 		}
 

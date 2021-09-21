@@ -1,35 +1,40 @@
-import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
+import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import EmbedResponse from "../utilities/EmbedResponse"
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("lyrics")
-		.setDescription("Shows the lyrics of the current song. If no **query** defined, searches lyrics for current song")
+		.setDescription(
+			"Shows the lyrics of the current song. If no **query** defined, searches lyrics for current song"
+		)
 		.addStringOption(option =>
 			option
 				.setName("query")
-				.setDescription("Use this to manually search the server for song lyrics for the current song")
+				.setDescription(
+					"Use this to manually search the server for song lyrics for the current song"
+				)
 				.setRequired(false)
 		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!(member.voice.channel instanceof VoiceChannel)) {
-			return helper.respond(new EmbedResponse(
-				Emoji.BAD,
-				"You have to be in a voice channel to use this command"
-			))
+			return helper.respond(
+				new EmbedResponse(
+					Emoji.BAD,
+					"You have to be in a voice channel to use this command"
+				)
+			)
 		}
 
 		if (helper.cache.service) {
 			const queue = helper.cache.service.queue
 			if (queue.length === 0) {
-				return helper.respond(new EmbedResponse(
-					Emoji.BAD,
-					"I am not playing anything right now"
-				))
+				return helper.respond(
+					new EmbedResponse(Emoji.BAD, "I am not playing anything right now")
+				)
 			}
 
 			const query = helper.string("query")
@@ -37,21 +42,26 @@ module.exports = {
 
 			let lyrics: string[]
 			try {
-				lyrics = await helper.cache.apiHelper.findGeniusLyrics(query || `${song.title} ${song.artiste}`)
+				lyrics = await helper.cache.apiHelper.findGeniusLyrics(
+					query || `${song.title} ${song.artiste}`
+				)
 			} catch {
 				if (query) {
-					return helper.respond(new EmbedResponse(
-						Emoji.BAD,
-						"Sorry, couldn't find any lyrics for this search query\n" +
-							"Was your query too specific? Try using a shorter query"
-					))
-				}
-				else {
-					return helper.respond(new EmbedResponse(
-						Emoji.BAD,
-						"Sorry, couldn't find any lyrics for this song\n" +
-							"Try using this command with the **query** option to manually search the server for lyrics"
-					))
+					return helper.respond(
+						new EmbedResponse(
+							Emoji.BAD,
+							"Sorry, couldn't find any lyrics for this search query\n" +
+								"Was your query too specific? Try using a shorter query"
+						)
+					)
+				} else {
+					return helper.respond(
+						new EmbedResponse(
+							Emoji.BAD,
+							"Sorry, couldn't find any lyrics for this song\n" +
+								"Try using this command with the **query** option to manually search the server for lyrics"
+						)
+					)
 				}
 			}
 
@@ -62,19 +72,15 @@ module.exports = {
 						.setColor(await new DominantColorGetter(song.cover).getColor())
 						.setThumbnail(song.cover)
 						.setDescription(lyrics.join("\n"))
-						.setFooter(`Requested by @${member.displayName}`, helper.interaction.user.displayAvatarURL())
+						.setFooter(
+							`Requested by @${member.displayName}`,
+							helper.interaction.user.displayAvatarURL()
+						)
 				]
 			})
-			helper.respond(new EmbedResponse(
-				Emoji.GOOD,
-				"Showing lyrics"
-			))
-		}
-		else {
-			helper.respond(new EmbedResponse(
-				Emoji.BAD,
-				"I am not currently in a voice channel"
-			))
+			helper.respond(new EmbedResponse(Emoji.GOOD, "Showing lyrics"))
+		} else {
+			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
 } as iInteractionFile

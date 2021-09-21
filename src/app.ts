@@ -1,8 +1,8 @@
-import { Client, Intents } from "discord.js"
-import BotSetupHelper from "./utilities/BotSetupHelper"
-import http from "http"
 import AfterEvery from "after-every"
+import { Client, Intents } from "discord.js"
+import http from "http"
 import GuildCache from "./models/GuildCache"
+import BotSetupHelper from "./utilities/BotSetupHelper"
 
 require("dotenv").config()
 
@@ -18,7 +18,7 @@ const bot = new Client({
 	intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS]
 })
 const botSetupHelper = new BotSetupHelper(bot)
-const {cache: botCache} = botSetupHelper
+const { cache: botCache } = botSetupHelper
 // endregion
 
 void bot.login(JSON.parse(process.env.discord!).token)
@@ -43,12 +43,14 @@ bot.on("ready", async () => {
 		try {
 			await botSetupHelper.deploySlashCommands(guild)
 		} catch (err) {
-			console.error(`${tag} ❌ Couldn't get Slash Command permission for Guild(${guild.name})`)
+			console.error(
+				`${tag} ❌ Couldn't get Slash Command permission for Guild(${guild.name})`
+			)
 			guild.leave()
 			continue
 		}
 
-		cache.updateMinutely(debugCount).then()
+		cache.updateMinutely(debugCount)
 
 		console.log(`${tag} ✅ Restored cache for Guild(${guild.name})`)
 	}
@@ -59,7 +61,7 @@ bot.on("ready", async () => {
 		debugCount++
 		for (const guild of bot.guilds.cache.toJSON()) {
 			const cache = await botCache.getGuildCache(guild)
-			cache.updateMinutely(debugCount).then()
+			cache.updateMinutely(debugCount)
 		}
 	})
 })

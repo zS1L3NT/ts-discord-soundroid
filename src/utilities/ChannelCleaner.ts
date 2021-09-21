@@ -63,8 +63,7 @@ export default class ChannelCleaner {
 			}
 
 			this.channel = channel
-		}
-		else {
+		} else {
 			throw new Error("Channel ID references is not a text channel or doesn't exist")
 		}
 	}

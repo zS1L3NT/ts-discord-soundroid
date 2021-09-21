@@ -1,8 +1,8 @@
-import admin from "firebase-admin"
 import { Client, Collection, Guild } from "discord.js"
-import GuildCache from "./GuildCache"
-import Document, { iDocument } from "./Document"
+import admin from "firebase-admin"
 import ApiHelper from "../utilities/ApiHelper"
+import Document from "./Document"
+import GuildCache from "./GuildCache"
 
 export default class BotCache {
 	public bot: Client
@@ -24,19 +24,18 @@ export default class BotCache {
 		return new Promise<GuildCache>((resolve, reject) => {
 			const cache = this.guilds.get(guild.id)
 			if (!cache) {
-				this.guilds.set(guild.id, new GuildCache(
-					this.bot,
-					guild,
-					this.apiHelper,
-					this.ref.doc(guild.id),
-					resolve
-				))
+				this.guilds.set(
+					guild.id,
+					new GuildCache(this.bot, guild, this.apiHelper, this.ref.doc(guild.id), resolve)
+				)
 
-				this.ref.doc(guild.id).get().then(snap => {
-					if (!snap.exists) reject()
-				})
-			}
-			else {
+				this.ref
+					.doc(guild.id)
+					.get()
+					.then(snap => {
+						if (!snap.exists) reject()
+					})
+			} else {
 				resolve(cache)
 			}
 		})

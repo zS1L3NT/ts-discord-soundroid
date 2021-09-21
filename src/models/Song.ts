@@ -1,5 +1,5 @@
-import { raw as ytdl } from "youtube-dl-exec"
 import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice"
+import { raw as ytdl } from "youtube-dl-exec"
 import ApiHelper from "../utilities/ApiHelper"
 
 export default class Song {
@@ -10,7 +10,14 @@ export default class Song {
 	public duration: number
 	public requester: string
 
-	public constructor(title: string, artiste: string, cover: string, url: string, duration: number, requester: string) {
+	public constructor(
+		title: string,
+		artiste: string,
+		cover: string,
+		url: string,
+		duration: number,
+		requester: string
+	) {
 		this.title = title
 		this.artiste = artiste
 		this.cover = cover
@@ -37,7 +44,10 @@ export default class Song {
 			let source = this.url
 			const urlObject = new URL(source)
 			if (urlObject.host === "open.spotify.com") {
-				const youtubeResult = (await apiHelper.findYoutubeSong(`${this.title} ${this.artiste}`, this.requester))
+				const youtubeResult = await apiHelper.findYoutubeSong(
+					`${this.title} ${this.artiste}`,
+					this.requester
+				)
 				source = youtubeResult.url
 			}
 
@@ -64,10 +74,14 @@ export default class Song {
 			process
 				.once("spawn", () => {
 					demuxProbe(stream)
-						.then((probe) => resolve(createAudioResource(probe.stream, {
-							metadata: this,
-							inputType: probe.type
-						})))
+						.then(probe =>
+							resolve(
+								createAudioResource(probe.stream, {
+									metadata: this,
+									inputType: probe.type
+								})
+							)
+						)
 						.catch(onError)
 				})
 				.catch(onError)
