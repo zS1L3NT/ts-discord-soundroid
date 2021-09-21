@@ -7,9 +7,9 @@ import {
 } from "discord.js"
 import GuildCache from "../models/GuildCache"
 import Song from "../models/Song"
-import { Emoji } from "./BotSetupHelper"
 import DominantColorGetter from "./DominantColorGetter"
 import DurationHelper from "./DurationHelper"
+import { Emoji } from "./EmbedResponse"
 
 export default class QueueFormatter {
 	private cache: GuildCache

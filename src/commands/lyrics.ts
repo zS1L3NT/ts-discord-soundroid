@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
-import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
+import { iInteractionFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
-import EmbedResponse from "../utilities/EmbedResponse"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
 module.exports = {
 	data: new SlashCommandBuilder()

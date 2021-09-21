@@ -9,8 +9,8 @@ import {
 } from "discord.js"
 import MusicService from "../models/MusicService"
 import Song from "../models/Song"
-import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse from "../utilities/EmbedResponse"
+import { iInteractionFile } from "../utilities/BotSetupHelper"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
 module.exports = {
 	data: new SlashCommandBuilder()

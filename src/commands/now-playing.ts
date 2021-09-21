@@ -1,10 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
 import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
-import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
+import { iInteractionFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
-import EmbedResponse from "../utilities/EmbedResponse"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
 const thumb = "🔘"
 const track = "▬"

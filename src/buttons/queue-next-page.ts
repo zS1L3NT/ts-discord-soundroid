@@ -1,6 +1,6 @@
 import { GuildMember, Message } from "discord.js"
-import { Emoji, iButtonFile } from "../utilities/BotSetupHelper"
-import EmbedResponse from "../utilities/EmbedResponse"
+import { iButtonFile } from "../utilities/BotSetupHelper"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import QueueFormatter from "../utilities/QueueFormatter"
 
 module.exports = {

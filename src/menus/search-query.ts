@@ -2,8 +2,8 @@ import { joinVoiceChannel } from "@discordjs/voice"
 import { GuildMember, VoiceChannel } from "discord.js"
 import MusicService from "../models/MusicService"
 import Song from "../models/Song"
-import { Emoji, iMenuFile } from "../utilities/BotSetupHelper"
-import EmbedResponse from "../utilities/EmbedResponse"
+import { iMenuFile } from "../utilities/BotSetupHelper"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
 module.exports = {
 	id: "search-query",

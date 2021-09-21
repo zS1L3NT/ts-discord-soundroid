@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { GuildMember, VoiceChannel } from "discord.js"
-import { Emoji, iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse from "../utilities/EmbedResponse"
+import { iInteractionFile } from "../utilities/BotSetupHelper"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("resume").setDescription("Resume the current song"),
