@@ -121,7 +121,8 @@ export default class MusicService {
 	 */
 	public enqueue(song: Song) {
 		this.queue.push(song)
-		void this.processQueue()
+		this.processQueue()
+		this.cache.updateMusicChannel()
 	}
 
 	/**
