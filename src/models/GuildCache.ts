@@ -1,5 +1,4 @@
-import { Client, Guild } from "discord.js"
-import { useTryAsync } from "no-try"
+import { Client, Guild, Message } from "discord.js"
 import ApiHelper from "../utilities/ApiHelper"
 import ChannelCleaner from "../utilities/ChannelCleaner"
 import QueueFormatter from "../utilities/QueueFormatter"
@@ -49,22 +48,25 @@ export default class GuildCache {
 		const musicChannelId = this.getMusicChannelId()
 		if (!musicChannelId) return
 
-		const [err, message] = await useTryAsync(async () => {
+		let message: Message
+
+		try {
 			const musicMessageId = this.getMusicMessageId()
 			const cleaner = new ChannelCleaner(this, musicChannelId, [musicMessageId])
 			await cleaner.clean()
 
 			const [newMusicMessageId] = cleaner.getMessageIds()
+			message = cleaner.getMessages().get(newMusicMessageId)!
 			if (newMusicMessageId !== musicMessageId) {
 				this.setMusicMessageId(newMusicMessageId)
 			}
-
-			return cleaner.getMessages().get(newMusicMessageId)!
-		})
-		if (err) {
-			console.warn(`Guild(${this.guild.name}) has no Channel(${musicChannelId})`)
-			await this.setMusicChannelId("")
-			return
+		} catch (err) {
+			if ((err as Error).message === "no-channel") {
+				console.warn(`Guild(${this.guild.name}) has no Channel(${musicChannelId})`)
+				await this.setMusicChannelId("")
+				return
+			}
+			throw err
 		}
 
 		message.edit(await new QueueFormatter(this).getMessagePayload())

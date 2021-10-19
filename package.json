@@ -13,9 +13,6 @@
 		"@discordjs/opus": "^0.6.0",
 		"@discordjs/rest": "^0.1.0-canary.0",
 		"@discordjs/voice": "^0.6.0",
-		"@types/node": "^16.4.10",
-		"@types/node-fetch": "^2.5.12",
-		"@types/spotify-web-api-node": "^5.0.3",
 		"after-every": "^1.0.3",
 		"axios": "^0.21.4",
 		"colorthief": "^2.3.2",
@@ -25,7 +22,6 @@
 		"ffmpeg-static": "^4.4.0",
 		"firebase-admin": "^9.11.1",
 		"libsodium-wrappers": "^0.7.9",
-		"no-try": "^3.1.0",
 		"spotify-web-api-node": "^5.0.2",
 		"ts-node": "^10.1.0",
 		"typescript": "^4.3.5",
@@ -35,5 +31,10 @@
 	},
 	"engines": {
 		"node": "16.x"
+	},
+	"devDependencies": {
+		"@types/node": "^16.11.1",
+		"@types/node-fetch": "^3.0.3",
+		"@types/spotify-web-api-node": "^5.0.3"
 	}
 }
