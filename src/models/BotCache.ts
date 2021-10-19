@@ -4,6 +4,8 @@ import ApiHelper from "../utilities/ApiHelper"
 import Document from "./Document"
 import GuildCache from "./GuildCache"
 
+const config = require("../../config.json")
+
 export default class BotCache {
 	public bot: Client
 	private ref: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
@@ -12,10 +14,10 @@ export default class BotCache {
 
 	public constructor(bot: Client) {
 		admin.initializeApp({
-			credential: admin.credential.cert(JSON.parse(process.env.firebase!).service_account)
+			credential: admin.credential.cert(config.firebase.service_account)
 		})
 		this.bot = bot
-		this.ref = admin.firestore().collection(JSON.parse(process.env.firebase!).collection)
+		this.ref = admin.firestore().collection(config.firebase.collection)
 		this.guilds = new Collection<string, GuildCache>()
 		this.apiHelper = new ApiHelper()
 	}

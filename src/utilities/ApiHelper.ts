@@ -3,6 +3,8 @@ import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import Song from "../models/Song"
 
+const config = require("../../config.json")
+
 export default class ApiHelper {
 	private youtubeMusicApi: any
 	private spotifyApi: SpotifyWebApi
@@ -10,8 +12,8 @@ export default class ApiHelper {
 	public constructor() {
 		this.youtubeMusicApi = new (require("youtube-music-api"))()
 		this.youtubeMusicApi.initalize()
-		this.spotifyApi = new SpotifyWebApi(JSON.parse(process.env.spotify!))
-		this.spotifyApi.setAccessToken(JSON.parse(process.env.spotify!).accessToken)
+		this.spotifyApi = new SpotifyWebApi(config.spotify)
+		this.spotifyApi.setAccessToken(config.spotify.accessToken)
 	}
 
 	public async searchYoutubeSongs(

@@ -1,17 +1,9 @@
 import AfterEvery from "after-every"
 import { Client, Intents } from "discord.js"
-import http from "http"
 import GuildCache from "./models/GuildCache"
 import BotSetupHelper from "./utilities/BotSetupHelper"
 
-require("dotenv").config()
-
-// region Configure heroku http server
-http.createServer((req, res) => {
-	res.writeHead(200)
-	res.end(`Server running`)
-}).listen(process.env.PORT || 5000)
-// endregion
+const config = require("../config.json")
 
 // region Initialize bot
 const bot = new Client({
@@ -21,7 +13,7 @@ const botSetupHelper = new BotSetupHelper(bot)
 const { cache: botCache } = botSetupHelper
 // endregion
 
-void bot.login(JSON.parse(process.env.discord!).token)
+void bot.login(config.discord.token)
 bot.on("ready", async () => {
 	console.log("Logged in as SounDroid Bot#5566")
 

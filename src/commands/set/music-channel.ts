@@ -3,6 +3,8 @@ import { GuildMember, TextChannel } from "discord.js"
 import { iInteractionSubcommandFile } from "../../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../../utilities/EmbedResponse"
 
+const config = require("../../../config.json")
+
 module.exports = {
 	data: new SlashCommandSubcommandBuilder()
 		.setName("music-channel")
@@ -14,7 +16,7 @@ module.exports = {
 		const member = helper.interaction.member as GuildMember
 		if (
 			!member.permissions.has("ADMINISTRATOR") &&
-			member.id !== JSON.parse(process.env.discord!).dev_id
+			member.id !== config.discord.dev_id
 		) {
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, "Only administrators can set bot channels")
