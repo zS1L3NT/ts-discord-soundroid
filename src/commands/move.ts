@@ -35,7 +35,7 @@ module.exports = {
 		}
 
 		if (helper.cache.service) {
-			const from = helper.integer("from", true)!
+			const from = helper.integer("from")!
 			const to = helper.integer("to")
 
 			const queue = helper.cache.service.queue

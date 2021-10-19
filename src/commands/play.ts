@@ -36,7 +36,7 @@ module.exports = {
 			)
 		}
 
-		const query = helper.string("query", true)!
+		const query = helper.string("query")!
 
 		try {
 			const urlObject = new URL(query)

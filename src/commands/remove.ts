@@ -34,7 +34,7 @@ module.exports = {
 			)
 		}
 
-		const from = helper.integer("from", true)!
+		const from = helper.integer("from")!
 		const to = helper.integer("to")
 
 		if (helper.cache.service) {
