@@ -7,7 +7,7 @@ const config = require("../config.json")
 
 // region Initialize bot
 const bot = new Client({
-	intents: [Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS]
+	intents: [Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS]
 })
 const botSetupHelper = new BotSetupHelper(bot)
 const { cache: botCache } = botSetupHelper
