@@ -24,5 +24,6 @@
 		"clientId": "",
 		"clientSecret": "",
 		"redirectUri": ""
-	}
+	},
+	"genius": ""
 }
