@@ -74,7 +74,7 @@ module.exports = {
 						.setDescription(lyrics.join("\n"))
 						.setFooter(
 							`Requested by @${member.displayName}`,
-							helper.interaction.user.displayAvatarURL()
+							member.user.displayAvatarURL()
 						)
 				]
 			})

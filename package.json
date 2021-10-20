@@ -21,6 +21,7 @@
 		"ffmpeg-static": "^4.4.0",
 		"firebase-admin": "^9.11.1",
 		"libsodium-wrappers": "^0.7.9",
+		"luxon": "^2.0.2",
 		"node-genius-api": "^1.2.0",
 		"spotify-web-api-node": "^5.0.2",
 		"ts-node": "^10.1.0",
@@ -33,6 +34,7 @@
 		"node": "16.x"
 	},
 	"devDependencies": {
+		"@types/luxon": "^2.0.5",
 		"@types/node": "^16.11.1",
 		"@types/node-fetch": "^3.0.3",
 		"@types/spotify-web-api-node": "^5.0.3"

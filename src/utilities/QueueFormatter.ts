@@ -32,7 +32,7 @@ export default class QueueFormatter {
 			embed.addField(`\u200B`, `__Now Playing:__`)
 
 			if (song) {
-				embed.addField(...this.song_format(song))
+				embed.addField(...this.songFormat(song))
 				embed.setThumbnail(song.cover)
 				embed.setColor(await new DominantColorGetter(song.cover).getColor())
 			} else {
@@ -49,7 +49,7 @@ export default class QueueFormatter {
 				embed.addField(`\u200B`, `__Queue:__`)
 				queue.forEach((song, i) => {
 					const song_index = `\`${page_offset + i + 1}.\` `
-					const field_format = this.song_format(song)
+					const field_format = this.songFormat(song)
 					embed.addField(song_index + field_format[0], field_format[1])
 				})
 				embed.addField(
@@ -103,7 +103,7 @@ export default class QueueFormatter {
 		}
 	}
 
-	public song_format(song: Song): [string, string] {
+	public songFormat(song: Song): [string, string] {
 		return [
 			`${song.title} - ${song.artiste} | ${new DurationHelper(song.duration).format()}`,
 			`Requested by <@!${song.requester}> | [Open song](${song.url})`

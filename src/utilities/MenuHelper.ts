@@ -17,9 +17,9 @@ export default class MenuHelper {
 				.followUp({
 					embeds: [options.create()]
 				})
-				.catch()
+				.catch(() => {})
 		} else {
-			this.interaction.followUp(options).catch()
+			this.interaction.followUp(options).catch(() => {})
 		}
 	}
 

@@ -59,7 +59,7 @@ module.exports = {
 						)
 						.setFooter(
 							`Requested by @${member.displayName}`,
-							helper.interaction.user.displayAvatarURL()
+							member.user.displayAvatarURL()
 						)
 				]
 			})

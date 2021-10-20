@@ -39,7 +39,7 @@ export default class BotSetupHelper {
 			try {
 				for (const messageFile of this.messageFiles) {
 					if (messageFile.condition(helper)) {
-						message.react("⌛")
+						message.react("⌛").catch(() => {})
 						await messageFile.execute(helper)
 						break
 					}
