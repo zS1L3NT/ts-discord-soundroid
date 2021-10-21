@@ -3,7 +3,7 @@ import { iMessageFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
 module.exports = {
-	condition: helper => helper.matchOnly("\\.queue-loop"),
+	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}queue-loop`),
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!(member.voice.channel instanceof VoiceChannel)) {

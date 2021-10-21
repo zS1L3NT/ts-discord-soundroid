@@ -4,7 +4,7 @@ import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import QueueFormatter from "../utilities/QueueFormatter"
 
 module.exports = {
-	condition: helper => helper.matchOnly("\\.queue"),
+	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}queue`),
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!(member.voice.channel instanceof VoiceChannel)) {

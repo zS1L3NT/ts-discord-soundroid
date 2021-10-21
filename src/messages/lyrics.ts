@@ -4,7 +4,7 @@ import DominantColorGetter from "../utilities/DominantColorGetter"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
 module.exports = {
-	condition: helper => helper.matchMore("\\.lyrics"),
+	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}lyrics`),
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!(member.voice.channel instanceof VoiceChannel)) {

@@ -9,7 +9,7 @@ const thumb = "🔘"
 const track = "▬"
 
 module.exports = {
-	condition: helper => helper.matchOnly("\\.now-playing"),
+	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}now-playing`),
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!(member.voice.channel instanceof VoiceChannel)) {

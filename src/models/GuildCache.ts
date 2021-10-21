@@ -89,4 +89,8 @@ export default class GuildCache {
 		this.document.value.music_message_id = music_message_id
 		await this.ref.update({ music_message_id })
 	}
+
+	public getPrefix() {
+		return this.document.value.prefix
+	}
 }
