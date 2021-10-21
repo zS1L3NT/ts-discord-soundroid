@@ -45,10 +45,13 @@ export default class ApiHelper {
 	public async findYoutubeSong(query: string, requester: string): Promise<Song> {
 		const result = (await this.youtubeMusicApi.search(query, "song")).content[0]
 		let duration = 0
-		try {
-			const info = await ytdl.getBasicInfo(result.videoId)
-			duration = parseInt(info.videoDetails.lengthSeconds) || 0
-		} catch {}
+
+		const query_info = await ytdl.getBasicInfo(query)
+		const result_info = await ytdl.getBasicInfo(result.videoId)
+		duration = parseInt(result_info.videoDetails.lengthSeconds) || 0
+		if (result_info.videoDetails.videoId !== query_info.videoDetails.videoId) {
+			throw new Error()
+		}
 
 		return new Song(
 			result.name,
