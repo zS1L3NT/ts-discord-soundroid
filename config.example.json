@@ -21,6 +21,7 @@
 	},
 	"spotify": {
 		"accessToken": "",
+		"refreshToken": "",
 		"clientId": "",
 		"clientSecret": "",
 		"redirectUri": ""
