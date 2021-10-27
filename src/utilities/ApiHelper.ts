@@ -1,3 +1,4 @@
+import { useTry } from "no-try"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import Song from "../models/Song"
@@ -46,11 +47,19 @@ export default class ApiHelper {
 		const result = (await this.youtubeMusicApi.search(query, "song")).content[0]
 		let duration = 0
 
-		const query_info = await ytdl.getBasicInfo(query)
-		const result_info = await ytdl.getBasicInfo(result.videoId)
-		duration = parseInt(result_info.videoDetails.lengthSeconds) || 0
-		if (result_info.videoDetails.videoId !== query_info.videoDetails.videoId) {
-			throw new Error()
+		const [err] = useTry(() => new URL(query))
+		if (err) {
+			try {
+				const info = await ytdl.getBasicInfo(result.videoId)
+				duration = parseInt(info.videoDetails.lengthSeconds) || 0
+			} catch {}
+		} else {
+			const query_info = await ytdl.getBasicInfo(query)
+			const result_info = await ytdl.getBasicInfo(result.videoId)
+			duration = parseInt(result_info.videoDetails.lengthSeconds) || 0
+			if (result_info.videoDetails.videoId !== query_info.videoDetails.videoId) {
+				throw new Error()
+			}
 		}
 
 		return new Song(
@@ -102,7 +111,9 @@ export default class ApiHelper {
 	public async findSpotifySong(trackId: string, requester: string): Promise<Song> {
 		const refresh_response = (await this.spotifyApi.refreshAccessToken()).body
 		this.spotifyApi.setAccessToken(refresh_response.access_token)
-		this.spotifyApi.setRefreshToken(refresh_response.refresh_token || config.spotify.refreshToken)
+		this.spotifyApi.setRefreshToken(
+			refresh_response.refresh_token || config.spotify.refreshToken
+		)
 
 		const result = (await this.spotifyApi.getTrack(trackId)).body
 		return new Song(
@@ -119,7 +130,10 @@ export default class ApiHelper {
 		const song = (await this.geniusApi.search(query))[0]?.result
 		if (!song) throw new Error("")
 
-		const lyrics = (await this.geniusApi.lyrics(song.id)).slice(1) as { part: string, content: string[] }[]
+		const lyrics = (await this.geniusApi.lyrics(song.id)).slice(1) as {
+			part: string
+			content: string[]
+		}[]
 		const lines: string[] = []
 
 		for (const lyric of lyrics) {

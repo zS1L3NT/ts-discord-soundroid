@@ -24,6 +24,7 @@
 		"firebase-admin": "^9.11.1",
 		"libsodium-wrappers": "^0.7.9",
 		"luxon": "^2.0.2",
+		"no-try": "^3.1.0",
 		"node-fetch": "^3.0.0",
 		"node-genius-api": "^1.2.0",
 		"spotify-web-api-node": "^5.0.2",

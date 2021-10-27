@@ -2500,6 +2500,11 @@ negotiator@0.6.2:
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.2.tgz#feacf7ccf525a77ae9634436a64883ffeca346fb"
   integrity sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==
 
+no-try@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/no-try/-/no-try-3.1.0.tgz#e47d8f34392c0a3d307d4f5f6002bb01d82cd7b9"
+  integrity sha512-4QyjqXvAcbjqEiV5fj8a6ZW/8VWx7SVq0qI2WhbgQ+XgnQ3vMa6zRw99x0pIG6Rgwv1uavlBJq/dP5DNMSzuiw==
+
 node-addon-api@^4.0.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-4.2.0.tgz#117cbb5a959dff0992e1c586ae0393573e4d2a87"

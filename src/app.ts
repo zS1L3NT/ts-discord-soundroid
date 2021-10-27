@@ -11,63 +11,65 @@ import axios from "axios"
 
 const config = require("../config.json")
 
-const PORT = 4296
-const app = express()
+const refresh_spotify = () => {
+	const PORT = 4296
+	const app = express()
 
-app.get("/", async (req, res) => {
-	console.log(`Got Spotify API Authorization token`)
-	const code = req.query.code as string
+	app.get("/", async (req, res) => {
+		console.log(`Got Spotify API Authorization token`)
+		const code = req.query.code as string
 
-	// Get spotify access token from authorization code
-	const spotify_res = await axios.post(
-		"https://accounts.spotify.com/api/token",
-		qs.stringify({
-			grant_type: "authorization_code",
-			code,
-			redirect_uri: "http://localhost:4296"
-		}),
-		{
-			headers: {
-				Authorization:
-					"Basic " +
-					Buffer.from(
-						config.spotify.clientId + ":" + config.spotify.clientSecret
-					).toString("base64"),
-				"Content-Type": "application/x-www-form-urlencoded"
+		// Get spotify access token from authorization code
+		const spotify_res = await axios.post(
+			"https://accounts.spotify.com/api/token",
+			qs.stringify({
+				grant_type: "authorization_code",
+				code,
+				redirect_uri: "http://localhost:4296"
+			}),
+			{
+				headers: {
+					Authorization:
+						"Basic " +
+						Buffer.from(
+							config.spotify.clientId + ":" + config.spotify.clientSecret
+						).toString("base64"),
+					"Content-Type": "application/x-www-form-urlencoded"
+				}
 			}
-		}
-	)
+		)
 
-	// Replace old access token with new access token
-	console.log(`Got Spotify API Access token`)
-	const config_path = path.join(__dirname, "../config.json")
-	const config_data = await fs.readFile(config_path, "utf8")
-	await fs.writeFile(
-		config_path,
-		config_data
-			.replace(config.spotify.accessToken, spotify_res.data.access_token)
-			.replace(config.spotify.refreshToken, spotify_res.data.refresh_token)
-	)
-	console.log(`Replaced Spotify API Access token`)
+		// Replace old access token with new access token
+		console.log(`Got Spotify API Access token`)
+		const config_path = path.join(__dirname, "../config.json")
+		const config_data = await fs.readFile(config_path, "utf8")
+		await fs.writeFile(
+			config_path,
+			config_data
+				.replace(config.spotify.accessToken, spotify_res.data.access_token)
+				.replace(config.spotify.refreshToken, spotify_res.data.refresh_token)
+		)
+		console.log(`Replaced Spotify API Access token`)
 
-	res.send("<script>window.close();</script>")
-	server.close()
+		res.send("<script>window.close();</script>")
+		server.close()
 
-	// Start the bot
-	start_bot()
-})
+		// Start the bot
+		start_bot()
+	})
 
-const server = app.listen(PORT, async () => {
-	console.log(`Server running on port ${PORT}`)
+	const server = app.listen(PORT, async () => {
+		console.log(`Server running on port ${PORT}`)
 
-	// Get spotify authorization code
-	const spotify_url = new URL("https://accounts.spotify.com/authorize")
-	spotify_url.searchParams.append("response_type", "code")
-	spotify_url.searchParams.append("client_id", config.spotify.clientId)
-	spotify_url.searchParams.append("redirect_uri", "http://localhost:4296")
-	spotify_url.searchParams.append("scope", "user-read-private playlist-read-private")
-	await open(spotify_url.href, { wait: true })
-})
+		// Get spotify authorization code
+		const spotify_url = new URL("https://accounts.spotify.com/authorize")
+		spotify_url.searchParams.append("response_type", "code")
+		spotify_url.searchParams.append("client_id", config.spotify.clientId)
+		spotify_url.searchParams.append("redirect_uri", "http://localhost:4296")
+		spotify_url.searchParams.append("scope", "user-read-private playlist-read-private")
+		await open(spotify_url.href, { wait: true })
+	})
+}
 
 const start_bot = () => {
 	// region Initialize bot
@@ -129,3 +131,5 @@ const start_bot = () => {
 		})
 	})
 }
+
+refresh_spotify()
