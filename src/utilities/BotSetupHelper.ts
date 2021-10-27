@@ -54,7 +54,9 @@ export default class BotSetupHelper {
 			const cache = await this.cache.getGuildCache(interaction.guild!)
 
 			if (interaction.isCommand()) {
-				await interaction.deferReply({ ephemeral: true })
+				await interaction
+					.deferReply({ ephemeral: true })
+					.catch(() => console.error("Failed to defer interaction"))
 				const interactionFile = this.interactionFiles.get(interaction.commandName)
 				if (!interactionFile) return
 
@@ -80,7 +82,9 @@ export default class BotSetupHelper {
 			}
 
 			if (interaction.isButton()) {
-				await interaction.deferReply({ ephemeral: true })
+				await interaction
+					.deferReply({ ephemeral: true })
+					.catch(() => console.error("Failed to defer interaction"))
 				const buttonFile = this.buttonFiles.get(interaction.customId)
 				if (!buttonFile) return
 
@@ -94,7 +98,9 @@ export default class BotSetupHelper {
 			}
 
 			if (interaction.isSelectMenu()) {
-				await interaction.deferReply({ ephemeral: true })
+				await interaction
+					.deferReply({ ephemeral: true })
+					.catch(() => console.error("Failed to defer interaction"))
 				const menuFile = this.menuFiles.get(interaction.customId)
 				if (!menuFile) return
 
