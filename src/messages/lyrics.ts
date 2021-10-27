@@ -28,7 +28,7 @@ module.exports = {
 				)
 			}
 
-			const matches = helper.match("\\.lyrics *(.*)")!
+			const matches = helper.match(`\\${helper.cache.getPrefix()}lyrics *(.*)`)!
 			const query = matches[0]
 			const song = queue[0]
 

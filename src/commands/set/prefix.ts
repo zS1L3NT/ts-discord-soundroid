@@ -21,6 +21,12 @@ module.exports = {
 			)
 		}
 
+		if (prefix.length !== 1) {
+			return helper.respond(
+				new EmbedResponse(Emoji.BAD, "Prefix must be only one character long")
+			)
+		}
+
 		await helper.cache.ref.set({ prefix }, { merge: true })
 		helper.respond(new EmbedResponse(Emoji.GOOD, `Prefix changed to \`${prefix}\``))
 	}

@@ -17,7 +17,7 @@ module.exports = {
 			)
 		}
 		
-		const [from_str, , to_str] = helper.match("\\.move *(\\d*) *(\\d*)$")!
+		const [from_str, , to_str] = helper.match(`\\${helper.cache.getPrefix()}move *(\\d*) *(\\d*)$`)!
 		const from = +from_str
 		const to = to_str ? +to_str : null
 

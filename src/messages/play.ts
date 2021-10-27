@@ -21,7 +21,7 @@ module.exports = {
 			)
 		}
 
-		const matches = helper.match("\\.play *(.*)")!
+		const matches = helper.match(`\\${helper.cache.getPrefix()}play *(.*)`)!
 		const query = matches[0]
 
 		try {
