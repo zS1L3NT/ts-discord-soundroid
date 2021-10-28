@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from "@discordjs/builders"
-import { Client, Collection, Guild } from "discord.js"
+import { Client, Collection } from "discord.js"
 import fs from "fs"
 import path from "path"
 import BotCache from "../models/BotCache"
@@ -117,7 +117,7 @@ export default class BotSetupHelper {
 		this.bot.on("guildCreate", async guild => {
 			console.log(`Added to Guild(${guild.name})`)
 			await this.cache.createGuildCache(guild)
-			await this.deploySlashCommands(guild)
+			await new SlashCommandDeployer(guild.id, this.interactionFiles).deploy()
 		})
 
 		this.bot.on("guildDelete", async guild => {
@@ -128,19 +128,6 @@ export default class BotSetupHelper {
 
 	private static isFile(file: string): boolean {
 		return file.endsWith(".ts") || file.endsWith(".js")
-	}
-
-	public async deploySlashCommands(guild: Guild) {
-		const deployer = new SlashCommandDeployer(guild.id)
-		this.interactionFiles.forEach(command => deployer.addCommand(command.data))
-		try {
-			await deployer.deploy()
-		} catch (err) {
-			console.error(
-				// @ts-ignore
-				`Failed to deploy slash commands for Guild(${guild.name}): ${err.message}`
-			)
-		}
 	}
 
 	private setupMessageCommands() {

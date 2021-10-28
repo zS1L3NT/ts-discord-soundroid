@@ -8,6 +8,7 @@ import fs from "fs/promises"
 import GuildCache from "./models/GuildCache"
 import BotSetupHelper from "./utilities/BotSetupHelper"
 import axios from "axios"
+import SlashCommandDeployer from "./utilities/SlashCommandDeployer"
 
 const config = require("../config.json")
 
@@ -106,7 +107,7 @@ const start_bot = () => {
 			}
 
 			try {
-				await botSetupHelper.deploySlashCommands(guild)
+				await new SlashCommandDeployer(guild.id, botSetupHelper.interactionFiles).deploy()
 			} catch (err) {
 				console.error(
 					`${tag} ❌ Couldn't get Slash Command permission for Guild(${guild.name})`
