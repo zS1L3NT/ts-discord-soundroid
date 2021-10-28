@@ -1,4 +1,4 @@
-import { joinVoiceChannel } from "@discordjs/voice"
+import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import { MessageActionRow, MessageEmbed, MessageSelectMenu, VoiceChannel } from "discord.js"
 import MusicService from "../models/MusicService"
 import Song from "../models/Song"
@@ -32,7 +32,7 @@ module.exports = {
 					joinVoiceChannel({
 						channelId: channel.id,
 						guildId: channel.guild.id,
-						adapterCreator: channel.guild.voiceAdapterCreator
+						adapterCreator: channel.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator
 					}),
 					helper.cache
 				)

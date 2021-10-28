@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { joinVoiceChannel } from "@discordjs/voice"
+import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import {
 	GuildMember,
 	MessageActionRow,
@@ -46,7 +46,7 @@ module.exports = {
 					joinVoiceChannel({
 						channelId: channel.id,
 						guildId: channel.guild.id,
-						adapterCreator: channel.guild.voiceAdapterCreator
+						adapterCreator: channel.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator
 					}),
 					helper.cache
 				)
