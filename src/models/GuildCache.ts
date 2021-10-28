@@ -72,6 +72,10 @@ export default class GuildCache {
 		message.edit(await new QueueFormatter(this).getMessagePayload())
 	}
 
+	public setNickname(nickname?: string) {
+		this.guild.me?.setNickname(nickname || "SounDroid Bot")
+	}
+
 	public getMusicChannelId() {
 		return this.document.value.music_channel_id
 	}

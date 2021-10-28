@@ -129,14 +129,19 @@ export default class MusicService {
 	 * Attempts to play a Song from the queue
 	 */
 	private async processQueue(): Promise<void> {
-		// If the queue is locked (already being processed), is empty, or the audio player is already playing something, return
+		// If the queue is locked (already being processed), or the audio player is already playing something, return
 		if (
 			this.queueLock ||
-			this.player.state.status !== AudioPlayerStatus.Idle ||
-			this.queue.length === 0
+			this.player.state.status !== AudioPlayerStatus.Idle
 		) {
 			return
 		}
+
+		// If the queue is empty
+		if (this.queue.length === 0) {
+			return this.cache.setNickname()
+		}
+
 		// Lock the queue to guarantee safe access
 		this.queueLock = true
 		const song = this.queue[0]
@@ -144,6 +149,7 @@ export default class MusicService {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
 			const resource = await song.createAudioResource(this.cache.apiHelper)
 			this.cache.updateMusicChannel()
+			this.cache.setNickname(song.title.slice(0, 32))
 			this.player.play(resource)
 			this.queueLock = false
 		} catch (error) {
