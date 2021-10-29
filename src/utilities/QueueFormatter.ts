@@ -34,7 +34,9 @@ export default class QueueFormatter {
 			if (song) {
 				embed.addField(...this.songFormat(song))
 				embed.setThumbnail(song.cover)
-				embed.setColor(await new DominantColorGetter(song.cover).getColor())
+				try {
+					embed.setColor(await new DominantColorGetter(song.cover).getColor())
+				} catch {}
 			} else {
 				embed.addField(`Not playing anything at the moment`, `\u200B`)
 			}
