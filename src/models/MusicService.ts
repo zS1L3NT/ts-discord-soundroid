@@ -111,6 +111,8 @@ export default class MusicService {
 	}
 
 	public destroy() {
+		this.cache.setNickname()
+		this.cache.updateMusicChannel()
 		delete this.cache.service
 	}
 
