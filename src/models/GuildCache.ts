@@ -80,7 +80,8 @@ export default class GuildCache {
 							"Use `/play <Youtube link, Spotify link, or Search query>` to use me!"
 						)
 						.setColor("#77B255")
-				]
+				],
+				components: []
 			})
 		}
 	}
