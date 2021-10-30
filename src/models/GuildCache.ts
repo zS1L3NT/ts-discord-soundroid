@@ -1,4 +1,4 @@
-import { Client, Guild, Message } from "discord.js"
+import { Client, Guild, Message, MessageEmbed } from "discord.js"
 import ApiHelper from "../utilities/ApiHelper"
 import ChannelCleaner from "../utilities/ChannelCleaner"
 import QueueFormatter from "../utilities/QueueFormatter"
@@ -69,7 +69,20 @@ export default class GuildCache {
 			throw err
 		}
 
-		message.edit(await new QueueFormatter(this).getMessagePayload())
+		if (this.service) {
+			message.edit(await new QueueFormatter(this).getMessagePayload())
+		} else {
+			message.edit({
+				embeds: [
+					new MessageEmbed()
+						.setTitle(`No song currently playing`)
+						.setDescription(
+							"Use `/play <Youtube link, Spotify link, or Search query>` to use me!"
+						)
+						.setColor("#77B255")
+				]
+			})
+		}
 	}
 
 	public setNickname(nickname?: string) {
