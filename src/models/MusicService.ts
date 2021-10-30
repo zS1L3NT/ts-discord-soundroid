@@ -151,7 +151,7 @@ export default class MusicService {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
 			const resource = await song.createAudioResource(this.cache.apiHelper)
 			this.cache.updateMusicChannel()
-			this.cache.setNickname(`${song.title} - ${song.artiste}`.slice(0, 32))
+			this.cache.setNickname(`🎵 ${song.title} - ${song.artiste}`.slice(0, 32))
 			this.player.play(resource)
 			this.queueLock = false
 		} catch (error) {
