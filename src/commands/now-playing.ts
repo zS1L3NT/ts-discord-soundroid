@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
-import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
+import { GuildMember, MessageEmbed } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
@@ -15,11 +15,11 @@ module.exports = {
 		.setDescription("Shows what's currently playing, along with the time"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
-		if (!(member.voice.channel instanceof VoiceChannel)) {
+		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
 				new EmbedResponse(
 					Emoji.BAD,
-					"You have to be in a voice channel to use this command"
+					"You have to be in the same voice channel as me to use this command"
 				)
 			)
 		}

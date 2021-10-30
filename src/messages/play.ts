@@ -32,7 +32,8 @@ module.exports = {
 					joinVoiceChannel({
 						channelId: channel.id,
 						guildId: channel.guild.id,
-						adapterCreator: channel.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator
+						adapterCreator: channel.guild
+							.voiceAdapterCreator as DiscordGatewayAdapterCreator
 					}),
 					helper.cache
 				)
@@ -94,28 +95,31 @@ module.exports = {
 			const emojis: string[] = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 			helper.reactSuccess()
-			helper.respond({
-				embeds: [
-					new MessageEmbed()
-						.setAuthor(
-							`YouTube search results for: "${query}"`,
-							`https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
+			helper.respond(
+				{
+					embeds: [
+						new MessageEmbed()
+							.setAuthor(
+								`YouTube search results for: "${query}"`,
+								`https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
+							)
+							.setColor("#FF0000")
+					],
+					components: [
+						new MessageActionRow().addComponents(
+							new MessageSelectMenu().setCustomId("search-query").addOptions(
+								results.map((result, i) => ({
+									emoji: emojis[i],
+									label: result.title,
+									value: result.url,
+									description: result.artiste
+								}))
+							)
 						)
-						.setColor("#FF0000")
-				],
-				components: [
-					new MessageActionRow().addComponents(
-						new MessageSelectMenu().setCustomId("search-query").addOptions(
-							results.map((result, i) => ({
-								emoji: emojis[i],
-								label: result.title,
-								value: result.url,
-								description: result.artiste
-							}))
-						)
-					)
-				]
-			}, 60_000)
+					]
+				},
+				60_000
+			)
 		}
 	}
 } as iMessageFile

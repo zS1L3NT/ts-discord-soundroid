@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
+import { GuildMember, MessageEmbed } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
@@ -20,11 +20,11 @@ module.exports = {
 		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
-		if (!(member.voice.channel instanceof VoiceChannel)) {
+		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
 				new EmbedResponse(
 					Emoji.BAD,
-					"You have to be in a voice channel to use this command"
+					"You have to be in the same voice channel as me to use this command"
 				)
 			)
 		}

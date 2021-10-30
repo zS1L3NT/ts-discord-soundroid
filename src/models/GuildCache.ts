@@ -1,4 +1,4 @@
-import { Client, Guild, Message, MessageEmbed } from "discord.js"
+import { Client, Guild, GuildMember, Message, MessageEmbed, VoiceChannel } from "discord.js"
 import ApiHelper from "../utilities/ApiHelper"
 import ChannelCleaner from "../utilities/ChannelCleaner"
 import QueueFormatter from "../utilities/QueueFormatter"
@@ -83,6 +83,13 @@ export default class GuildCache {
 				]
 			})
 		}
+	}
+
+	public isMemberInMyVoiceChannel(member: GuildMember): boolean {
+		return (
+			member.voice.channel instanceof VoiceChannel &&
+			member.voice.channel.id === this.guild.me?.voice?.channel?.id
+		)
 	}
 
 	public setNickname(nickname?: string) {

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { GuildMember, VoiceChannel } from "discord.js"
+import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
@@ -9,17 +9,17 @@ module.exports = {
 		.setDescription("Clear all songs in the queue from users that have left the voice channel"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
-		if (!(member.voice.channel instanceof VoiceChannel)) {
+		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
 				new EmbedResponse(
 					Emoji.BAD,
-					"You have to be in a voice channel to use this command"
+					"You have to be in the same voice channel as me to use this command"
 				)
 			)
 		}
 
 		if (helper.cache.service) {
-			const members = member.voice.channel.members
+			const members = member.voice.channel!.members
 			const oldLength = helper.cache.service.queue.length
 			helper.cache.service.queue = helper.cache.service.queue.filter(
 				(song, i) => i === 0 || !!members.get(song.requester)
