@@ -16,8 +16,8 @@ module.exports = {
 			)
 		}
 
-		const [from_str, , to_str] = helper.match(
-			`\\${helper.cache.getPrefix()}remove *(\\d*) *(\\d*)$`
+		const [from_str, to_str] = helper.match(
+			`\\${helper.cache.getPrefix()}remove *(\\S*) *(\\S*)`
 		)!
 		const from = +from_str
 		const to = to_str ? +to_str : null

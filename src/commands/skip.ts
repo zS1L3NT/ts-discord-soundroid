@@ -6,7 +6,13 @@ import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("skip")
-		.setDescription("Skip to the next song in queue"),
+		.setDescription("Skip to the next song in queue")
+		.addIntegerOption(option =>
+			option
+				.setName("count")
+				.setDescription("Number of songs to skip. Defaults to 1")
+				.setRequired(false)
+		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -19,6 +25,12 @@ module.exports = {
 		}
 
 		if (helper.cache.service) {
+			const count = helper.integer("count") || 1
+			if (count < 1) {
+				return helper.respond(new EmbedResponse(Emoji.BAD, "Invalid song count to skip"))
+			}
+
+			helper.cache.service.queue = helper.cache.service.queue.slice(count - 1)
 			helper.cache.service.player.stop()
 			helper.cache.updateMusicChannel()
 			helper.respond(new EmbedResponse(Emoji.GOOD, "Skipped to the next song"))
