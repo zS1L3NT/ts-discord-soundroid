@@ -6,11 +6,11 @@ import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("skip")
-		.setDescription("Skip to the next song in queue")
+		.setDescription("Skip current playing song and songs in queue")
 		.addIntegerOption(option =>
 			option
 				.setName("count")
-				.setDescription("Number of songs to skip. Defaults to 1")
+				.setDescription("Number of songs to skip. Defaults to 1 (only skip current song)")
 				.setRequired(false)
 		),
 	execute: async helper => {
@@ -33,7 +33,13 @@ module.exports = {
 			helper.cache.service.queue = helper.cache.service.queue.slice(count - 1)
 			helper.cache.service.player.stop()
 			helper.cache.updateMusicChannel()
-			helper.respond(new EmbedResponse(Emoji.GOOD, "Skipped to the next song"))
+			helper.respond(
+				new EmbedResponse(
+					Emoji.GOOD,
+					"Skipped the current song" +
+						(count > 1 ? ` and ${count - 1} songs in the queue` : "")
+				)
+			)
 		} else {
 			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
 		}
