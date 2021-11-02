@@ -14,10 +14,7 @@ module.exports = {
 		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
-		if (
-			!member.permissions.has("ADMINISTRATOR") &&
-			member.id !== config.discord.dev_id
-		) {
+		if (!member.permissions.has("ADMINISTRATOR") && member.id !== config.discord.dev_id) {
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, "Only administrators can set bot channels")
 			)

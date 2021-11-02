@@ -25,7 +25,8 @@ module.exports = {
 				joinVoiceChannel({
 					channelId: channel.id,
 					guildId: channel.guild.id,
-					adapterCreator: channel.guild.voiceAdapterCreator as DiscordGatewayAdapterCreator,
+					adapterCreator: channel.guild
+						.voiceAdapterCreator as DiscordGatewayAdapterCreator,
 					selfDeaf: false
 				}),
 				helper.cache

@@ -132,10 +132,7 @@ export default class MusicService {
 	 */
 	private async processQueue(): Promise<void> {
 		// If the queue is locked (already being processed), or the audio player is already playing something, return
-		if (
-			this.queueLock ||
-			this.player.state.status !== AudioPlayerStatus.Idle
-		) {
+		if (this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle) {
 			return
 		}
 
