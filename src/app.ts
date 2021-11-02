@@ -133,4 +133,10 @@ const start_bot = () => {
 	})
 }
 
-refresh_spotify()
+if (process.platform === "win32") {
+	refresh_spotify()
+}
+
+if (process.platform === "linux") {
+	start_bot()
+}
