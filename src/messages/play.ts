@@ -33,7 +33,8 @@ module.exports = {
 						channelId: channel.id,
 						guildId: channel.guild.id,
 						adapterCreator: channel.guild
-							.voiceAdapterCreator as DiscordGatewayAdapterCreator
+							.voiceAdapterCreator as DiscordGatewayAdapterCreator,
+						selfDeaf: false
 					}),
 					helper.cache
 				)
