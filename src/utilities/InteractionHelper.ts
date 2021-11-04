@@ -5,6 +5,7 @@ import EmbedResponse from "./EmbedResponse"
 export default class InteractionHelper {
 	public cache: GuildCache
 	public interaction: CommandInteraction
+	private responded = false
 
 	public constructor(cache: GuildCache, interaction: CommandInteraction) {
 		this.cache = cache
@@ -12,14 +13,27 @@ export default class InteractionHelper {
 	}
 
 	public respond(options: MessagePayload | InteractionReplyOptions | EmbedResponse) {
-		if (options instanceof EmbedResponse) {
-			this.interaction
-				.followUp({
-					embeds: [options.create()]
-				})
-				.catch(() => {})
+		if (this.responded) {
+			if (options instanceof EmbedResponse) {
+				this.interaction
+					.editReply({
+						embeds: [options.create()]
+					})
+					.catch(() => {})
+			} else {
+				this.interaction.editReply(options).catch(() => {})
+			}
 		} else {
-			this.interaction.followUp(options).catch(() => {})
+			if (options instanceof EmbedResponse) {
+				this.interaction
+					.followUp({
+						embeds: [options.create()]
+					})
+					.catch(() => {})
+			} else {
+				this.interaction.followUp(options).catch(() => {})
+			}
+			this.responded = true
 		}
 	}
 
