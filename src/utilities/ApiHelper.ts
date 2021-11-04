@@ -87,8 +87,11 @@ export default class ApiHelper {
 	}
 
 	public async findSpotifyPlaylist(playlistId: string, requester: string): Promise<Song[]> {
-		const accessToken = (await this.spotifyApi.refreshAccessToken()).body.access_token
-		this.spotifyApi.setAccessToken(accessToken)
+		const refresh_response = (await this.spotifyApi.refreshAccessToken()).body
+		this.spotifyApi.setAccessToken(refresh_response.access_token)
+		this.spotifyApi.setRefreshToken(
+			refresh_response.refresh_token || config.spotify.refreshToken
+		)
 
 		const results = (await this.spotifyApi.getPlaylist(playlistId)).body.tracks.items.map(
 			i => i.track
