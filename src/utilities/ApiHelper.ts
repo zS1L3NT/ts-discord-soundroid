@@ -86,37 +86,65 @@ export default class ApiHelper {
 		)
 	}
 
-	public async findSpotifyPlaylist(playlistId: string, requester: string): Promise<Song[]> {
+	public async refreshSpotify() {
 		const refresh_response = (await this.spotifyApi.refreshAccessToken()).body
 		this.spotifyApi.setAccessToken(refresh_response.access_token)
 		this.spotifyApi.setRefreshToken(
 			refresh_response.refresh_token || config.spotify.refreshToken
 		)
+	}
 
-		const results = (await this.spotifyApi.getPlaylist(playlistId)).body.tracks.items.map(
-			i => i.track
-		)
-		return results
-			.filter(result => result !== null)
-			.map(
-				result =>
-					new Song(
-						result.name,
-						result.artists.map(a => a.name).join(", "),
-						result.album.images[0].url,
-						`https://open.spotify.com/track/${result.id}`,
-						Math.floor(result.duration_ms / 1000),
-						requester
+	public async findSpotifyPlaylistLength(playlistId: string) {
+		await this.refreshSpotify()
+		return (await this.spotifyApi.getPlaylist(playlistId)).body.tracks.total
+	}
+
+	public async findSpotifyPlaylist(
+		playlistId: string,
+		start: number,
+		end: number,
+		requester: string
+	) {
+		await this.refreshSpotify()
+
+		const tracks: Song[] = []
+		let left = end - start + 1
+		let offset = start - 1
+
+		while (left > 0) {
+			const limit = left > 100 ? 100 : left
+
+			const results = await this.spotifyApi.getPlaylistTracks(playlistId, { limit, offset })
+			tracks.push(
+				...results.body.items
+					.map(i => i.track)
+					.filter(result => result !== null)
+					.map(
+						result =>
+							new Song(
+								result.name,
+								result.artists.map(a => a.name).join(", "),
+								result.album.images[0].url,
+								`https://open.spotify.com/track/${result.id}`,
+								Math.floor(result.duration_ms / 1000),
+								requester
+							)
 					)
 			)
+
+			if (limit === 100) {
+				left -= 100
+				offset += 100
+			} else {
+				break
+			}
+		}
+
+		return tracks
 	}
 
 	public async findSpotifySong(trackId: string, requester: string): Promise<Song> {
-		const refresh_response = (await this.spotifyApi.refreshAccessToken()).body
-		this.spotifyApi.setAccessToken(refresh_response.access_token)
-		this.spotifyApi.setRefreshToken(
-			refresh_response.refresh_token || config.spotify.refreshToken
-		)
+		await this.refreshSpotify()
 
 		const result = (await this.spotifyApi.getTrack(trackId)).body
 		return new Song(
