@@ -19,10 +19,10 @@ module.exports = {
 		if (helper.cache.service) {
 			const [count_str] = helper.match(`\\${helper.cache.getPrefix()}skip *(\\S*)`)!
 
-			const count = isNaN(+count_str) ? 1 : +count_str
+			const count = isNaN(+count_str) || count_str === "" ? 1 : +count_str
 			if (count < 1) {
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, "Invalid song count to skip"),
+					new EmbedResponse(Emoji.BAD, `Invalid skip count: ${count}`),
 					5000
 				)
 			}

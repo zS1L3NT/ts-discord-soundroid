@@ -27,7 +27,7 @@ module.exports = {
 		if (helper.cache.service) {
 			const count = helper.integer("count") || 1
 			if (count < 1) {
-				return helper.respond(new EmbedResponse(Emoji.BAD, "Invalid song count to skip"))
+				return helper.respond(new EmbedResponse(Emoji.BAD, `Invalid skip count: ${count}`))
 			}
 
 			helper.cache.service.queue = helper.cache.service.queue.slice(count - 1)
