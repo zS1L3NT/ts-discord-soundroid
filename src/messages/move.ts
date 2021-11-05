@@ -18,9 +18,9 @@ module.exports = {
 
 		const [from_str, to_str] = helper.input()!
 		const from = +from_str
-		const to = to_str ? +to_str : null
+		const to = +to_str
 
-		if (isNaN(from) || from_str === "") {
+		if (from_str === undefined || isNaN(from)) {
 			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`),
@@ -28,7 +28,7 @@ module.exports = {
 			)
 		}
 
-		if (to !== null && (isNaN(to) || from_str === "")) {
+		if (to_str !== undefined && (from_str === undefined || isNaN(to))) {
 			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to}`),

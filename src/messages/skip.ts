@@ -19,7 +19,7 @@ module.exports = {
 		if (helper.cache.service) {
 			const [count_str] = helper.input()!
 
-			const count = isNaN(+count_str) || count_str === "" ? 1 : +count_str
+			const count = count_str === undefined ? 1 : isNaN(+count_str) ? 0 : +count_str
 			if (count < 1) {
 				return helper.respond(
 					new EmbedResponse(Emoji.BAD, `Invalid skip count: ${count}`),

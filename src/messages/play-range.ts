@@ -51,22 +51,22 @@ module.exports = {
 
 		const [link, from_str, end_str] = input
 
-		if (isNaN(+from_str) && from_str !== "") {
+		if (from_str === undefined || isNaN(+from_str)) {
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from_str}`),
 				5000
 			)
 		}
 
-		if (isNaN(+end_str) && end_str !== "") {
+		if (end_str === undefined || isNaN(+end_str)) {
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "end" position: ${end_str}`),
 				5000
 			)
 		}
 
-		let from = from_str === "" ? 1 : +from_str
-		let end = end_str === "" ? null : +end_str
+		let from = from_str ? +from_str : 1
+		let end = end_str ? +end_str : null
 
 		const [err, playlistId] = useTry(() => {
 			const linkURI = new URL(link)
