@@ -23,6 +23,16 @@ export default class QueueFormatter {
 	public async getMessagePayload(page: number = 1): Promise<InteractionReplyOptions> {
 		if (this.cache.service) {
 			const embed = new MessageEmbed()
+			const playing_duration = this.cache.service.queue
+				.slice(1)
+				.map(song => song.duration)
+				.reduce((t, d) => t + d, 0)
+			const max_pages = Math.ceil((this.cache.service.queue.length - 1) / 10) || 1
+
+			if (page > max_pages) {
+				page = max_pages
+			}
+
 			const page_offset = (page - 1) * 10
 			const queue = this.cache.service.queue.slice(1).slice(page_offset, page_offset + 10)
 
@@ -40,12 +50,6 @@ export default class QueueFormatter {
 			} else {
 				embed.addField(`Not playing anything at the moment`, `\u200B`)
 			}
-
-			const playing_duration = this.cache.service.queue
-				.slice(1)
-				.map(song => song.duration)
-				.reduce((t, d) => t + d, 0)
-			const max_pages = Math.ceil((this.cache.service.queue.length - 1) / 10) || 1
 
 			if (queue.length > 0) {
 				embed.addField(`\u200B`, `__Queue:__`)
@@ -77,15 +81,10 @@ export default class QueueFormatter {
 				components: [
 					new MessageActionRow().addComponents([
 						new MessageButton()
-							.setCustomId("queue-previous-page")
+							.setCustomId("queue-select-menu")
 							.setStyle("PRIMARY")
-							.setLabel("Previous page")
-							.setDisabled(page === 1),
-						new MessageButton()
-							.setCustomId("queue-next-page")
-							.setStyle("PRIMARY")
-							.setLabel("Next page")
-							.setDisabled(page === max_pages),
+							.setLabel("Choose page")
+							.setDisabled(max_pages === 1),
 						new MessageButton()
 							.setCustomId("refresh")
 							.setStyle("SUCCESS")

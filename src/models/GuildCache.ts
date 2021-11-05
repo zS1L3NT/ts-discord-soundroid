@@ -1,4 +1,5 @@
 import { Client, Guild, GuildMember, Message, MessageEmbed, VoiceChannel } from "discord.js"
+import { useTry, useTryAsync } from "no-try"
 import ApiHelper from "../utilities/ApiHelper"
 import ChannelCleaner from "../utilities/ChannelCleaner"
 import QueueFormatter from "../utilities/QueueFormatter"
@@ -48,29 +49,38 @@ export default class GuildCache {
 		const musicChannelId = this.getMusicChannelId()
 		if (!musicChannelId) return
 
-		let message: Message
-
-		try {
+		const [message_err, message] = await useTryAsync(async () => {
 			const musicMessageId = this.getMusicMessageId()
 			const cleaner = new ChannelCleaner(this, musicChannelId, [musicMessageId])
 			await cleaner.clean()
 
 			const [newMusicMessageId] = cleaner.getMessageIds()
-			message = cleaner.getMessages().get(newMusicMessageId)!
+			const message = cleaner.getMessages().get(newMusicMessageId)!
 			if (newMusicMessageId !== musicMessageId) {
 				this.setMusicMessageId(newMusicMessageId)
 			}
-		} catch (err) {
-			if ((err as Error).message === "no-channel") {
+
+			return message
+		})
+
+		if (message_err) {
+			if (message_err.message === "no-channel") {
 				console.warn(`Guild(${this.guild.name}) has no Channel(${musicChannelId})`)
 				await this.setMusicChannelId("")
 				return
 			}
-			throw err
+			throw message_err
 		}
 
+		const [page_err, page] = useTry(() => {
+			const embed = message.embeds[0]
+			const pageInfo = embed.fields.find(field => field.name === `Page`)!.value
+			const [page_str] = pageInfo.split("/")
+			return +page_str
+		})
+
 		if (this.service) {
-			message.edit(await new QueueFormatter(this).getMessagePayload())
+			message.edit(await new QueueFormatter(this).getMessagePayload(page_err ? 1 : page))
 		} else {
 			message.edit({
 				embeds: [
