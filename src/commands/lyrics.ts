@@ -40,7 +40,7 @@ module.exports = {
 			const query = helper.string("query")
 			const song = queue[0]
 
-			let lyrics: string[]
+			let lyrics: string
 			try {
 				lyrics = await helper.cache.apiHelper.findGeniusLyrics(
 					query || `${song.title} ${song.artiste}`
@@ -71,7 +71,7 @@ module.exports = {
 						.setTitle(`${song.title} - ${song.artiste}`)
 						.setColor(await new DominantColorGetter(song.cover).getColor())
 						.setThumbnail(song.cover)
-						.setDescription(lyrics.join("\n"))
+						.setDescription(lyrics)
 						.setFooter(
 							`Requested by @${member.displayName}`,
 							member.user.displayAvatarURL()

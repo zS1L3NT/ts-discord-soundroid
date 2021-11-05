@@ -157,7 +157,7 @@ export default class ApiHelper {
 		)
 	}
 
-	public async findGeniusLyrics(query: string): Promise<string[]> {
+	public async findGeniusLyrics(query: string): Promise<string> {
 		const song = (await this.geniusApi.search(query))[0]?.result
 		if (!song) throw new Error("")
 
@@ -172,6 +172,7 @@ export default class ApiHelper {
 			lines.push(...lyric.content)
 		}
 
-		return lines.slice(1)
+		const lyrics_str = lines.slice(1).join("\n")
+		return lyrics_str.slice(0, 6000)
 	}
 }
