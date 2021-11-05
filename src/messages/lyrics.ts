@@ -28,8 +28,7 @@ module.exports = {
 				)
 			}
 
-			const matches = helper.match(`\\${helper.cache.getPrefix()}lyrics *(.*)`)!
-			const query = matches[0]
+			const query = helper.input()!.join(" ")
 			const song = queue[0]
 
 			let lyrics: string[]

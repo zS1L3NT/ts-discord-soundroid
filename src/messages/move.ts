@@ -16,13 +16,11 @@ module.exports = {
 			)
 		}
 
-		const [from_str, to_str] = helper.match(
-			`\\${helper.cache.getPrefix()}move *(\\S*) *(\\S*)`
-		)!
+		const [from_str, to_str] = helper.input()!
 		const from = +from_str
 		const to = to_str ? +to_str : null
 
-		if (isNaN(from)) {
+		if (isNaN(from) || from_str === "") {
 			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`),
@@ -30,7 +28,7 @@ module.exports = {
 			)
 		}
 
-		if (to !== null && isNaN(to)) {
+		if (to !== null && (isNaN(to) || from_str === "")) {
 			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to}`),

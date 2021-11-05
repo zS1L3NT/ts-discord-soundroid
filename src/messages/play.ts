@@ -21,8 +21,7 @@ module.exports = {
 			)
 		}
 
-		const matches = helper.match(`\\${helper.cache.getPrefix()}play *(.*)`)!
-		const query = matches[0]
+		const query = helper.input()!.join(" ")
 
 		try {
 			const urlObject = new URL(query)

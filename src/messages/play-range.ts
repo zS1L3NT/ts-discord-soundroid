@@ -33,11 +33,8 @@ module.exports = {
 			)
 		}
 
-		const playRangeMatch = helper.match(
-			`\\${helper.cache.getPrefix()}play-range *(\\S*) *(\\S*) *(\\S*) *$`
-		)
-
-		if (!playRangeMatch) {
+		const input = helper.input()!
+		if (!input.length) {
 			return helper.respond(
 				new EmbedResponse(
 					Emoji.BAD,
@@ -52,7 +49,7 @@ module.exports = {
 			)
 		}
 
-		const [link, from_str, end_str] = playRangeMatch
+		const [link, from_str, end_str] = input
 
 		if (isNaN(+from_str) && from_str !== "") {
 			return helper.respond(

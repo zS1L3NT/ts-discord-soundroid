@@ -17,7 +17,7 @@ module.exports = {
 		}
 
 		if (helper.cache.service) {
-			const [count_str] = helper.match(`\\${helper.cache.getPrefix()}skip *(\\S*)`)!
+			const [count_str] = helper.input()!
 
 			const count = isNaN(+count_str) || count_str === "" ? 1 : +count_str
 			if (count < 1) {
