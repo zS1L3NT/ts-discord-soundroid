@@ -65,7 +65,7 @@ module.exports = {
 				}
 			}
 
-			helper.interaction.channel!.send({
+			helper.respond({
 				embeds: [
 					new MessageEmbed()
 						.setTitle(`${song.title} - ${song.artiste}`)

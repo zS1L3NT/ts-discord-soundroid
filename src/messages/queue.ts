@@ -18,7 +18,7 @@ module.exports = {
 		}
 
 		helper.reactSuccess()
-		helper.message.channel!.send(
+		helper.respond(
 			await new QueueFormatter(helper.cache, member).getMessagePayload()
 		)
 	}

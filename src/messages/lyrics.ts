@@ -60,7 +60,7 @@ module.exports = {
 			}
 
 			helper.reactSuccess()
-			helper.message.channel!.send({
+			helper.respond({
 				embeds: [
 					new MessageEmbed()
 						.setTitle(`${song.title} - ${song.artiste}`)

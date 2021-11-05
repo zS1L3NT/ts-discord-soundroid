@@ -47,7 +47,10 @@ export default class MessageHelper {
 		this.message.react("❌").catch(() => {})
 	}
 
-	public respond(options: MessagePayload | InteractionReplyOptions | EmbedResponse, ms: number) {
+	public respond(
+		options: MessagePayload | InteractionReplyOptions | EmbedResponse,
+		ms?: number
+	) {
 		let message: Promise<Message>
 
 		if (options instanceof EmbedResponse) {
@@ -60,8 +63,10 @@ export default class MessageHelper {
 
 		message
 			.then(async temporary => {
-				await time(ms)
-				await temporary.delete().catch(() => {})
+				if (ms) {
+					await time(ms)
+					await temporary.delete().catch(() => {})
+				}
 			})
 			.catch(() => {})
 	}
