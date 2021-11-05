@@ -21,7 +21,6 @@ export default class DominantColorGetter {
 
 			return `#${rs + gs + bs}`
 		} catch (err) {
-			console.error(err)
 			return "#FFFFFF"
 		}
 	}
