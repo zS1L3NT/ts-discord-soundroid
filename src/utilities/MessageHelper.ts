@@ -26,6 +26,13 @@ export default class MessageHelper {
 		return !!this.match(`^${command}(?:(?= *)(?!\\w+))`)
 	}
 
+	public input() {
+		return this.match(`^\\S* *(.*)`)?.[0]
+			?.replaceAll("  ", " ")
+			?.split(" ")
+			?.filter(i => i !== "")
+	}
+
 	public clearAfter(ms: number) {
 		setTimeout(() => {
 			this.message.delete().catch(() => {})
