@@ -117,6 +117,7 @@ const start_bot = () => {
 			}
 
 			cache.updateMinutely(debugCount)
+			guild.me?.setNickname("SounDroid Bot")
 
 			console.log(`${tag} ✅ Restored cache for Guild(${guild.name})`)
 		}
