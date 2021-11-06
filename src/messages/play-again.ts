@@ -27,7 +27,7 @@ module.exports = {
 
 			const [count_str] = helper.input()!
 
-			const count = count_str === undefined ? 1 : isNaN(+count_str) ? 0 : +count_str
+			const count = helper.getNumber(count_str, 1, 0)
 			if (count < 1) {
 				return helper.respond(
 					new EmbedResponse(Emoji.BAD, `Invalid play count: ${count}`),

@@ -17,10 +17,9 @@ module.exports = {
 		}
 
 		const [from_str, to_str] = helper.input()!
-		const from = +from_str
-		const to = +to_str
 
-		if (from_str === undefined || isNaN(from)) {
+		const from = helper.getNumber(from_str, 0, 0)
+		if (from < 1) {
 			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`),
@@ -28,7 +27,8 @@ module.exports = {
 			)
 		}
 
-		if (to_str !== undefined && (from_str === undefined || isNaN(to))) {
+		const to = helper.getNumber(to_str, null, 0)
+		if (to && to < 1) {
 			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to}`),
@@ -40,7 +40,7 @@ module.exports = {
 			const queue = helper.cache.service.queue
 			const song = queue[from]
 
-			if (from < 1 || from >= queue.length) {
+			if (from >= queue.length) {
 				helper.reactFailure()
 				return helper.respond(
 					new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`),
@@ -48,7 +48,7 @@ module.exports = {
 				)
 			}
 
-			if (to && (to < 1 || to > queue.length)) {
+			if (to && to > queue.length) {
 				helper.reactFailure()
 				return helper.respond(
 					new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to}`),

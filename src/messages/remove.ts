@@ -17,10 +17,9 @@ module.exports = {
 		}
 
 		const [from_str, to_str] = helper.input()!
-		const from = +from_str
-		const to = +to_str
 
-		if (from_str === undefined || isNaN(from)) {
+		const from = helper.getNumber(from_str, 0, 0)
+		if (from < 1) {
 			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`),
@@ -28,7 +27,8 @@ module.exports = {
 			)
 		}
 
-		if (to_str !== undefined && (from_str === undefined || isNaN(to))) {
+		const to = helper.getNumber(to_str, null, 0)
+		if (to && to < 1) {
 			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to}`),
@@ -37,7 +37,7 @@ module.exports = {
 		}
 
 		if (helper.cache.service) {
-			if (from < 1 || from >= helper.cache.service.queue.length) {
+			if (from >= helper.cache.service.queue.length) {
 				helper.reactFailure()
 				helper.respond(
 					new EmbedResponse(Emoji.BAD, "No such starting position in the queue"),

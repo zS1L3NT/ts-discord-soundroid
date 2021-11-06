@@ -33,6 +33,10 @@ export default class MessageHelper {
 			?.filter(i => i !== "")
 	}
 
+	public getNumber<T, U>(string: string | undefined, not_defined: T, nan: U) {
+		return string === undefined ? not_defined : isNaN(+string) ? nan : +string
+	}
+
 	public clearAfter(ms: number) {
 		setTimeout(() => {
 			this.message.delete().catch(() => {})

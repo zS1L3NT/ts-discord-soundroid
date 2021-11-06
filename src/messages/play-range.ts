@@ -42,31 +42,30 @@ module.exports = {
 						"The command .play-range takes 3 parameters",
 						"1) A Spotify playlist link (required)",
 						"2) A start position (optional, first song of the playlist by default)",
-						"3) An end position (optional,last song of the playlist by default)"
+						"3) An end position (optional, last song of the playlist by default)"
 					].join("\n")
 				),
 				10_000
 			)
 		}
 
-		const [link, from_str, end_str] = input
+		const [link, from_str, to_str] = input
 
-		if (from_str === undefined || isNaN(+from_str)) {
+		const from = helper.getNumber(from_str, 1, 0)
+		if (from < 1) {
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from_str}`),
 				5000
 			)
 		}
 
-		if (end_str === undefined || isNaN(+end_str)) {
+		let to = helper.getNumber(to_str, null, 0)
+		if (to && to < 1) {
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, `Invalid "end" position: ${end_str}`),
+				new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to_str}`),
 				5000
 			)
 		}
-
-		let from = from_str ? +from_str : 1
-		let end = end_str ? +end_str : null
 
 		const [err, playlistId] = useTry(() => {
 			const linkURI = new URL(link)
@@ -85,25 +84,18 @@ module.exports = {
 			)
 		}
 
-		if (from < 1) {
-			return helper.respond(
-				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`),
-				5000
-			)
-		}
-
-		if (end) {
-			if (from > end) {
+		if (to) {
+			if (from > to) {
 				return helper.respond(
 					new EmbedResponse(
 						Emoji.BAD,
-						`Invalid "from" and "end" positions: ${from} and ${end}`
+						`Invalid "from" and "to" positions: ${from} and ${to}`
 					),
 					5000
 				)
 			}
 
-			if (end - from > 1000) {
+			if (to - from > 1000) {
 				return helper.respond(
 					new EmbedResponse(
 						Emoji.BAD,
@@ -115,29 +107,29 @@ module.exports = {
 		}
 
 		const length = await helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
-		if (end && end > length) {
+		if (to && to > length) {
 			return helper.respond(
 				new EmbedResponse(
 					Emoji.BAD,
-					`Invalid "end" position: Playlist only has ${length} songs`
+					`Invalid "to" position: Playlist only has ${length} songs`
 				),
 				5000
 			)
 		}
 
-		if (!end) {
-			end = length
+		if (!to) {
+			to = length
 		}
 
 		helper.respond(
-			new EmbedResponse(Emoji.GOOD, `Adding songs from #${from} to #${end}...`),
+			new EmbedResponse(Emoji.GOOD, `Adding songs from #${from} to #${to}...`),
 			5000
 		)
 
 		const songs = await helper.cache.apiHelper.findSpotifyPlaylist(
 			playlistId,
 			from,
-			end,
+			to,
 			member.id
 		)
 
