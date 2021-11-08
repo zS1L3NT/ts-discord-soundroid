@@ -112,6 +112,7 @@ export default class MusicService {
 			let icon = ""
 			switch (newState.status) {
 				case AudioPlayerStatus.Buffering:
+				case AudioPlayerStatus.Idle:
 					icon = "🕑"
 					break
 				case AudioPlayerStatus.Paused:
