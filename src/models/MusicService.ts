@@ -98,7 +98,10 @@ export default class MusicService {
 				oldState.status !== AudioPlayerStatus.Idle
 			) {
 				if (this.queue_loop) {
-					this.queue.push(this.queue.shift()!)
+					const current = this.queue.shift()
+					if (current) {
+						this.queue.push(current)
+					}
 				} else if (this.loop) {
 				} else {
 					this.queue.shift()
@@ -151,14 +154,9 @@ export default class MusicService {
 	 * Attempts to play a Song from the queue
 	 */
 	private async processQueue(): Promise<void> {
-		// If the queue is locked (already being processed), or the audio player is already playing something, return
-		if (this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle) {
+		// If the queue is empty, locked (already being processed), or the audio player is already playing something, return
+		if (this.queue.length === 0 || this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle) {
 			return
-		}
-
-		// If the queue is empty
-		if (this.queue.length === 0) {
-			return this.cache.setNickname()
 		}
 
 		// Lock the queue to guarantee safe access
