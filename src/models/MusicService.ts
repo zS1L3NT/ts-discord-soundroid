@@ -105,6 +105,26 @@ export default class MusicService {
 				}
 				void this.processQueue()
 			}
+
+			let icon = ""
+			switch (newState.status) {
+				case AudioPlayerStatus.Buffering:
+					icon = "🕑"
+					break
+				case AudioPlayerStatus.Paused:
+					icon = "⏸️"
+					break
+				case AudioPlayerStatus.Playing:
+					icon = "🎵"
+					break
+			}
+
+			const current = this.queue.at(0)
+			if (current) {
+				this.cache.setNickname(`${icon} ${current.title} - ${current.artiste}`.slice(0, 32))
+			} else {
+				this.cache.setNickname(`SounDroid Bot`)
+			}			
 		})
 
 		this.connection.subscribe(this.player)
@@ -148,7 +168,6 @@ export default class MusicService {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
 			const resource = await song.createAudioResource(this.cache.apiHelper)
 			this.cache.updateMusicChannel()
-			this.cache.setNickname(`🎵 ${song.title} - ${song.artiste}`.slice(0, 32))
 			this.player.play(resource)
 			this.queueLock = false
 		} catch (error) {
