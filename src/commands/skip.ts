@@ -30,7 +30,21 @@ module.exports = {
 				return helper.respond(new EmbedResponse(Emoji.BAD, `Invalid skip count: ${count}`))
 			}
 
-			helper.cache.service.queue = helper.cache.service.queue.slice(count - 1)
+			const queue = [...helper.cache.service.queue]
+			if (count >= queue.length) {
+				return helper.respond(
+					new EmbedResponse(
+						Emoji.BAD,
+						`The queue only has ${queue.length} songs, cannot skip ${count} songs`
+					)
+				)
+			}
+
+			helper.cache.service.queue = queue.slice(count - 1)
+			if (helper.cache.service.queue_loop) {
+				helper.cache.service.queue.push(...queue.slice(0, count - 1))
+			}
+
 			helper.cache.service.player.stop()
 			helper.cache.updateMusicChannel()
 			helper.respond(
