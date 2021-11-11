@@ -63,7 +63,7 @@ module.exports = {
 						helper.respond(new EmbedResponse(Emoji.BAD, "Playlist is empty"), 5000)
 					}
 				} catch (err) {
-					console.error(err)
+					console.error(`[PLAY]:`, err)
 					helper.reactFailure()
 					helper.respond(
 						new EmbedResponse(Emoji.BAD, "Error playing playlist from url"),
@@ -84,7 +84,7 @@ module.exports = {
 						5000
 					)
 				} catch (err) {
-					console.error(err)
+					console.error(`[PLAY]:`, err)
 					helper.reactFailure()
 					helper.respond(
 						new EmbedResponse(Emoji.BAD, "Error playing song from url"),

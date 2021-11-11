@@ -62,15 +62,11 @@ export default class Song {
 				{ stdio: ["ignore", "pipe", "ignore"] }
 			)
 			if (!process.stdout) {
+				console.error(`[SOURCE>STDOUT]: No stduout from source`)
 				reject(new Error("No stdout"))
 				return
 			}
 			const stream = process.stdout
-			const onError = (error: Error) => {
-				if (!process.killed) process.kill()
-				stream.resume()
-				reject(error)
-			}
 			process
 				.once("spawn", () => {
 					demuxProbe(stream)
@@ -82,9 +78,19 @@ export default class Song {
 								})
 							)
 						)
-						.catch(onError)
+						.catch(err => {
+							console.error(`[SOURCE>DEMUXPROBE]:`, err)
+							if (!process.killed) process.kill()
+							stream.resume()
+							reject(err)
+						})
 				})
-				.catch(onError)
+				.catch(err => {
+					console.error(`[SOURCE>PROCESS]:`, err)
+					if (!process.killed) process.kill()
+					stream.resume()
+					reject(err)
+				})
 		})
 	}
 }

@@ -75,7 +75,7 @@ module.exports = {
 						helper.respond(new EmbedResponse(Emoji.BAD, "Playlist is empty"))
 					}
 				} catch (err) {
-					console.error(err)
+					console.error(`[PLAY]:`, err)
 					helper.respond(new EmbedResponse(Emoji.BAD, "Error playing playlist from url"))
 				}
 			} else {
@@ -87,7 +87,7 @@ module.exports = {
 						new EmbedResponse(Emoji.GOOD, `Enqueued: "${song.title} - ${song.artiste}"`)
 					)
 				} catch (err) {
-					console.error(err)
+					console.error(`[PLAY]:`, err)
 					helper.respond(new EmbedResponse(Emoji.BAD, "Error playing song from url"))
 				}
 			}

@@ -46,6 +46,7 @@ export default class MusicService {
 						await entersState(this.connection, VoiceConnectionStatus.Connecting, 5_000)
 						// Probably moved voice channel
 					} catch {
+						console.warn("[CONNECTION]: Bot didn't enter connecting state")
 						this.connection.destroy()
 						this.destroy()
 						// Probably removed from voice channel
@@ -54,12 +55,14 @@ export default class MusicService {
 					/*
 						The disconnect in this case is recoverable, and we also have <5 repeated attempts so we will reconnect.
 					*/
+					console.warn(`[CONNECTION]: Reconnecting, attempt ${this.connection.rejoinAttempts + 1}`)
 					await time((this.connection.rejoinAttempts + 1) * 5_000)
 					this.connection.rejoin()
 				} else {
 					/*
 						The disconnect in this case may be recoverable, but we have no more remaining attempts - destroy.
 					*/
+					console.warn("[CONNECTION]: Disconnected after 5 attempts")
 					this.connection.destroy()
 					this.destroy()
 				}
@@ -171,6 +174,7 @@ export default class MusicService {
 			this.queueLock = false
 		} catch (error) {
 			// If an error occurred, try the next item of the queue instead
+			console.warn("[SONG]:", error)
 			this.queueLock = false
 			return this.processQueue()
 		}
