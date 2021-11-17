@@ -7,6 +7,7 @@ import {
 	VoiceConnectionDisconnectReason,
 	VoiceConnectionStatus
 } from "@discordjs/voice"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import GuildCache from "./GuildCache"
 import Song from "./Song"
 
@@ -43,7 +44,7 @@ export default class MusicService {
 						the voice connection.
 					*/
 					try {
-						await entersState(this.connection, VoiceConnectionStatus.Connecting, 5_000)
+						await entersState(this.connection, VoiceConnectionStatus.Connecting, 15_000)
 						// Probably moved voice channel
 					} catch {
 						console.warn("[CONNECTION]: Bot didn't enter connecting state")
@@ -55,7 +56,9 @@ export default class MusicService {
 					/*
 						The disconnect in this case is recoverable, and we also have <5 repeated attempts so we will reconnect.
 					*/
-					console.warn(`[CONNECTION]: Reconnecting, attempt ${this.connection.rejoinAttempts + 1}`)
+					console.warn(
+						`[CONNECTION]: Reconnecting, attempt ${this.connection.rejoinAttempts + 1}`
+					)
 					await time((this.connection.rejoinAttempts + 1) * 5_000)
 					this.connection.rejoin()
 				} else {
@@ -131,7 +134,7 @@ export default class MusicService {
 				this.cache.setNickname(`${icon} ${current.title} - ${current.artiste}`.slice(0, 32))
 			} else {
 				this.cache.setNickname(`SounDroid Bot`)
-			}			
+			}
 		})
 
 		this.connection.subscribe(this.player)
@@ -159,7 +162,11 @@ export default class MusicService {
 	 */
 	private async processQueue(): Promise<void> {
 		// If the queue is empty, locked (already being processed), or the audio player is already playing something, return
-		if (this.queue.length === 0 || this.queueLock || this.player.state.status !== AudioPlayerStatus.Idle) {
+		if (
+			this.queue.length === 0 ||
+			this.queueLock ||
+			this.player.state.status !== AudioPlayerStatus.Idle
+		) {
 			return
 		}
 
@@ -174,8 +181,21 @@ export default class MusicService {
 			this.queueLock = false
 		} catch (error) {
 			// If an error occurred, try the next item of the queue instead
-			console.warn("[SONG]:", error)
 			this.queueLock = false
+
+			if ((error as Error).message === "[SOURCE>PROCESS]: Premature close") {
+				this.cache.guild.systemChannel?.send({
+					embeds: [
+						new EmbedResponse(
+							Emoji.BAD,
+							"Premature close of music stream. Retrying..."
+						).create()
+					]
+				})
+			} else {
+				console.error(error)
+			}
+
 			return this.processQueue()
 		}
 	}

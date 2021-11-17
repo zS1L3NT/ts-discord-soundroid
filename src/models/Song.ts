@@ -62,8 +62,7 @@ export default class Song {
 				{ stdio: ["ignore", "pipe", "ignore"] }
 			)
 			if (!process.stdout) {
-				console.error(`[SOURCE>STDOUT]: No stduout from source`)
-				reject(new Error("No stdout"))
+				reject(new Error("[SOURCE>STDOUT]: No stduout from source"))
 				return
 			}
 			const stream = process.stdout
@@ -79,14 +78,14 @@ export default class Song {
 							)
 						)
 						.catch(err => {
-							console.error(`[SOURCE>DEMUXPROBE]:`, err)
+							err.message = `[SOURCE>DEMUXPROBE]: ` + err.message
 							if (!process.killed) process.kill()
 							stream.resume()
 							reject(err)
 						})
 				})
 				.catch(err => {
-					console.error(`[SOURCE>PROCESS]:`, err)
+					err.message = `[SOURCE>PROCESS]: ` + err.message
 					if (!process.killed) process.kill()
 					stream.resume()
 					reject(err)
