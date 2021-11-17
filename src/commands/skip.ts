@@ -31,7 +31,7 @@ module.exports = {
 			}
 
 			const queue = [...helper.cache.service.queue]
-			if (count >= queue.length) {
+			if (count >= queue.length && count > 1) {
 				return helper.respond(
 					new EmbedResponse(
 						Emoji.BAD,
