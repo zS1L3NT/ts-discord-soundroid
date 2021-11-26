@@ -1,4 +1,5 @@
 import { MessageEmbed } from "discord.js"
+import { useTryAsync } from "no-try"
 import { iMessageFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
@@ -31,12 +32,13 @@ module.exports = {
 			const query = helper.input()!.join(" ")
 			const song = queue[0]
 
-			let lyrics: string
-			try {
-				lyrics = await helper.cache.apiHelper.findGeniusLyrics(
+			const [err, lyrics] = await useTryAsync(() => {
+				return helper.cache.apiHelper.findGeniusLyrics(
 					query || `${song.title} ${song.artiste}`
 				)
-			} catch {
+			})
+
+			if (err) {
 				helper.reactFailure()
 				if (query) {
 					return helper.respond(
@@ -63,7 +65,7 @@ module.exports = {
 			helper.respond({
 				embeds: [
 					new MessageEmbed()
-						.setTitle(`${song.title} - ${song.artiste}`)
+						.setTitle(query ? `Query: \`${query}\`` : `${song.title} - ${song.artiste}`)
 						.setColor(await new DominantColorGetter(song.cover).getColor())
 						.setThumbnail(song.cover)
 						.setDescription(lyrics)
