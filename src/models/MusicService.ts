@@ -17,6 +17,7 @@ export default class MusicService {
 	public readonly connection: VoiceConnection
 	public readonly player: AudioPlayer
 	public readonly cache: GuildCache
+	public disconnectTimeout: NodeJS.Timeout | null = null
 	public queue: Song[]
 	public queueLock = false
 	public readyLock = false
@@ -48,7 +49,6 @@ export default class MusicService {
 						// Probably moved voice channel
 					} catch {
 						console.warn("[CONNECTION]: Bot didn't enter connecting state")
-						this.connection.destroy()
 						this.destroy()
 						// Probably removed from voice channel
 					}
@@ -66,7 +66,6 @@ export default class MusicService {
 						The disconnect in this case may be recoverable, but we have no more remaining attempts - destroy.
 					*/
 					console.warn("[CONNECTION]: Disconnected after 5 attempts")
-					this.connection.destroy()
 					this.destroy()
 				}
 			} else if (newState.status === VoiceConnectionStatus.Destroyed) {
@@ -89,7 +88,6 @@ export default class MusicService {
 					await entersState(this.connection, VoiceConnectionStatus.Ready, 20_000)
 				} catch {
 					if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
-						this.connection.destroy()
 						this.destroy()
 					}
 				} finally {
@@ -141,6 +139,9 @@ export default class MusicService {
 	}
 
 	public destroy() {
+		if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
+			this.connection.destroy()
+		}
 		this.cache.setNickname()
 		this.cache.updateMusicChannel()
 		delete this.cache.service
@@ -167,7 +168,20 @@ export default class MusicService {
 			this.queueLock ||
 			this.player.state.status !== AudioPlayerStatus.Idle
 		) {
+			if (this.queue.length === 0) {
+				if (this.disconnectTimeout) {
+					clearTimeout(this.disconnectTimeout)
+				}
+
+				this.disconnectTimeout = setTimeout(() => {
+					this.destroy()
+				}, 15_000)
+			}
 			return
+		}
+
+		if (this.disconnectTimeout) {
+			clearTimeout(this.disconnectTimeout)
 		}
 
 		// Lock the queue to guarantee safe access
@@ -185,7 +199,7 @@ export default class MusicService {
 						]
 					})
 				} else {
-					console.error(handleError)
+					console.error(message)
 				}
 			}
 
