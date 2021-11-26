@@ -7,6 +7,7 @@ module.exports = {
 	execute: async helper => {
 		const member = helper.message.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
+			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(
 					Emoji.BAD,
@@ -19,6 +20,7 @@ module.exports = {
 		if (helper.cache.service) {
 			const song = helper.cache.service.queue.at(0)
 			if (!song) {
+				helper.reactFailure()
 				return helper.respond(
 					new EmbedResponse(Emoji.BAD, "No song playing right now"),
 					5000
@@ -29,6 +31,7 @@ module.exports = {
 
 			const count = helper.getNumber(count_str, 1, 0)
 			if (count < 1) {
+				helper.reactFailure()
 				return helper.respond(
 					new EmbedResponse(Emoji.BAD, `Invalid play count: ${count}`),
 					5000
@@ -36,6 +39,7 @@ module.exports = {
 			}
 
 			if (count > 1000) {
+				helper.reactFailure()
 				return helper.respond(
 					new EmbedResponse(Emoji.BAD, `Play again count cannot exceed 1000`),
 					5000
@@ -44,6 +48,7 @@ module.exports = {
 
 			helper.cache.service.queue.splice(1, 0, ...Array(count).fill(song))
 			helper.cache.updateMusicChannel()
+			helper.reactSuccess()
 			helper.respond(
 				new EmbedResponse(
 					Emoji.GOOD,
@@ -52,6 +57,7 @@ module.exports = {
 				5000
 			)
 		} else {
+			helper.reactFailure()
 			helper.respond(
 				new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"),
 				5000

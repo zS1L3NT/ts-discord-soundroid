@@ -11,6 +11,7 @@ module.exports = {
 		const member = helper.message.member as GuildMember
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
+			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(
 					Emoji.BAD,
@@ -35,6 +36,7 @@ module.exports = {
 
 		const input = helper.input()!
 		if (!input.length) {
+			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(
 					Emoji.BAD,
@@ -53,6 +55,7 @@ module.exports = {
 
 		const from = helper.getNumber(from_str, 1, 0)
 		if (from < 1) {
+			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from_str}`),
 				5000
@@ -61,6 +64,7 @@ module.exports = {
 
 		let to = helper.getNumber(to_str, null, 0)
 		if (to && to < 1) {
+			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to_str}`),
 				5000
@@ -78,6 +82,7 @@ module.exports = {
 		})
 
 		if (err) {
+			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(Emoji.BAD, "Link must me a Spotify playlist link"),
 				5000
@@ -86,6 +91,7 @@ module.exports = {
 
 		if (to) {
 			if (from > to) {
+				helper.reactFailure()
 				return helper.respond(
 					new EmbedResponse(
 						Emoji.BAD,
@@ -96,6 +102,7 @@ module.exports = {
 			}
 
 			if (to - from > 1000) {
+				helper.reactFailure()
 				return helper.respond(
 					new EmbedResponse(
 						Emoji.BAD,
@@ -108,6 +115,7 @@ module.exports = {
 
 		const length = await helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
 		if (to && to > length) {
+			helper.reactFailure()
 			return helper.respond(
 				new EmbedResponse(
 					Emoji.BAD,
@@ -136,6 +144,7 @@ module.exports = {
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)
 		helper.cache.updateMusicChannel()
+		helper.reactSuccess()
 		helper.respond(new EmbedResponse(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`), 5000)
 	}
 } as iMessageFile
