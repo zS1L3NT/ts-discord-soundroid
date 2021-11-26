@@ -188,30 +188,15 @@ export default class MusicService {
 		this.queueLock = true
 		const song = this.queue[0]
 		try {
-			const handleError = (message: string) => {
-				if (message === "[SOURCE>PROCESS]: Premature close") {
-					this.cache.guild.systemChannel?.send({
-						embeds: [
-							new EmbedResponse(
-								Emoji.BAD,
-								"Premature close of music stream. Retrying..."
-							).create()
-						]
-					})
-				} else {
-					console.error(message)
-				}
-			}
-
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
-			const resource = await song.createAudioResource(this.cache.apiHelper, handleError)
+			const resource = await song.createAudioResource(this.cache.apiHelper)
 			this.cache.updateMusicChannel()
 			this.player.play(resource)
 			this.queueLock = false
 		} catch (error) {
 			// If an error occurred, try the next item of the queue instead
 			this.queueLock = false
-
+			console.error("Error playing track:", error)
 			return this.processQueue()
 		}
 	}

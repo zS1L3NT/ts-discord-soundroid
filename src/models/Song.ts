@@ -39,10 +39,7 @@ export default class Song {
 		}
 	}
 
-	public createAudioResource(
-		apiHelper: ApiHelper,
-		onError: (message: string) => void
-	): Promise<AudioResource<Song>> {
+	public createAudioResource(apiHelper: ApiHelper): Promise<AudioResource<Song>> {
 		return new Promise(async (resolve, reject) => {
 			let source = this.url
 			const urlObject = new URL(source)
@@ -66,7 +63,6 @@ export default class Song {
 			)
 			if (!process.stdout) {
 				reject(new Error("[SOURCE>STDOUT]: No stduout from source"))
-				onError("[SOURCE>STDOUT]: No stduout from source")
 				return
 			}
 			const stream = process.stdout
@@ -86,7 +82,7 @@ export default class Song {
 							if (!process.killed) process.kill()
 							stream.resume()
 							reject(err)
-							onError(err.message)
+							console.warn("Source demuxprobe error")
 						})
 				})
 				.catch(err => {
@@ -94,7 +90,6 @@ export default class Song {
 					if (!process.killed) process.kill()
 					stream.resume()
 					reject(err)
-					onError(err.message)
 				})
 		})
 	}
