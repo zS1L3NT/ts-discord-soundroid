@@ -1,10 +1,9 @@
-import { GuildMember, Message } from "discord.js"
-import { iButtonFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import QueueFormatter from "../utilities/QueueFormatter"
+import { GuildMember, Message } from "discord.js"
+import { iButtonFile } from "../utilities/BotSetupHelper"
 
-module.exports = {
-	id: "refresh",
+const file: iButtonFile = {
 	execute: async helper => {
 		const message = helper.interaction.message as Message
 		await message.edit(
@@ -15,4 +14,6 @@ module.exports = {
 		)
 		helper.respond(new EmbedResponse(Emoji.GOOD, "Refreshed queue message"))
 	}
-} as iButtonFile
+}
+
+module.exports = file

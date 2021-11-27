@@ -12,8 +12,8 @@ import Song from "../models/Song"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
-module.exports = {
-	data: new SlashCommandBuilder()
+const file: iInteractionFile = {
+	builder: new SlashCommandBuilder()
 		.setName("play")
 		.setDescription("Play a song from a url or search")
 		.addStringOption(option =>
@@ -119,4 +119,6 @@ module.exports = {
 			})
 		}
 	}
-} as iInteractionFile
+}
+
+module.exports = file

@@ -6,8 +6,8 @@ import MusicService from "../models/MusicService"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
-module.exports = {
-	data: new SlashCommandBuilder()
+const file: iInteractionFile = {
+	builder: new SlashCommandBuilder()
 		.setName("play-range")
 		.setDescription("Play a Spotify playlist from a specific range")
 		.addStringOption(option =>
@@ -132,4 +132,6 @@ module.exports = {
 		helper.cache.updateMusicChannel()
 		helper.respond(new EmbedResponse(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`))
 	}
-} as iInteractionFile
+}
+
+module.exports = file

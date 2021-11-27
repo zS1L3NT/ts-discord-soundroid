@@ -82,7 +82,7 @@ const start_bot = () => {
 		]
 	})
 	const botSetupHelper = new BotSetupHelper(bot)
-	const { cache: botCache } = botSetupHelper
+	const { botCache } = botSetupHelper
 	// endregion
 
 	void bot.login(config.discord.token)

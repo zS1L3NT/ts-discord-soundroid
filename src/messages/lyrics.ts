@@ -1,10 +1,10 @@
-import { MessageEmbed } from "discord.js"
-import { useTryAsync } from "no-try"
-import { iMessageFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { iMessageFile } from "../utilities/BotSetupHelper"
+import { MessageEmbed } from "discord.js"
+import { useTryAsync } from "no-try"
 
-module.exports = {
+const file: iMessageFile = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}lyrics`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -83,4 +83,6 @@ module.exports = {
 			)
 		}
 	}
-} as iMessageFile
+}
+
+module.exports = file

@@ -1,6 +1,6 @@
-import { CommandInteraction, InteractionReplyOptions, MessagePayload } from "discord.js"
-import GuildCache from "../models/GuildCache"
 import EmbedResponse from "./EmbedResponse"
+import GuildCache from "../models/GuildCache"
+import { CommandInteraction, InteractionReplyOptions, MessagePayload } from "discord.js"
 
 export default class InteractionHelper {
 	public cache: GuildCache

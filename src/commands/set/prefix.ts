@@ -1,12 +1,12 @@
-import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionSubcommandFile } from "../../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../../utilities/EmbedResponse"
+import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
 
 const config = require("../../../config.json")
 
-module.exports = {
-	data: new SlashCommandSubcommandBuilder()
+const file: iInteractionSubcommandFile = {
+	builder: new SlashCommandSubcommandBuilder()
 		.setName("prefix")
 		.setDescription("Change the prefix for message commands")
 		.addStringOption(option =>
@@ -30,4 +30,6 @@ module.exports = {
 		await helper.cache.ref.set({ prefix }, { merge: true })
 		helper.respond(new EmbedResponse(Emoji.GOOD, `Prefix changed to \`${prefix}\``))
 	}
-} as iInteractionSubcommandFile
+}
+
+module.exports = file

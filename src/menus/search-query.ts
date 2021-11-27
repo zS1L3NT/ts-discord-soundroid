@@ -1,12 +1,11 @@
-import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { GuildMember, VoiceChannel } from "discord.js"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import MusicService from "../models/MusicService"
 import Song from "../models/Song"
+import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { GuildMember, VoiceChannel } from "discord.js"
 import { iMenuFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
-module.exports = {
-	id: "search-query",
+const file: iMenuFile = {
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel
@@ -44,4 +43,6 @@ module.exports = {
 			helper.respond(new EmbedResponse(Emoji.BAD, "Error playing song from url"))
 		}
 	}
-} as iMenuFile
+}
+
+module.exports = file

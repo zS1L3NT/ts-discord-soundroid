@@ -1,8 +1,8 @@
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iMessageFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
-module.exports = {
+const file: iMessageFile = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}play-again`),
 	execute: async helper => {
 		const member = helper.message.member as GuildMember
@@ -64,4 +64,6 @@ module.exports = {
 			)
 		}
 	}
-} as iMessageFile
+}
+
+module.exports = file

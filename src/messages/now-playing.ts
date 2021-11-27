@@ -1,14 +1,14 @@
-import { AudioPlayerPlayingState, AudioPlayerPausedState } from "@discordjs/voice"
-import { MessageEmbed } from "discord.js"
-import { iMessageFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
+import { iMessageFile } from "../utilities/BotSetupHelper"
+import { MessageEmbed } from "discord.js"
 
 const thumb = "🔘"
 const track = "▬"
 
-module.exports = {
+const file: iMessageFile = {
 	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}now-playing`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -76,4 +76,6 @@ module.exports = {
 			)
 		}
 	}
-} as iMessageFile
+}
+
+module.exports = file

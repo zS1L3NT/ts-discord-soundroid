@@ -3,8 +3,8 @@ import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 
-module.exports = {
-	data: new SlashCommandBuilder()
+const file: iInteractionFile = {
+	builder: new SlashCommandBuilder()
 		.setName("clear-queue")
 		.setDescription("Clear the queue and the current song"),
 	execute: async helper => {
@@ -27,4 +27,6 @@ module.exports = {
 			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
-} as iInteractionFile
+}
+
+module.exports = file

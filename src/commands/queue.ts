@@ -4,8 +4,8 @@ import { iInteractionFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import QueueFormatter from "../utilities/QueueFormatter"
 
-module.exports = {
-	data: new SlashCommandBuilder()
+const file: iInteractionFile = {
+	builder: new SlashCommandBuilder()
 		.setName("queue")
 		.setDescription("Show the queue of songs playing"),
 	execute: async helper => {
@@ -27,4 +27,6 @@ module.exports = {
 		)
 		helper.respond(new EmbedResponse(Emoji.GOOD, "Showing queue"))
 	}
-} as iInteractionFile
+}
+
+module.exports = file

@@ -9,8 +9,8 @@ import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 const thumb = "🔘"
 const track = "▬"
 
-module.exports = {
-	data: new SlashCommandBuilder()
+const file: iInteractionFile = {
+	builder: new SlashCommandBuilder()
 		.setName("now-playing")
 		.setDescription("Shows what's currently playing, along with the time"),
 	execute: async helper => {
@@ -67,4 +67,6 @@ module.exports = {
 			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
-} as iInteractionFile
+}
+
+module.exports = file

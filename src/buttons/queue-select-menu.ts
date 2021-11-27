@@ -1,10 +1,9 @@
-import { Message } from "discord.js"
-import { iButtonFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import PageSelectFormatter from "../utilities/PageSelectFormatter"
+import { iButtonFile } from "../utilities/BotSetupHelper"
+import { Message } from "discord.js"
 
-module.exports = {
-	id: "queue-select-menu",
+const file: iButtonFile = {
 	execute: async helper => {
 		const message = helper.interaction.message as Message
 		const embed = message.embeds[0]
@@ -15,6 +14,10 @@ module.exports = {
 			)
 		}
 
-		helper.respond(new PageSelectFormatter(embed, message.channel.id, message.id).getMessagePayload())
+		helper.respond(
+			new PageSelectFormatter(embed, message.channel.id, message.id).getMessagePayload()
+		)
 	}
-} as iButtonFile
+}
+
+module.exports = file

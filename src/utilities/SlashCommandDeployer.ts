@@ -1,8 +1,8 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { REST } from "@discordjs/rest"
-import { Routes } from "discord-api-types/v9"
 import { Collection } from "discord.js"
 import { iInteractionFile, iInteractionFolder } from "./BotSetupHelper"
+import { REST } from "@discordjs/rest"
+import { Routes } from "discord-api-types/v9"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const config = require("../../config.json")
 
@@ -14,7 +14,7 @@ export default class SlashCommandDeployer {
 		guildId: string,
 		interactionFiles: Collection<string, iInteractionFile | iInteractionFolder>
 	) {
-		this.commands = interactionFiles.map(file => file.data)
+		this.commands = interactionFiles.map(file => file.builder)
 		this.guildId = guildId
 	}
 

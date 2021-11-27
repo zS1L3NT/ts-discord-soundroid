@@ -1,6 +1,6 @@
-import { InteractionReplyOptions, Message, MessagePayload } from "discord.js"
-import GuildCache from "../models/GuildCache"
 import EmbedResponse from "./EmbedResponse"
+import GuildCache from "../models/GuildCache"
+import { InteractionReplyOptions, Message, MessagePayload } from "discord.js"
 
 const time = (ms: number) => new Promise(res => setTimeout(res, ms))
 
@@ -51,10 +51,7 @@ export default class MessageHelper {
 		this.message.react("❌").catch(() => {})
 	}
 
-	public respond(
-		options: MessagePayload | InteractionReplyOptions | EmbedResponse,
-		ms?: number
-	) {
+	public respond(options: MessagePayload | InteractionReplyOptions | EmbedResponse, ms?: number) {
 		let message: Promise<Message>
 
 		if (options instanceof EmbedResponse) {

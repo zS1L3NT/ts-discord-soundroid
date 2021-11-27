@@ -1,5 +1,5 @@
-import { Collection, Message, TextChannel } from "discord.js"
 import GuildCache from "../models/GuildCache"
+import { Collection, Message, TextChannel } from "discord.js"
 
 type iFilter = (message: Message) => boolean
 export default class ChannelCleaner {

@@ -1,12 +1,12 @@
-import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../../utilities/EmbedResponse"
 import { GuildMember, TextChannel } from "discord.js"
 import { iInteractionSubcommandFile } from "../../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../../utilities/EmbedResponse"
+import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
 
 const config = require("../../../config.json")
 
-module.exports = {
-	data: new SlashCommandSubcommandBuilder()
+const file: iInteractionSubcommandFile = {
+	builder: new SlashCommandSubcommandBuilder()
 		.setName("music-channel")
 		.setDescription("Set the channel where the bot sends information of playing songs")
 		.addChannelOption(option =>
@@ -43,4 +43,6 @@ module.exports = {
 			helper.respond(new EmbedResponse(Emoji.BAD, `Please select a text channel`))
 		}
 	}
-} as iInteractionSubcommandFile
+}
+
+module.exports = file

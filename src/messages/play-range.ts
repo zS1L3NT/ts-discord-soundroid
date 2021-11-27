@@ -1,11 +1,11 @@
-import { joinVoiceChannel, DiscordGatewayAdapterCreator } from "@discordjs/voice"
-import { GuildMember, VoiceChannel } from "discord.js"
-import { useTry } from "no-try"
-import MusicService from "../models/MusicService"
-import { iMessageFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import MusicService from "../models/MusicService"
+import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { GuildMember, VoiceChannel } from "discord.js"
+import { iMessageFile } from "../utilities/BotSetupHelper"
+import { useTry } from "no-try"
 
-module.exports = {
+const file: iMessageFile = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}play-range`),
 	execute: async helper => {
 		const member = helper.message.member as GuildMember
@@ -147,4 +147,6 @@ module.exports = {
 		helper.reactSuccess()
 		helper.respond(new EmbedResponse(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`), 5000)
 	}
-} as iMessageFile
+}
+
+module.exports = file

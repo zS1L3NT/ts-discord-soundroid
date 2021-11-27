@@ -1,12 +1,11 @@
-import { GuildMember, Message, TextChannel } from "discord.js"
-import { useTryAsync } from "no-try"
-import { iMenuFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import PageSelectFormatter from "../utilities/PageSelectFormatter"
 import QueueFormatter from "../utilities/QueueFormatter"
+import { GuildMember, Message, TextChannel } from "discord.js"
+import { iMenuFile } from "../utilities/BotSetupHelper"
+import { useTryAsync } from "no-try"
 
-module.exports = {
-	id: "select-page",
+const file: iMenuFile = {
 	execute: async helper => {
 		const [channel_id, message_id, page_str, more_str] = helper.value()!.split("-")
 		const guild = helper.cache.guild
@@ -50,4 +49,6 @@ module.exports = {
 
 		helper.respond(new EmbedResponse(Emoji.GOOD, `Showing page ${page} of the queue`))
 	}
-} as iMenuFile
+}
+
+module.exports = file

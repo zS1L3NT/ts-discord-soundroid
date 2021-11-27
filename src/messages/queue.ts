@@ -1,8 +1,8 @@
-import { iMessageFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import QueueFormatter from "../utilities/QueueFormatter"
+import { iMessageFile } from "../utilities/BotSetupHelper"
 
-module.exports = {
+const file: iMessageFile = {
 	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}queue`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -18,8 +18,8 @@ module.exports = {
 		}
 
 		helper.reactSuccess()
-		helper.respond(
-			await new QueueFormatter(helper.cache, member).getMessagePayload()
-		)
+		helper.respond(await new QueueFormatter(helper.cache, member).getMessagePayload())
 	}
-} as iMessageFile
+}
+
+module.exports = file

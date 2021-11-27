@@ -1,6 +1,6 @@
-import { InteractionReplyOptions, MessagePayload, SelectMenuInteraction } from "discord.js"
-import GuildCache from "../models/GuildCache"
 import EmbedResponse from "./EmbedResponse"
+import GuildCache from "../models/GuildCache"
+import { InteractionReplyOptions, MessagePayload, SelectMenuInteraction } from "discord.js"
 
 export default class MenuHelper {
 	public cache: GuildCache

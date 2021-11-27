@@ -1,7 +1,7 @@
-import { iMessageFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { iMessageFile } from "../utilities/BotSetupHelper"
 
-module.exports = {
+const file: iMessageFile = {
 	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}pause`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -28,4 +28,6 @@ module.exports = {
 			)
 		}
 	}
-} as iMessageFile
+}
+
+module.exports = file

@@ -1,11 +1,11 @@
-import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { MessageActionRow, MessageEmbed, MessageSelectMenu, VoiceChannel } from "discord.js"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import MusicService from "../models/MusicService"
 import Song from "../models/Song"
+import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import { iMessageFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { MessageActionRow, MessageEmbed, MessageSelectMenu, VoiceChannel } from "discord.js"
 
-module.exports = {
+const file: iMessageFile = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}play`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -124,4 +124,6 @@ module.exports = {
 			)
 		}
 	}
-} as iMessageFile
+}
+
+module.exports = file
