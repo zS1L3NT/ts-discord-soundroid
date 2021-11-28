@@ -78,7 +78,9 @@ class HelpBuilder {
 			[
 				"Welcome to SounDroid!",
 				"SounDroid is a Music bot which plays songs from Spotify and YouTube",
-				`My prefix for message commands is \`${this.cache.getPrefix()}\``,
+				this.cache.getPrefix()
+					? `My prefix for message commands is \`${this.cache.getPrefix()}\``
+					: `No message command prefix for this server`,
 				"",
 				"Click the button below to see all available commands",
 				"Use the select menu below to find out more about a specific command"
@@ -110,7 +112,26 @@ class HelpBuilder {
 			: (interactionFiles.get(command) as iInteractionFile).help
 
 		embed.setAuthor(command, this.QUESTION)
-		embed.setDescription(help.description)
+		const description = [help.description]
+
+		if (help.params.length) {
+			description.push("", "__Input Parameters__")
+			for (let i = 0, il = help.params.length; i < il; i++) {
+				const param = help.params[i]
+				const values = [
+					`**(${param.required ? "required" : "optional"})**`,
+					`**About**: _${param.description}_`,
+					`**Type**: ${param.requirements}`
+				]
+				if (param.default) {
+					values.push(`**Default**: \`${param.default}\``)
+				}
+
+				embed.addField(`[${i + 1}]\t__${param.name}__`, values.join("\n"))
+			}
+		}
+
+		embed.setDescription(description.join("\n"))
 
 		return {
 			embeds: [embed],
