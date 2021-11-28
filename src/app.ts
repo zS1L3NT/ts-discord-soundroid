@@ -87,7 +87,15 @@ const start_bot = () => {
 
 	void bot.login(config.discord.token)
 	bot.on("ready", async () => {
-		console.log("Logged in as SounDroid Bot#5566")
+		console.log("Logged in as SounDroid#5566")
+		bot.user!.setPresence({
+			activities: [
+				{
+					name: "/help",
+					type: "LISTENING"
+				}
+			]
+		})
 
 		let debugCount = 0
 
