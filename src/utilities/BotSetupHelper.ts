@@ -66,8 +66,14 @@ export default class BotSetupHelper {
 				const interactionEntity = this.interactionFiles.get(interaction.commandName)
 				if (!interactionEntity) return
 
+				const ephemeral = Object.keys(interactionEntity).includes("ephemeral")
+					? (interactionEntity as iInteractionFile).ephemeral
+					: (interactionEntity as iInteractionFolder).files.get(
+							interaction.options.getSubcommand(true)
+					  )!.ephemeral
+
 				await interaction
-					.deferReply({ ephemeral: true })
+					.deferReply({ ephemeral })
 					.catch(err => console.error("Failed to defer interaction", err))
 
 				const helper = new InteractionHelper(cache, interaction)
@@ -108,7 +114,7 @@ export default class BotSetupHelper {
 
 				if (buttonFile.defer) {
 					await interaction
-						.deferReply({ ephemeral: true })
+						.deferReply({ ephemeral: buttonFile.ephemeral })
 						.catch(() => console.error("Failed to defer interaction"))
 				}
 
@@ -132,7 +138,7 @@ export default class BotSetupHelper {
 
 				if (menuFile.defer) {
 					await interaction
-						.deferReply({ ephemeral: true })
+						.deferReply({ ephemeral: menuFile.ephemeral })
 						.catch(() => console.error("Failed to defer interaction"))
 				}
 
@@ -258,6 +264,7 @@ export interface iInteractionHelp {
 
 export interface iInteractionFile {
 	defer: boolean
+	ephemeral: boolean
 	help: iInteractionHelp
 	builder: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
 	execute: (helper: InteractionHelper) => Promise<any>
@@ -265,6 +272,7 @@ export interface iInteractionFile {
 
 export interface iInteractionSubcommandFile {
 	defer: boolean
+	ephemeral: boolean
 	help: iInteractionHelp
 	builder: SlashCommandSubcommandBuilder
 	execute: (helper: InteractionHelper) => Promise<any>
@@ -277,10 +285,12 @@ export interface iInteractionFolder {
 
 export interface iButtonFile {
 	defer: boolean
+	ephemeral: boolean
 	execute: (helper: ButtonHelper) => Promise<any>
 }
 
 export interface iMenuFile {
 	defer: boolean
+	ephemeral: boolean
 	execute: (helper: MenuHelper) => Promise<any>
 }

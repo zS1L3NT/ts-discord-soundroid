@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
 	defer: false,
+	ephemeral: true,
 	help: {
 		description: "Skips songs in the queue as many times as specified",
 		params: [

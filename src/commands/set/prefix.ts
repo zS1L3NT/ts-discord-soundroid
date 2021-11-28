@@ -7,6 +7,7 @@ const config = require("../../../config.json")
 
 const file: iInteractionSubcommandFile = {
 	defer: true,
+	ephemeral: true,
 	help: {
 		description: "Sets the prefix for message commands in this server",
 		params: [

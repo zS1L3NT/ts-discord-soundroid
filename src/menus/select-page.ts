@@ -7,6 +7,7 @@ import { useTryAsync } from "no-try"
 
 const file: iMenuFile = {
 	defer: false,
+	ephemeral: true,
 	execute: async helper => {
 		const [channel_id, message_id, page_str, more_str] = helper.value()!.split("-")
 		const guild = helper.cache.guild

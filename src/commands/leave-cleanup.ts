@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
 	defer: true,
+	ephemeral: true,
 	help: {
 		description: [
 			"Removes all songs in the queue that were added by users who aren't currently in the voice channel",

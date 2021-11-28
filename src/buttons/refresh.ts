@@ -4,6 +4,7 @@ import { iButtonFile } from "../utilities/BotSetupHelper"
 
 const file: iButtonFile = {
 	defer: false,
+	ephemeral: true,
 	execute: async helper => {
 		await helper.interaction.update(
 			await new QueueBuilder(helper.cache, helper.interaction.member as GuildMember).build()

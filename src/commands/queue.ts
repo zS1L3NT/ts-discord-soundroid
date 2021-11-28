@@ -6,6 +6,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
 	defer: true,
+	ephemeral: true,
 	help: {
 		description: [
 			"Shows a detailed message about all the songs in the queue",

@@ -11,6 +11,7 @@ const track = "▬"
 
 const file: iInteractionFile = {
 	defer: true,
+	ephemeral: true,
 	help: {
 		description:
 			"Shows you the currently playing song with a progressbar showing how far into the song you are",

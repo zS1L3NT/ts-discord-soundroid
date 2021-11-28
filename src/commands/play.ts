@@ -14,6 +14,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
 	defer: true,
+	ephemeral: true,
 	help: {
 		description: [
 			"Play a song with either",

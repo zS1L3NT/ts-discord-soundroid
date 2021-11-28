@@ -4,6 +4,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
 	defer: false,
+	ephemeral: false,
 	help: {
 		description: "Shows you the help menu that you are looking at right now",
 		params: []

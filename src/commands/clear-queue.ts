@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
 	defer: false,
+	ephemeral: true,
 	help: {
 		description: "Clears the entire queue along with the current song",
 		params: []

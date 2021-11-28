@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
 	defer: false,
+	ephemeral: true,
 	help: {
 		description: "Pause the current song",
 		params: []

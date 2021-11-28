@@ -6,6 +6,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
 	defer: true,
+	ephemeral: true,
 	help: {
 		description: "Gives you the lyrics for the current song",
 		params: [

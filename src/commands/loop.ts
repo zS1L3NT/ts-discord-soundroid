@@ -5,6 +5,7 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
 	defer: true,
+	ephemeral: true,
 	help: {
 		description: [
 			"Toggles between looping and unlooping the current song",

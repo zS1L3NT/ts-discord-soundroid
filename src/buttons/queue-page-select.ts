@@ -5,6 +5,7 @@ import { Message } from "discord.js"
 
 const file: iButtonFile = {
 	defer: true,
+	ephemeral: true,
 	execute: async helper => {
 		const message = helper.interaction.message as Message
 		const embed = message.embeds[0]

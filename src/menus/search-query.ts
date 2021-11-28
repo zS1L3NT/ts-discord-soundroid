@@ -7,6 +7,7 @@ import { iMenuFile } from "../utilities/BotSetupHelper"
 
 const file: iMenuFile = {
 	defer: true,
+	ephemeral: true,
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel

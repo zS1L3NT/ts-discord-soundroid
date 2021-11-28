@@ -8,6 +8,7 @@ import { useTry } from "no-try"
 
 const file: iInteractionFile = {
 	defer: true,
+	ephemeral: true,
 	help: {
 		description:
 			"Plays a Spotify playlist, except you can specify which song you want to start playing from",

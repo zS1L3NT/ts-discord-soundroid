@@ -7,6 +7,7 @@ const config = require("../../../config.json")
 
 const file: iInteractionSubcommandFile = {
 	defer: true,
+	ephemeral: true,
 	help: {
 		description: [
 			"Sets the channel which the bot will attatch to and show the current playing song and queue",
