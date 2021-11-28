@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { iMessageFile } from "../utilities/BotSetupHelper"
 
 const file: iMessageFile = {
@@ -8,7 +8,7 @@ const file: iMessageFile = {
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				),
@@ -22,7 +22,7 @@ const file: iMessageFile = {
 			const count = helper.getNumber(count_str, 1, 0)
 			if (count < 1) {
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, `Invalid skip count: ${count}`),
+					new ResponseBuilder(Emoji.BAD, `Invalid skip count: ${count}`),
 					5000
 				)
 			}
@@ -30,7 +30,7 @@ const file: iMessageFile = {
 			const queue = [...helper.cache.service.queue]
 			if (count >= queue.length && count > 1) {
 				return helper.respond(
-					new EmbedResponse(
+					new ResponseBuilder(
 						Emoji.BAD,
 						`The queue only has ${queue.length} songs, cannot skip ${count} songs`
 					)
@@ -48,7 +48,7 @@ const file: iMessageFile = {
 		} else {
 			helper.reactFailure()
 			helper.respond(
-				new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"),
+				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000
 			)
 		}

@@ -1,5 +1,5 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
-import QueueFormatter from "../utilities/QueueFormatter"
+import QueueBuilder from "../utilities/QueueBuilder"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { iMessageFile } from "../utilities/BotSetupHelper"
 
 const file: iMessageFile = {
@@ -9,7 +9,7 @@ const file: iMessageFile = {
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				),
@@ -18,7 +18,7 @@ const file: iMessageFile = {
 		}
 
 		helper.reactSuccess()
-		helper.respond(await new QueueFormatter(helper.cache, member).getMessagePayload())
+		helper.respond(await new QueueBuilder(helper.cache, member).build())
 	}
 }
 

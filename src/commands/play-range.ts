@@ -1,5 +1,5 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import MusicService from "../models/MusicService"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import { GuildMember, VoiceChannel } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
@@ -68,7 +68,7 @@ const file: iInteractionFile = {
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in a voice channel to use this command"
 				)
@@ -101,7 +101,7 @@ const file: iInteractionFile = {
 
 		if (err) {
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, "Link must me a Spotify playlist link")
+				new ResponseBuilder(Emoji.BAD, "Link must me a Spotify playlist link")
 			)
 		}
 
@@ -109,13 +109,15 @@ const file: iInteractionFile = {
 		let to = helper.integer("to")
 
 		if (from < 1) {
-			return helper.respond(new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`))
+			return helper.respond(
+				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`)
+			)
 		}
 
 		if (to) {
 			if (from > to) {
 				return helper.respond(
-					new EmbedResponse(
+					new ResponseBuilder(
 						Emoji.BAD,
 						`Invalid "from" and "to" positions: ${from} and ${to}`
 					)
@@ -124,7 +126,7 @@ const file: iInteractionFile = {
 
 			if (to - from > 1000) {
 				return helper.respond(
-					new EmbedResponse(
+					new ResponseBuilder(
 						Emoji.BAD,
 						`Cannot add more than 1000 songs, bot will take too long to respond`
 					)
@@ -135,7 +137,7 @@ const file: iInteractionFile = {
 		const length = await helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
 		if (to && to > length) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					`Invalid "to" position: Playlist only has ${length} songs`
 				)
@@ -146,7 +148,7 @@ const file: iInteractionFile = {
 			to = length
 		}
 
-		helper.respond(new EmbedResponse(Emoji.GOOD, `Adding songs from #${from} to #${to}...`))
+		helper.respond(new ResponseBuilder(Emoji.GOOD, `Adding songs from #${from} to #${to}...`))
 
 		const songs = await helper.cache.apiHelper.findSpotifyPlaylist(
 			playlistId,
@@ -158,7 +160,7 @@ const file: iInteractionFile = {
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)
 		helper.cache.updateMusicChannel()
-		helper.respond(new EmbedResponse(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`))
+		helper.respond(new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`))
 	}
 }
 

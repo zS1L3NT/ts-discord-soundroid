@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
@@ -52,7 +52,7 @@ const file: iInteractionFile = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				)
@@ -65,13 +65,13 @@ const file: iInteractionFile = {
 		if (helper.cache.service) {
 			if (from < 1 || from >= helper.cache.service.queue.length) {
 				helper.respond(
-					new EmbedResponse(Emoji.BAD, "No such starting position in the queue")
+					new ResponseBuilder(Emoji.BAD, "No such starting position in the queue")
 				)
 			} else {
 				if (to) {
 					if (to <= from || to >= helper.cache.service.queue.length) {
 						helper.respond(
-							new EmbedResponse(
+							new ResponseBuilder(
 								Emoji.BAD,
 								"Invalid ending position in queue, ensure the end position is greater than the start position"
 							)
@@ -81,7 +81,7 @@ const file: iInteractionFile = {
 						helper.cache.service.queue.splice(from, delete_count)
 						helper.cache.updateMusicChannel()
 						helper.respond(
-							new EmbedResponse(
+							new ResponseBuilder(
 								Emoji.GOOD,
 								`Removed ${delete_count} songs from the queue`
 							)
@@ -91,7 +91,7 @@ const file: iInteractionFile = {
 					const song = helper.cache.service.queue.splice(from, 1)[0]
 					helper.cache.updateMusicChannel()
 					helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.GOOD,
 							`Removed 1 song from queue: "${song.title} - ${song.artiste}"`
 						)
@@ -99,7 +99,7 @@ const file: iInteractionFile = {
 				}
 			}
 		} else {
-			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
 }

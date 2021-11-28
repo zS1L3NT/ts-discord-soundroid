@@ -1,6 +1,6 @@
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
 import { iMessageFile } from "../utilities/BotSetupHelper"
 import { MessageEmbed } from "discord.js"
@@ -15,7 +15,7 @@ const file: iMessageFile = {
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				),
@@ -28,7 +28,7 @@ const file: iMessageFile = {
 			if (service.queue.length === 0) {
 				helper.reactFailure()
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, "I am not playing anything right now"),
+					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now"),
 					5000
 				)
 			}
@@ -71,7 +71,7 @@ const file: iMessageFile = {
 		} else {
 			helper.reactFailure()
 			helper.respond(
-				new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"),
+				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000
 			)
 		}

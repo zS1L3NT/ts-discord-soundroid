@@ -2,7 +2,7 @@ import DominantColorGetter from "./DominantColorGetter"
 import DurationHelper from "./DurationHelper"
 import GuildCache from "../models/GuildCache"
 import Song from "../models/Song"
-import { Emoji } from "./EmbedResponse"
+import { Emoji } from "./ResponseBuilder"
 import {
 	GuildMember,
 	InteractionReplyOptions,
@@ -11,7 +11,7 @@ import {
 	MessageEmbed
 } from "discord.js"
 
-export default class QueueFormatter {
+export default class QueueBuilder {
 	private cache: GuildCache
 	private member?: GuildMember
 
@@ -20,7 +20,7 @@ export default class QueueFormatter {
 		this.member = member
 	}
 
-	public async getMessagePayload(page: number = 1): Promise<InteractionReplyOptions> {
+	public async build(page: number = 1): Promise<InteractionReplyOptions> {
 		if (this.cache.service) {
 			const embed = new MessageEmbed()
 			const playing_duration = this.cache.service.queue

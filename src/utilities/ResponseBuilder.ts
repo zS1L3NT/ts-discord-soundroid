@@ -5,7 +5,7 @@ export enum Emoji {
 	BAD = "https://firebasestorage.googleapis.com/v0/b/zectan-projects.appspot.com/o/bad.png?alt=media&token=cbd48c77-784c-4f86-8de1-7335b452a894"
 }
 
-export default class EmbedResponse {
+export default class ResponseBuilder {
 	private emoji: Emoji
 	private content: string
 
@@ -14,7 +14,7 @@ export default class EmbedResponse {
 		this.content = content
 	}
 
-	public create() {
+	public build() {
 		return new MessageEmbed()
 			.setAuthor(this.content, this.emoji)
 			.setColor(this.emoji === Emoji.GOOD ? "#77B255" : "#DD2E44")

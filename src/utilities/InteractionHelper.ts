@@ -1,5 +1,5 @@
-import EmbedResponse from "./EmbedResponse"
 import GuildCache from "../models/GuildCache"
+import ResponseBuilder from "./ResponseBuilder"
 import { CommandInteraction, InteractionReplyOptions, MessagePayload } from "discord.js"
 
 export default class InteractionHelper {
@@ -12,22 +12,22 @@ export default class InteractionHelper {
 		this.interaction = interaction
 	}
 
-	public respond(options: MessagePayload | InteractionReplyOptions | EmbedResponse) {
+	public respond(options: MessagePayload | InteractionReplyOptions | ResponseBuilder) {
 		if (this.responded) {
-			if (options instanceof EmbedResponse) {
+			if (options instanceof ResponseBuilder) {
 				this.interaction
 					.editReply({
-						embeds: [options.create()]
+						embeds: [options.build()]
 					})
 					.catch(() => {})
 			} else {
 				this.interaction.editReply(options).catch(() => {})
 			}
 		} else {
-			if (options instanceof EmbedResponse) {
+			if (options instanceof ResponseBuilder) {
 				this.interaction
 					.followUp({
-						embeds: [options.create()]
+						embeds: [options.build()]
 					})
 					.catch(() => {})
 			} else {

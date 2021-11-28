@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
@@ -49,7 +49,7 @@ const file: iInteractionFile = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				)
@@ -65,18 +65,20 @@ const file: iInteractionFile = {
 
 			if (from < 1 || from >= queue.length) {
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`)
+					new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`)
 				)
 			}
 
 			if (to && (to < 1 || to > queue.length)) {
-				return helper.respond(new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to}`))
+				return helper.respond(
+					new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`)
+				)
 			}
 
 			queue.splice(to || 1, 0, ...queue.splice(from, 1))
 			helper.cache.updateMusicChannel()
 			helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.GOOD,
 					`Moved "${song.title} - ${song.artiste}" from ${from} to ${
 						to ?? `top of the queue`
@@ -84,7 +86,7 @@ const file: iInteractionFile = {
 				)
 			)
 		} else {
-			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
 }

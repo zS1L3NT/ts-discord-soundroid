@@ -1,5 +1,5 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
-import PageSelectFormatter from "../utilities/PageSelectFormatter"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import PageSelectBuilder from "../utilities/PageSelectBuilder"
 import { iButtonFile } from "../utilities/BotSetupHelper"
 import { Message } from "discord.js"
 
@@ -11,13 +11,11 @@ const file: iButtonFile = {
 
 		if (!embed) {
 			helper.respond(
-				new EmbedResponse(Emoji.BAD, "Failed to get information about queue page number")
+				new ResponseBuilder(Emoji.BAD, "Failed to get information about queue page number")
 			)
 		}
 
-		helper.respond(
-			new PageSelectFormatter(embed, message.channel.id, message.id).getMessagePayload()
-		)
+		helper.respond(new PageSelectBuilder(embed, message.channel.id, message.id).build())
 	}
 }
 

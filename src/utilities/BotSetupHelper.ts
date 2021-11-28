@@ -1,11 +1,11 @@
 import BotCache from "../models/BotCache"
 import ButtonHelper from "./ButtonHelper"
-import EmbedResponse, { Emoji } from "./EmbedResponse"
 import fs from "fs"
 import InteractionHelper from "./InteractionHelper"
 import MenuHelper from "./MenuHelper"
 import MessageHelper from "./MessageHelper"
 import path from "path"
+import ResponseBuilder, { Emoji } from "./ResponseBuilder"
 import SlashCommandDeployer from "./SlashCommandDeployer"
 import { Client, Collection } from "discord.js"
 import { SlashCommandBuilder, SlashCommandSubcommandBuilder } from "@discordjs/builders"
@@ -50,7 +50,10 @@ export default class BotSetupHelper {
 				console.error(error)
 				helper.reactFailure()
 				helper.respond(
-					new EmbedResponse(Emoji.BAD, "There was an error while executing this command!")
+					new ResponseBuilder(
+						Emoji.BAD,
+						"There was an error while executing this command!"
+					)
 				)
 			}
 		})
@@ -91,7 +94,7 @@ export default class BotSetupHelper {
 				} catch (error) {
 					console.error(error)
 					helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.BAD,
 							"There was an error while executing this command!"
 						)
@@ -115,7 +118,7 @@ export default class BotSetupHelper {
 				} catch (error) {
 					console.error(error)
 					helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.BAD,
 							"There was an error while executing this command!"
 						)
@@ -139,7 +142,7 @@ export default class BotSetupHelper {
 				} catch (error) {
 					console.error(error)
 					helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.BAD,
 							"There was an error while executing this command!"
 						)

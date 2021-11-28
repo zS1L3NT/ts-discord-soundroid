@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
@@ -30,7 +30,7 @@ const file: iInteractionFile = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				)
@@ -40,13 +40,15 @@ const file: iInteractionFile = {
 		if (helper.cache.service) {
 			const count = helper.integer("count") || 1
 			if (count < 1) {
-				return helper.respond(new EmbedResponse(Emoji.BAD, `Invalid skip count: ${count}`))
+				return helper.respond(
+					new ResponseBuilder(Emoji.BAD, `Invalid skip count: ${count}`)
+				)
 			}
 
 			const queue = [...helper.cache.service.queue]
 			if (count >= queue.length && count > 1) {
 				return helper.respond(
-					new EmbedResponse(
+					new ResponseBuilder(
 						Emoji.BAD,
 						`The queue only has ${queue.length} songs, cannot skip ${count} songs`
 					)
@@ -61,14 +63,14 @@ const file: iInteractionFile = {
 			helper.cache.service.player.stop()
 			helper.cache.updateMusicChannel()
 			helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.GOOD,
 					"Skipped the current song" +
 						(count > 1 ? ` and ${count - 1} songs in the queue` : "")
 				)
 			)
 		} else {
-			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
 }

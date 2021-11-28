@@ -1,5 +1,5 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import MusicService from "../models/MusicService"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import { GuildMember, VoiceChannel } from "discord.js"
 import { iMessageFile } from "../utilities/BotSetupHelper"
@@ -13,7 +13,7 @@ const file: iMessageFile = {
 		if (!(channel instanceof VoiceChannel)) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in a voice channel to use this command"
 				),
@@ -38,7 +38,7 @@ const file: iMessageFile = {
 		if (!input.length) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					[
 						"The command .play-range takes 3 parameters",
@@ -57,7 +57,7 @@ const file: iMessageFile = {
 		if (from < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from_str}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from_str}`),
 				5000
 			)
 		}
@@ -66,7 +66,7 @@ const file: iMessageFile = {
 		if (to && to < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to_str}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to_str}`),
 				5000
 			)
 		}
@@ -84,7 +84,7 @@ const file: iMessageFile = {
 		if (err) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, "Link must me a Spotify playlist link"),
+				new ResponseBuilder(Emoji.BAD, "Link must me a Spotify playlist link"),
 				5000
 			)
 		}
@@ -93,7 +93,7 @@ const file: iMessageFile = {
 			if (from > to) {
 				helper.reactFailure()
 				return helper.respond(
-					new EmbedResponse(
+					new ResponseBuilder(
 						Emoji.BAD,
 						`Invalid "from" and "to" positions: ${from} and ${to}`
 					),
@@ -104,7 +104,7 @@ const file: iMessageFile = {
 			if (to - from > 1000) {
 				helper.reactFailure()
 				return helper.respond(
-					new EmbedResponse(
+					new ResponseBuilder(
 						Emoji.BAD,
 						`Cannot add more than 1000 songs, bot will take too long to respond`
 					),
@@ -117,7 +117,7 @@ const file: iMessageFile = {
 		if (to && to > length) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					`Invalid "to" position: Playlist only has ${length} songs`
 				),
@@ -130,7 +130,7 @@ const file: iMessageFile = {
 		}
 
 		helper.respond(
-			new EmbedResponse(Emoji.GOOD, `Adding songs from #${from} to #${to}...`),
+			new ResponseBuilder(Emoji.GOOD, `Adding songs from #${from} to #${to}...`),
 			5000
 		)
 
@@ -145,7 +145,7 @@ const file: iMessageFile = {
 		helper.cache.service!.queue.push(...songs)
 		helper.cache.updateMusicChannel()
 		helper.reactSuccess()
-		helper.respond(new EmbedResponse(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`), 5000)
+		helper.respond(new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`), 5000)
 	}
 }
 

@@ -1,5 +1,5 @@
 import DominantColorGetter from "../utilities/DominantColorGetter"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { iMessageFile } from "../utilities/BotSetupHelper"
 import { MessageEmbed } from "discord.js"
 import { useTryAsync } from "no-try"
@@ -11,7 +11,7 @@ const file: iMessageFile = {
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				),
@@ -24,7 +24,7 @@ const file: iMessageFile = {
 			if (queue.length === 0) {
 				helper.reactFailure()
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, "I am not playing anything right now"),
+					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now"),
 					5000
 				)
 			}
@@ -42,7 +42,7 @@ const file: iMessageFile = {
 				helper.reactFailure()
 				if (query) {
 					return helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.BAD,
 							"Sorry, couldn't find any lyrics for this search query\n" +
 								"Was your query too specific? Try using a shorter query"
@@ -51,7 +51,7 @@ const file: iMessageFile = {
 					)
 				} else {
 					return helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.BAD,
 							"Sorry, couldn't find any lyrics for this song\n" +
 								"Try using this command with the **query** option to manually search the server for lyrics"
@@ -78,7 +78,7 @@ const file: iMessageFile = {
 		} else {
 			helper.reactFailure()
 			helper.respond(
-				new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"),
+				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000
 			)
 		}

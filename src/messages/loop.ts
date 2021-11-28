@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { iMessageFile } from "../utilities/BotSetupHelper"
 
 const file: iMessageFile = {
@@ -8,7 +8,7 @@ const file: iMessageFile = {
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				),
@@ -20,17 +20,17 @@ const file: iMessageFile = {
 			helper.cache.service.queue_loop = false
 			if (helper.cache.service.loop) {
 				helper.cache.service.loop = false
-				helper.respond(new EmbedResponse(Emoji.GOOD, "Loop disabled"), 3000)
+				helper.respond(new ResponseBuilder(Emoji.GOOD, "Loop disabled"), 3000)
 			} else {
 				helper.cache.service.loop = true
-				helper.respond(new EmbedResponse(Emoji.GOOD, "Loop enabled"), 3000)
+				helper.respond(new ResponseBuilder(Emoji.GOOD, "Loop enabled"), 3000)
 			}
 			helper.reactSuccess()
 			helper.cache.updateMusicChannel()
 		} else {
 			helper.reactFailure()
 			helper.respond(
-				new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"),
+				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000
 			)
 		}

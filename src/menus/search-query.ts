@@ -1,5 +1,5 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import MusicService from "../models/MusicService"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import Song from "../models/Song"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import { GuildMember, VoiceChannel } from "discord.js"
@@ -12,7 +12,7 @@ const file: iMenuFile = {
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
 			return helper.update(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in a voice channel to use this command"
 				)
@@ -38,10 +38,10 @@ const file: iMenuFile = {
 			helper.cache.service!.enqueue(song)
 			helper.cache.updateMusicChannel()
 			helper.respond(
-				new EmbedResponse(Emoji.GOOD, `Enqueued song: "${song.title} - ${song.artiste}"`)
+				new ResponseBuilder(Emoji.GOOD, `Enqueued song: "${song.title} - ${song.artiste}"`)
 			)
 		} catch {
-			helper.respond(new EmbedResponse(Emoji.BAD, "Error playing song from url"))
+			helper.respond(new ResponseBuilder(Emoji.BAD, "Error playing song from url"))
 		}
 	}
 }

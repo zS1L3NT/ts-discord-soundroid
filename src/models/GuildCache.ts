@@ -1,10 +1,10 @@
-import { Client, Guild, GuildMember, Message, MessageEmbed, VoiceChannel } from "discord.js"
-import { useTry, useTryAsync } from "no-try"
 import ApiHelper from "../utilities/ApiHelper"
 import ChannelCleaner from "../utilities/ChannelCleaner"
-import QueueFormatter from "../utilities/QueueFormatter"
 import Document, { iDocument } from "./Document"
 import MusicService from "./MusicService"
+import QueueBuilder from "../utilities/QueueBuilder"
+import { Client, Guild, GuildMember, Message, MessageEmbed, VoiceChannel } from "discord.js"
+import { useTry, useTryAsync } from "no-try"
 
 export default class GuildCache {
 	public bot: Client
@@ -80,7 +80,7 @@ export default class GuildCache {
 		})
 
 		if (this.service) {
-			message.edit(await new QueueFormatter(this).getMessagePayload(page_err ? 1 : page))
+			message.edit(await new QueueBuilder(this).build(page_err ? 1 : page))
 		} else {
 			message.edit({
 				embeds: [

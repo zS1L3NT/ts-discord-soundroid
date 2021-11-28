@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../../utilities/ResponseBuilder"
 import { GuildMember, TextChannel } from "discord.js"
 import { iInteractionSubcommandFile } from "../../utilities/BotSetupHelper"
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
@@ -35,7 +35,7 @@ const file: iInteractionSubcommandFile = {
 		const member = helper.interaction.member as GuildMember
 		if (!member.permissions.has("ADMINISTRATOR") && member.id !== config.discord.dev_id) {
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, "Only administrators can set bot channels")
+				new ResponseBuilder(Emoji.BAD, "Only administrators can set bot channels")
 			)
 		}
 
@@ -43,13 +43,13 @@ const file: iInteractionSubcommandFile = {
 		if (channel instanceof TextChannel) {
 			if (channel.id === helper.cache.getMusicChannelId()) {
 				helper.respond(
-					new EmbedResponse(Emoji.BAD, "This channel is already the Music channel!")
+					new ResponseBuilder(Emoji.BAD, "This channel is already the Music channel!")
 				)
 			} else {
 				await helper.cache.setMusicChannelId(channel.id)
 				helper.cache.updateMusicChannel()
 				helper.respond(
-					new EmbedResponse(
+					new ResponseBuilder(
 						Emoji.GOOD,
 						`Music channel reassigned to ${channel.toString()}`
 					)
@@ -57,9 +57,9 @@ const file: iInteractionSubcommandFile = {
 			}
 		} else if (channel === null) {
 			await helper.cache.setMusicChannelId("")
-			helper.respond(new EmbedResponse(Emoji.GOOD, `Music channel unassigned`))
+			helper.respond(new ResponseBuilder(Emoji.GOOD, `Music channel unassigned`))
 		} else {
-			helper.respond(new EmbedResponse(Emoji.BAD, `Please select a text channel`))
+			helper.respond(new ResponseBuilder(Emoji.BAD, `Please select a text channel`))
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { iMessageFile } from "../utilities/BotSetupHelper"
 
 const file: iMessageFile = {
@@ -8,7 +8,7 @@ const file: iMessageFile = {
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				),
@@ -22,7 +22,7 @@ const file: iMessageFile = {
 		if (from < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`),
 				5000
 			)
 		}
@@ -31,7 +31,7 @@ const file: iMessageFile = {
 		if (to && to < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`),
 				5000
 			)
 		}
@@ -43,7 +43,7 @@ const file: iMessageFile = {
 			if (from >= queue.length) {
 				helper.reactFailure()
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`),
+					new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`),
 					5000
 				)
 			}
@@ -51,7 +51,7 @@ const file: iMessageFile = {
 			if (to && to > queue.length) {
 				helper.reactFailure()
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to}`),
+					new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`),
 					5000
 				)
 			}
@@ -60,7 +60,7 @@ const file: iMessageFile = {
 			helper.cache.updateMusicChannel()
 			helper.reactSuccess()
 			helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.GOOD,
 					`Moved "${song.title} - ${song.artiste}" from ${from} to ${
 						to ?? `top of the queue`
@@ -71,7 +71,7 @@ const file: iMessageFile = {
 		} else {
 			helper.reactFailure()
 			helper.respond(
-				new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"),
+				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000
 			)
 		}

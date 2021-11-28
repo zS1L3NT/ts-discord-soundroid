@@ -1,5 +1,5 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import MusicService from "../models/MusicService"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import Song from "../models/Song"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import { iMessageFile } from "../utilities/BotSetupHelper"
@@ -13,7 +13,7 @@ const file: iMessageFile = {
 		if (!(channel instanceof VoiceChannel)) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in a voice channel to use this command"
 				),
@@ -55,18 +55,18 @@ const file: iMessageFile = {
 						helper.cache.updateMusicChannel()
 						helper.reactSuccess()
 						helper.respond(
-							new EmbedResponse(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`),
+							new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`),
 							5000
 						)
 					} else {
 						helper.reactFailure()
-						helper.respond(new EmbedResponse(Emoji.BAD, "Playlist is empty"), 5000)
+						helper.respond(new ResponseBuilder(Emoji.BAD, "Playlist is empty"), 5000)
 					}
 				} catch (err) {
 					console.error(`[PLAY]:`, err)
 					helper.reactFailure()
 					helper.respond(
-						new EmbedResponse(Emoji.BAD, "Error playing playlist from url"),
+						new ResponseBuilder(Emoji.BAD, "Error playing playlist from url"),
 						5000
 					)
 				}
@@ -77,7 +77,7 @@ const file: iMessageFile = {
 					helper.cache.updateMusicChannel()
 					helper.reactSuccess()
 					helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.GOOD,
 							`Enqueued: "${song.title} - ${song.artiste}"`
 						),
@@ -87,7 +87,7 @@ const file: iMessageFile = {
 					console.error(`[PLAY]:`, err)
 					helper.reactFailure()
 					helper.respond(
-						new EmbedResponse(Emoji.BAD, "Error playing song from url"),
+						new ResponseBuilder(Emoji.BAD, "Error playing song from url"),
 						5000
 					)
 				}

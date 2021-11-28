@@ -1,6 +1,6 @@
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
 import { GuildMember, MessageEmbed } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
@@ -23,7 +23,7 @@ const file: iInteractionFile = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				)
@@ -34,7 +34,7 @@ const file: iInteractionFile = {
 			const service = helper.cache.service
 			if (service.queue.length === 0) {
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, "I am not playing anything right now")
+					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now")
 				)
 			}
 
@@ -70,7 +70,7 @@ const file: iInteractionFile = {
 				]
 			})
 		} else {
-			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
@@ -19,7 +19,7 @@ const file: iInteractionFile = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				)
@@ -35,13 +35,13 @@ const file: iInteractionFile = {
 			const newLength = helper.cache.service.queue.length
 			helper.cache.updateMusicChannel()
 			helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.GOOD,
 					`Cleared ${oldLength - newLength} songs from the queue`
 				)
 			)
 		} else {
-			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
 }

@@ -5,7 +5,7 @@ import {
 	MessageSelectMenu
 } from "discord.js"
 
-export default class PageSelectFormatter {
+export default class PageSelectBuilder {
 	private embed: MessageEmbed
 	private channel_id: string
 	private message_id: string
@@ -21,7 +21,7 @@ export default class PageSelectFormatter {
 		this.message_id = message_id
 	}
 
-	public getMessagePayload(start_page?: number): InteractionReplyOptions {
+	public build(start_page?: number): InteractionReplyOptions {
 		const pageInfo = this.embed.fields.find(field => field.name === `Page`)!.value
 		const [pageStr, maxPagesStr] = pageInfo.split("/")
 		this.current_page = start_page || +pageStr

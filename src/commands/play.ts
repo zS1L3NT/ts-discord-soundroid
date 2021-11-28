@@ -1,5 +1,5 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import MusicService from "../models/MusicService"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import Song from "../models/Song"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import {
@@ -47,7 +47,7 @@ const file: iInteractionFile = {
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in a voice channel to use this command"
 				)
@@ -87,14 +87,16 @@ const file: iInteractionFile = {
 						helper.cache.service!.queue.push(...songs)
 						helper.cache.updateMusicChannel()
 						helper.respond(
-							new EmbedResponse(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`)
+							new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`)
 						)
 					} else {
-						helper.respond(new EmbedResponse(Emoji.BAD, "Playlist is empty"))
+						helper.respond(new ResponseBuilder(Emoji.BAD, "Playlist is empty"))
 					}
 				} catch (err) {
 					console.error(`[PLAY]:`, err)
-					helper.respond(new EmbedResponse(Emoji.BAD, "Error playing playlist from url"))
+					helper.respond(
+						new ResponseBuilder(Emoji.BAD, "Error playing playlist from url")
+					)
 				}
 			} else {
 				try {
@@ -102,11 +104,14 @@ const file: iInteractionFile = {
 					helper.cache.service!.enqueue(song)
 					helper.cache.updateMusicChannel()
 					helper.respond(
-						new EmbedResponse(Emoji.GOOD, `Enqueued: "${song.title} - ${song.artiste}"`)
+						new ResponseBuilder(
+							Emoji.GOOD,
+							`Enqueued: "${song.title} - ${song.artiste}"`
+						)
 					)
 				} catch (err) {
 					console.error(`[PLAY]:`, err)
-					helper.respond(new EmbedResponse(Emoji.BAD, "Error playing song from url"))
+					helper.respond(new ResponseBuilder(Emoji.BAD, "Error playing song from url"))
 				}
 			}
 		} catch {

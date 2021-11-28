@@ -1,5 +1,5 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
-import QueueFormatter from "../utilities/QueueFormatter"
+import QueueBuilder from "../utilities/QueueBuilder"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
@@ -21,7 +21,7 @@ const file: iInteractionFile = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				)
@@ -29,12 +29,9 @@ const file: iInteractionFile = {
 		}
 
 		helper.interaction.channel!.send(
-			await new QueueFormatter(
-				helper.cache,
-				helper.interaction.member as GuildMember
-			).getMessagePayload()
+			await new QueueBuilder(helper.cache, helper.interaction.member as GuildMember).build()
 		)
-		helper.respond(new EmbedResponse(Emoji.GOOD, "Showing queue"))
+		helper.respond(new ResponseBuilder(Emoji.GOOD, "Showing queue"))
 	}
 }
 

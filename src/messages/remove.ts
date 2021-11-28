@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { iMessageFile } from "../utilities/BotSetupHelper"
 
 const file: iMessageFile = {
@@ -8,7 +8,7 @@ const file: iMessageFile = {
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				),
@@ -22,7 +22,7 @@ const file: iMessageFile = {
 		if (from < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`),
 				5000
 			)
 		}
@@ -31,7 +31,7 @@ const file: iMessageFile = {
 		if (to && to < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, `Invalid "to" position: ${to}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`),
 				5000
 			)
 		}
@@ -40,7 +40,7 @@ const file: iMessageFile = {
 			if (from >= helper.cache.service.queue.length) {
 				helper.reactFailure()
 				helper.respond(
-					new EmbedResponse(Emoji.BAD, "No such starting position in the queue"),
+					new ResponseBuilder(Emoji.BAD, "No such starting position in the queue"),
 					5000
 				)
 			} else {
@@ -48,7 +48,7 @@ const file: iMessageFile = {
 					if (to <= from || to >= helper.cache.service.queue.length) {
 						helper.reactFailure()
 						helper.respond(
-							new EmbedResponse(
+							new ResponseBuilder(
 								Emoji.BAD,
 								"Invalid ending position in queue, ensure the end position is greater than the start position"
 							),
@@ -60,7 +60,7 @@ const file: iMessageFile = {
 						helper.cache.updateMusicChannel()
 						helper.reactSuccess()
 						helper.respond(
-							new EmbedResponse(
+							new ResponseBuilder(
 								Emoji.GOOD,
 								`Removed ${delete_count} songs from the queue`
 							),
@@ -72,7 +72,7 @@ const file: iMessageFile = {
 					helper.cache.updateMusicChannel()
 					helper.reactSuccess()
 					helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.GOOD,
 							`Removed 1 song from queue: "${song.title} - ${song.artiste}"`
 						),
@@ -83,7 +83,7 @@ const file: iMessageFile = {
 		} else {
 			helper.reactFailure()
 			helper.respond(
-				new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"),
+				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000
 			)
 		}

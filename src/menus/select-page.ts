@@ -1,6 +1,6 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
-import PageSelectFormatter from "../utilities/PageSelectFormatter"
-import QueueFormatter from "../utilities/QueueFormatter"
+import PageSelectBuilder from "../utilities/PageSelectBuilder"
+import QueueBuilder from "../utilities/QueueBuilder"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { GuildMember, Message, TextChannel } from "discord.js"
 import { iMenuFile } from "../utilities/BotSetupHelper"
 import { useTryAsync } from "no-try"
@@ -19,7 +19,7 @@ const file: iMenuFile = {
 
 		if (channel_err) {
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, "Channel with the message not found")
+				new ResponseBuilder(Emoji.BAD, "Channel with the message not found")
 			)
 		}
 
@@ -28,26 +28,21 @@ const file: iMenuFile = {
 		)
 
 		if (message_err) {
-			return helper.respond(new EmbedResponse(Emoji.BAD, "Queue message not found"))
+			return helper.respond(new ResponseBuilder(Emoji.BAD, "Queue message not found"))
 		}
 
 		if (page_str === "more") {
 			return helper.update(
-				new PageSelectFormatter(
-					message.embeds[0],
-					channel_id,
-					message_id
-				).getMessagePayload(more)
+				new PageSelectBuilder(message.embeds[0], channel_id, message_id).build(more)
 			)
 		}
 
 		message.edit(
-			await new QueueFormatter(
-				helper.cache,
-				helper.interaction.member as GuildMember
-			).getMessagePayload(page)
+			await new QueueBuilder(helper.cache, helper.interaction.member as GuildMember).build(
+				page
+			)
 		)
-		helper.update(new EmbedResponse(Emoji.GOOD, `Changed to page ${page}`))
+		helper.update(new ResponseBuilder(Emoji.GOOD, `Changed to page ${page}`))
 	}
 }
 

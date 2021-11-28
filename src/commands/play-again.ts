@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
@@ -30,7 +30,7 @@ const file: iInteractionFile = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				)
@@ -40,31 +40,33 @@ const file: iInteractionFile = {
 		if (helper.cache.service) {
 			const song = helper.cache.service.queue.at(0)
 			if (!song) {
-				return helper.respond(new EmbedResponse(Emoji.BAD, "No song playing right now"))
+				return helper.respond(new ResponseBuilder(Emoji.BAD, "No song playing right now"))
 			}
 
 			const count = helper.integer("count") || 1
 
 			if (count < 1) {
-				return helper.respond(new EmbedResponse(Emoji.BAD, `Invalid play count: ${count}`))
+				return helper.respond(
+					new ResponseBuilder(Emoji.BAD, `Invalid play count: ${count}`)
+				)
 			}
 
 			if (count > 1000) {
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, `Play again count cannot exceed 1000`)
+					new ResponseBuilder(Emoji.BAD, `Play again count cannot exceed 1000`)
 				)
 			}
 
 			helper.cache.service.queue.splice(1, 0, ...Array(count).fill(song))
 			helper.cache.updateMusicChannel()
 			helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.GOOD,
 					`Playing "${song.title} - ${song.artiste}" again ${count} times`
 				)
 			)
 		} else {
-			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
 }

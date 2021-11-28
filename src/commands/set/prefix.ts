@@ -1,4 +1,4 @@
-import EmbedResponse, { Emoji } from "../../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../../utilities/ResponseBuilder"
 import { GuildMember } from "discord.js"
 import { iInteractionSubcommandFile } from "../../utilities/BotSetupHelper"
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
@@ -29,18 +29,18 @@ const file: iInteractionSubcommandFile = {
 		const prefix = helper.string("prefix")!
 		if (!member.permissions.has("ADMINISTRATOR") && member.id !== config.discord.dev_id) {
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, "Only administrators can set the prefix")
+				new ResponseBuilder(Emoji.BAD, "Only administrators can set the prefix")
 			)
 		}
 
 		if (prefix.length !== 1) {
 			return helper.respond(
-				new EmbedResponse(Emoji.BAD, "Prefix must be only one character long")
+				new ResponseBuilder(Emoji.BAD, "Prefix must be only one character long")
 			)
 		}
 
 		await helper.cache.ref.set({ prefix }, { merge: true })
-		helper.respond(new EmbedResponse(Emoji.GOOD, `Prefix changed to \`${prefix}\``))
+		helper.respond(new ResponseBuilder(Emoji.GOOD, `Prefix changed to \`${prefix}\``))
 	}
 }
 

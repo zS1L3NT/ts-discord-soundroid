@@ -1,5 +1,5 @@
 import DominantColorGetter from "../utilities/DominantColorGetter"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { GuildMember, MessageEmbed } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
@@ -34,7 +34,7 @@ const file: iInteractionFile = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new EmbedResponse(
+				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
 				)
@@ -45,7 +45,7 @@ const file: iInteractionFile = {
 			const queue = helper.cache.service.queue
 			if (queue.length === 0) {
 				return helper.respond(
-					new EmbedResponse(Emoji.BAD, "I am not playing anything right now")
+					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now")
 				)
 			}
 
@@ -60,7 +60,7 @@ const file: iInteractionFile = {
 			} catch {
 				if (query) {
 					return helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.BAD,
 							"Sorry, couldn't find any lyrics for this search query\n" +
 								"Was your query too specific? Try using a shorter query"
@@ -68,7 +68,7 @@ const file: iInteractionFile = {
 					)
 				} else {
 					return helper.respond(
-						new EmbedResponse(
+						new ResponseBuilder(
 							Emoji.BAD,
 							"Sorry, couldn't find any lyrics for this song\n" +
 								"Try using this command with the **query** option to manually search the server for lyrics"
@@ -90,9 +90,9 @@ const file: iInteractionFile = {
 						)
 				]
 			})
-			helper.respond(new EmbedResponse(Emoji.GOOD, "Showing lyrics"))
+			helper.respond(new ResponseBuilder(Emoji.GOOD, "Showing lyrics"))
 		} else {
-			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}
 	}
 }
