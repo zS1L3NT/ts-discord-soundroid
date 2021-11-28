@@ -113,6 +113,12 @@ class HelpBuilder {
 
 		embed.setAuthor(command, this.QUESTION)
 		const description = [help.description]
+		
+		const [err] = useTry(() => {
+			fs.readFileSync(path.join(__dirname, "../messages", command.replaceAll(" ", "/") + ".ts"))
+		})
+
+		description.push("", `__Message Commands__: **${err ? "Unsupported" : "Supported"}**`)
 
 		if (help.params.length) {
 			description.push("", "__Input Parameters__")
