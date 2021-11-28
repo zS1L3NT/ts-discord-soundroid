@@ -1,15 +1,21 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
-import { GuildMember, MessageEmbed } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
+import { GuildMember, MessageEmbed } from "discord.js"
+import { iInteractionFile } from "../utilities/BotSetupHelper"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const thumb = "🔘"
 const track = "▬"
 
 const file: iInteractionFile = {
+	defer: true,
+	help: {
+		description:
+			"Shows you the currently playing song with a progressbar showing how far into the song you are",
+		params: []
+	},
 	builder: new SlashCommandBuilder()
 		.setName("now-playing")
 		.setDescription("Shows what's currently playing, along with the time"),

@@ -1,9 +1,22 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: true,
+	help: {
+		description: "Plays the current playing song again as many times as specified",
+		params: [
+			{
+				name: "count",
+				description: "This is the number of times you want the song to repeat",
+				requirements: "Number between 1 and 1000",
+				required: false,
+				default: "1"
+			}
+		]
+	},
 	builder: new SlashCommandBuilder()
 		.setName("play-again")
 		.setDescription("Play the current song again")

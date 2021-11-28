@@ -1,9 +1,14 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: false,
+	help: {
+		description: "Clears the entire queue along with the current song",
+		params: []
+	},
 	builder: new SlashCommandBuilder()
 		.setName("clear-queue")
 		.setDescription("Clear the queue and the current song"),
@@ -22,7 +27,6 @@ const file: iInteractionFile = {
 			helper.cache.service.queue.length = 0
 			helper.cache.service.player.stop()
 			helper.cache.updateMusicChannel()
-			helper.respond(new EmbedResponse(Emoji.GOOD, "Cleared queue"))
 		} else {
 			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
 		}

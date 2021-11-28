@@ -6,11 +6,12 @@ import { GuildMember, VoiceChannel } from "discord.js"
 import { iMenuFile } from "../utilities/BotSetupHelper"
 
 const file: iMenuFile = {
+	defer: true,
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
-			return helper.respond(
+			return helper.update(
 				new EmbedResponse(
 					Emoji.BAD,
 					"You have to be in a voice channel to use this command"

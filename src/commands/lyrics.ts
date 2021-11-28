@@ -1,10 +1,22 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { GuildMember, MessageEmbed } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { GuildMember, MessageEmbed } from "discord.js"
+import { iInteractionFile } from "../utilities/BotSetupHelper"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: true,
+	help: {
+		description: "Gives you the lyrics for the current song",
+		params: [
+			{
+				name: "query",
+				description: "Use this if you want to search for the lyrics of a song",
+				requirements: "Text",
+				required: false
+			}
+		]
+	},
 	builder: new SlashCommandBuilder()
 		.setName("lyrics")
 		.setDescription(

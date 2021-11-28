@@ -6,6 +6,18 @@ import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
 const config = require("../../../config.json")
 
 const file: iInteractionSubcommandFile = {
+	defer: true,
+	help: {
+		description: "Sets the prefix for message commands in this server",
+		params: [
+			{
+				name: "prefix",
+				description: "Message prefix to activate message commands",
+				requirements: "Any single character",
+				required: true
+			}
+		]
+	},
 	builder: new SlashCommandSubcommandBuilder()
 		.setName("prefix")
 		.setDescription("Change the prefix for message commands")

@@ -6,6 +6,7 @@ import { iMenuFile } from "../utilities/BotSetupHelper"
 import { useTryAsync } from "no-try"
 
 const file: iMenuFile = {
+	defer: false,
 	execute: async helper => {
 		const [channel_id, message_id, page_str, more_str] = helper.value()!.split("-")
 		const guild = helper.cache.guild
@@ -31,7 +32,7 @@ const file: iMenuFile = {
 		}
 
 		if (page_str === "more") {
-			return helper.respond(
+			return helper.update(
 				new PageSelectFormatter(
 					message.embeds[0],
 					channel_id,
@@ -46,8 +47,7 @@ const file: iMenuFile = {
 				helper.interaction.member as GuildMember
 			).getMessagePayload(page)
 		)
-
-		helper.respond(new EmbedResponse(Emoji.GOOD, `Showing page ${page} of the queue`))
+		helper.update(new EmbedResponse(Emoji.GOOD, `Changed to page ${page}`))
 	}
 }
 

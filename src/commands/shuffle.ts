@@ -1,9 +1,14 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: false,
+	help: {
+		description: "Shuffles the songs in the queue",
+		params: []
+	},
 	builder: new SlashCommandBuilder()
 		.setName("shuffle")
 		.setDescription("Shuffles the songs in the queue to a random order"),
@@ -29,7 +34,6 @@ const file: iInteractionFile = {
 					.map(({ value }) => value)
 			]
 			helper.cache.updateMusicChannel()
-			helper.respond(new EmbedResponse(Emoji.GOOD, "Shuffled queue"))
 		} else {
 			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
 		}

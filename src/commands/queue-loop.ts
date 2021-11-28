@@ -1,9 +1,17 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: true,
+	help: {
+		description: [
+			"Toggles between looping and unlooping the entire queue",
+			"If loop is active and you are enabling queue-loop, disables loop"
+		].join("\n"),
+		params: []
+	},
 	builder: new SlashCommandBuilder()
 		.setName("queue-loop")
 		.setDescription("Loop the current queue, disables loop mode"),

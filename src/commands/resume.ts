@@ -1,9 +1,14 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: false,
+	help: {
+		description: "Resume the current song",
+		params: []
+	},
 	builder: new SlashCommandBuilder().setName("resume").setDescription("Resume the current song"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
@@ -19,7 +24,6 @@ const file: iInteractionFile = {
 		if (helper.cache.service) {
 			helper.cache.service.player.unpause()
 			helper.cache.updateMusicChannel()
-			helper.respond(new EmbedResponse(Emoji.GOOD, "Resumed song"))
 		} else {
 			helper.respond(new EmbedResponse(Emoji.BAD, "I am not currently in a voice channel"))
 		}

@@ -1,12 +1,43 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { joinVoiceChannel, DiscordGatewayAdapterCreator } from "@discordjs/voice"
-import { GuildMember, VoiceChannel } from "discord.js"
-import { useTry } from "no-try"
-import MusicService from "../models/MusicService"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import MusicService from "../models/MusicService"
+import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { GuildMember, VoiceChannel } from "discord.js"
+import { iInteractionFile } from "../utilities/BotSetupHelper"
+import { SlashCommandBuilder } from "@discordjs/builders"
+import { useTry } from "no-try"
 
 const file: iInteractionFile = {
+	defer: true,
+	help: {
+		description:
+			"Plays a Spotify playlist, except you can specify which song you want to start playing from",
+		params: [
+			{
+				name: "link",
+				description: "Spotify playlist link",
+				requirements: "URL",
+				required: true
+			},
+			{
+				name: "from",
+				description: "The first position of the playlist to play from",
+				requirements: "Number that references a song in the Spotify playlist",
+				required: false,
+				default: "1"
+			},
+			{
+				name: "to",
+				description: "The last position of the playlist to play from",
+				requirements: [
+					"Number that references a song in the Spotify playlist",
+					"Cannot be smaller than `from` position specified earlier",
+					"Cannot be more than 1000 songs away from `from` position specified earlier"
+				].join("\n"),
+				required: false,
+				default: "End of the playlist"
+			}
+		]
+	},
 	builder: new SlashCommandBuilder()
 		.setName("play-range")
 		.setDescription("Play a Spotify playlist from a specific range")
@@ -19,13 +50,17 @@ const file: iInteractionFile = {
 		.addIntegerOption(option =>
 			option
 				.setName("from")
-				.setDescription("The first song in the playlist to add to queue. Leave empty for first song")
+				.setDescription(
+					"The first song in the playlist to add to queue. Leave empty for first song"
+				)
 				.setRequired(false)
 		)
 		.addIntegerOption(option =>
 			option
 				.setName("to")
-				.setDescription("The last song in the playlist to add to queue. Leave empty for last song")
+				.setDescription(
+					"The last song in the playlist to add to queue. Leave empty for last song"
+				)
 				.setRequired(false)
 		),
 	execute: async helper => {
@@ -74,9 +109,7 @@ const file: iInteractionFile = {
 		let to = helper.integer("to")
 
 		if (from < 1) {
-			return helper.respond(
-				new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`)
-			)
+			return helper.respond(new EmbedResponse(Emoji.BAD, `Invalid "from" position: ${from}`))
 		}
 
 		if (to) {
@@ -113,12 +146,7 @@ const file: iInteractionFile = {
 			to = length
 		}
 
-		helper.respond(
-			new EmbedResponse(
-				Emoji.GOOD,
-				`Adding songs from #${from} to #${to}...`
-			)
-		)
+		helper.respond(new EmbedResponse(Emoji.GOOD, `Adding songs from #${from} to #${to}...`))
 
 		const songs = await helper.cache.apiHelper.findSpotifyPlaylist(
 			playlistId,

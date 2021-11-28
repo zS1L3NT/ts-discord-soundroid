@@ -1,4 +1,6 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import MusicService from "../models/MusicService"
+import Song from "../models/Song"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import {
 	GuildMember,
@@ -7,12 +9,28 @@ import {
 	MessageSelectMenu,
 	VoiceChannel
 } from "discord.js"
-import MusicService from "../models/MusicService"
-import Song from "../models/Song"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: true,
+	help: {
+		description: [
+			"Play a song with either",
+			"(1) YouTube Link",
+			"(2) Spotify Song Link",
+			"(3) Spotify Playlist Link",
+			"(4) YouTube Search Query"
+		].join("\n"),
+		params: [
+			{
+				name: "query",
+				description: "Can be either of the 4 options specified above",
+				requirements: "Text or URL",
+				required: true
+			}
+		]
+	},
 	builder: new SlashCommandBuilder()
 		.setName("play")
 		.setDescription("Play a song from a url or search")

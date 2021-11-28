@@ -60,17 +60,21 @@ export default class BotSetupHelper {
 			const cache = await this.botCache.getGuildCache(interaction.guild!)
 
 			if (interaction.isCommand()) {
-				await interaction
-					.deferReply({ ephemeral: true })
-					.catch(() => console.error("Failed to defer interaction"))
 				const interactionEntity = this.interactionFiles.get(interaction.commandName)
 				if (!interactionEntity) return
+
+				await interaction
+					.deferReply({ ephemeral: true })
+					.catch(err => console.error("Failed to defer interaction", err))
 
 				const helper = new InteractionHelper(cache, interaction)
 				try {
 					const interactionFile = interactionEntity as iInteractionFile
 					if (interactionFile.execute) {
 						await interactionFile.execute(helper)
+						if (!interactionFile.defer) {
+							await interaction.deleteReply()
+						}
 					}
 
 					const interactionFolder = interactionEntity as iInteractionFolder
@@ -80,6 +84,9 @@ export default class BotSetupHelper {
 						if (!interactionFile) return
 
 						await interactionFile.execute(helper)
+						if (!interactionFile.defer) {
+							await interaction.deleteReply()
+						}
 					}
 				} catch (error) {
 					console.error(error)
@@ -93,11 +100,14 @@ export default class BotSetupHelper {
 			}
 
 			if (interaction.isButton()) {
-				await interaction
-					.deferReply({ ephemeral: true })
-					.catch(() => console.error("Failed to defer interaction"))
 				const buttonFile = this.buttonFiles.get(interaction.customId)
 				if (!buttonFile) return
+
+				if (buttonFile.defer) {
+					await interaction
+						.deferReply({ ephemeral: true })
+						.catch(() => console.error("Failed to defer interaction"))
+				}
 
 				const helper = new ButtonHelper(cache, interaction)
 				try {
@@ -114,11 +124,14 @@ export default class BotSetupHelper {
 			}
 
 			if (interaction.isSelectMenu()) {
-				await interaction
-					.deferReply({ ephemeral: true })
-					.catch(() => console.error("Failed to defer interaction"))
 				const menuFile = this.menuFiles.get(interaction.customId)
 				if (!menuFile) return
+
+				if (menuFile.defer) {
+					await interaction
+						.deferReply({ ephemeral: true })
+						.catch(() => console.error("Failed to defer interaction"))
+				}
 
 				const helper = new MenuHelper(cache, interaction)
 				try {
@@ -229,12 +242,27 @@ export interface iMessageFile {
 	execute: (helper: MessageHelper) => Promise<void>
 }
 
+export interface iInteractionHelp {
+	description: string
+	params: {
+		name: string
+		description: string
+		requirements: string
+		required: boolean
+		default?: string
+	}[]
+}
+
 export interface iInteractionFile {
-	builder: SlashCommandBuilder
+	defer: boolean
+	help: iInteractionHelp
+	builder: SlashCommandBuilder | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
 	execute: (helper: InteractionHelper) => Promise<any>
 }
 
 export interface iInteractionSubcommandFile {
+	defer: boolean
+	help: iInteractionHelp
 	builder: SlashCommandSubcommandBuilder
 	execute: (helper: InteractionHelper) => Promise<any>
 }
@@ -245,9 +273,11 @@ export interface iInteractionFolder {
 }
 
 export interface iButtonFile {
+	defer: boolean
 	execute: (helper: ButtonHelper) => Promise<any>
 }
 
 export interface iMenuFile {
+	defer: boolean
 	execute: (helper: MenuHelper) => Promise<any>
 }

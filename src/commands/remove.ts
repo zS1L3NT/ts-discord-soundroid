@@ -1,9 +1,34 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: true,
+	help: {
+		description: "Removes songs from the queue with either the song position or a range",
+		params: [
+			{
+				name: "from",
+				description: [
+					"If you define a `to` position later, this will be the starting position in the queue to remove",
+					"If not, this will be the song to remove"
+				].join("\n"),
+				requirements: "Number that references a song in the queue",
+				required: true
+			},
+			{
+				name: "to",
+				description:
+					"If this is defined, will remove all the songs between `from` defined earlier and this position",
+				requirements: [
+					"Number that references a song in the queue",
+					"Cannot be smaller than `from` position specified earlier"
+				].join("\n"),
+				required: false
+			}
+		]
+	},
 	builder: new SlashCommandBuilder()
 		.setName("remove")
 		.setDescription(

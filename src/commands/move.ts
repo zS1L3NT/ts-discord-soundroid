@@ -1,9 +1,31 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: true,
+	help: {
+		description: "Move a song in the queue to a specified position",
+		params: [
+			{
+				name: "from",
+				description: "This is the song's position in the queue that you want to move",
+				requirements: "Number that references a song in the queue",
+				required: true
+			},
+			{
+				name: "to",
+				description: [
+					"This is the position in the queue to move the song to",
+					"Moves a song to the top of a queue if this isn't provided"
+				].join("\n"),
+				requirements: "Number that references a position in the queue",
+				required: false,
+				default: "1"
+			}
+		]
+	},
 	builder: new SlashCommandBuilder()
 		.setName("move")
 		.setDescription("Change a song's position in the queue")

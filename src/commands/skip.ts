@@ -1,9 +1,22 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: false,
+	help: {
+		description: "Skips songs in the queue as many times as specified",
+		params: [
+			{
+				name: "count",
+				description: "This is the number of times you want to skip the song",
+				requirements: "Number",
+				required: false,
+				default: "1"
+			}
+		]
+	},
 	builder: new SlashCommandBuilder()
 		.setName("skip")
 		.setDescription("Skip current playing song and songs in queue")

@@ -23,6 +23,16 @@ export default class MenuHelper {
 		}
 	}
 
+	public update(options: MessagePayload | InteractionReplyOptions | EmbedResponse) {
+		if (options instanceof EmbedResponse) {
+			this.interaction.update({
+				embeds: [options.create()]
+			})
+		} else {
+			this.interaction.update(options)
+		}
+	}
+
 	public value(): string | undefined {
 		return this.interaction.values[0]
 	}

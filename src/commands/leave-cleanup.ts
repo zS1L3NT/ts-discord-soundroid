@@ -1,9 +1,17 @@
-import { SlashCommandBuilder } from "@discordjs/builders"
+import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
 import { GuildMember } from "discord.js"
 import { iInteractionFile } from "../utilities/BotSetupHelper"
-import EmbedResponse, { Emoji } from "../utilities/EmbedResponse"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile = {
+	defer: true,
+	help: {
+		description: [
+			"Removes all songs in the queue that were added by users who aren't currently in the voice channel",
+			"Does not skip the currently playing song no matter who it was added by"
+		].join("\n"),
+		params: []
+	},
 	builder: new SlashCommandBuilder()
 		.setName("leave-cleanup")
 		.setDescription("Clear all songs in the queue from users that have left the voice channel"),

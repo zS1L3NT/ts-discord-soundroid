@@ -81,7 +81,7 @@ export default class QueueFormatter {
 				components: [
 					new MessageActionRow().addComponents([
 						new MessageButton()
-							.setCustomId("queue-select-menu")
+							.setCustomId("queue-page-select")
 							.setStyle("PRIMARY")
 							.setLabel("Choose page")
 							.setDisabled(max_pages === 1),

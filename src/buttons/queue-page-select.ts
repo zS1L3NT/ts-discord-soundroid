@@ -4,6 +4,7 @@ import { iButtonFile } from "../utilities/BotSetupHelper"
 import { Message } from "discord.js"
 
 const file: iButtonFile = {
+	defer: true,
 	execute: async helper => {
 		const message = helper.interaction.message as Message
 		const embed = message.embeds[0]

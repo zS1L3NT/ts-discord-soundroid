@@ -8,7 +8,10 @@ const config = require("../../config.json")
 
 export default class SlashCommandDeployer {
 	private readonly guildId: string
-	private commands: SlashCommandBuilder[]
+	private commands: (
+		| SlashCommandBuilder
+		| Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
+	)[]
 
 	public constructor(
 		guildId: string,
