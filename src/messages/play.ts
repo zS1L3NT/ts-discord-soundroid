@@ -25,7 +25,7 @@ const file: iMessageFile<iValue, Document, GuildCache> = {
 		const query = helper.input()!.join(" ")
 
 		try {
-			const urlObject = new URL(query)
+			const URL_ = new URL(query)
 
 			if (!helper.cache.service) {
 				helper.cache.service = new MusicService(
@@ -40,7 +40,7 @@ const file: iMessageFile<iValue, Document, GuildCache> = {
 				)
 			}
 
-			const playlistMatch = urlObject.pathname.match(/^\/playlist\/(.*)$/)
+			const playlistMatch = URL_.pathname.match(/^\/playlist\/(.*)$/)
 			if (playlistMatch) {
 				try {
 					const [, playlistId] = playlistMatch

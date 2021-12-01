@@ -1,30 +1,30 @@
 import Song from "../models/Song"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
+import ytpl from "ytpl"
+import { YouTube } from "youtube-node"
 import { useTry } from "no-try"
 
 const config = require("../../config.json")
 
 export default class ApiHelper {
 	private youtubeMusicApi: any
+	private youtubeVideoApi: YouTube
 	private spotifyApi: SpotifyWebApi
 	private geniusApi: any
 
 	public constructor() {
 		this.youtubeMusicApi = new (require("youtube-music-api"))()
 		this.youtubeMusicApi.initalize()
+		this.youtubeVideoApi = new YouTube()
 		this.spotifyApi = new SpotifyWebApi(config.spotify)
 		this.spotifyApi.setAccessToken(config.spotify.accessToken)
 		this.geniusApi = new (require("node-genius-api"))(config.genius)
 	}
 
-	public async searchYoutubeSongs(
-		query: string,
-		requester: string,
-		limit: number = 10
-	): Promise<Song[]> {
+	public async searchYoutubeSongs(query: string, requester: string): Promise<Song[]> {
 		const results = (await this.youtubeMusicApi.search(query, "song")).content
-		if (results.length > limit) results.length = limit
+		if (results.length > 10) results.length = 10
 
 		const songs: Promise<Song>[] = results.map(
 			async (result: any) =>
@@ -74,6 +74,9 @@ export default class ApiHelper {
 		)
 	}
 
+	// @ts-ignore
+	public async searchYoutubeVideos(query: string, requester: string): Promise<Song> {}
+
 	public async findYoutubeVideo(url: string, requester: string): Promise<Song> {
 		const info = (await ytdl.getBasicInfo(url)).videoDetails
 		return new Song(
@@ -86,6 +89,18 @@ export default class ApiHelper {
 		)
 	}
 
+	public async findYoutubePlaylistLength(playlistId: string): Promise<number> {
+		return (await ytpl(playlistId)).estimatedItemCount
+	}
+
+	public async findYoutubePlaylist(
+		playlistId: string,
+		start: number,
+		end: number,
+		requester: string
+		// @ts-ignore
+	): Promise<Song[]> {}
+
 	public async refreshSpotify() {
 		const refresh_response = (await this.spotifyApi.refreshAccessToken()).body
 		this.spotifyApi.setAccessToken(refresh_response.access_token)
@@ -94,7 +109,7 @@ export default class ApiHelper {
 		)
 	}
 
-	public async findSpotifyPlaylistLength(playlistId: string) {
+	public async findSpotifyPlaylistLength(playlistId: string): Promise<number> {
 		await this.refreshSpotify()
 		return (await this.spotifyApi.getPlaylist(playlistId)).body.tracks.total
 	}
@@ -104,7 +119,7 @@ export default class ApiHelper {
 		start: number,
 		end: number,
 		requester: string
-	) {
+	): Promise<Song[]> {
 		await this.refreshSpotify()
 
 		const tracks: Song[] = []

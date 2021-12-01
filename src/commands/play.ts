@@ -22,7 +22,7 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 			"(1) YouTube Link",
 			"(2) Spotify Song Link",
 			"(3) Spotify Playlist Link",
-			"(4) YouTube Search Query"
+			"(4) YouTube Music Search Query"
 		].join("\n"),
 		params: [
 			{
@@ -59,7 +59,7 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 		const query = helper.string("query")!
 
 		try {
-			const urlObject = new URL(query)
+			const URL_ = new URL(query)
 
 			if (!helper.cache.service) {
 				helper.cache.service = new MusicService(

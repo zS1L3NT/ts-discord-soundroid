@@ -27,5 +27,6 @@
 		"clientSecret": "",
 		"redirectUri": ""
 	},
+	"google": "",
 	"genius": ""
 }
