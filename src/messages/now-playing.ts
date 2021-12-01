@@ -1,14 +1,15 @@
+import Document, { iValue } from "../models/Document"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import GuildCache from "../models/GuildCache"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
-import { iMessageFile } from "../utilities/BotSetupHelper"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 import { MessageEmbed } from "discord.js"
 
 const thumb = "🔘"
 const track = "▬"
 
-const file: iMessageFile = {
+const file: iMessageFile<iValue, Document, GuildCache> = {
 	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}now-playing`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -23,8 +24,8 @@ const file: iMessageFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const service = helper.cache.service
+		const service = helper.cache.service
+		if (service) {
 			if (service.queue.length === 0) {
 				helper.reactFailure()
 				return helper.respond(
@@ -34,9 +35,7 @@ const file: iMessageFile = {
 			}
 
 			const song = service.queue[0]
-			const state = helper.cache.service.player.state as
-				| AudioPlayerPlayingState
-				| AudioPlayerPausedState
+			const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
 			const percent = (state.playbackDuration / 1000 / song.duration) * 100
 			const index = percent === 100 ? 24 : Math.floor(percent / 4)
@@ -78,4 +77,4 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file

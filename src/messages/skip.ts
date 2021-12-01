@@ -1,7 +1,8 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
-import { iMessageFile } from "../utilities/BotSetupHelper"
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 
-const file: iMessageFile = {
+const file: iMessageFile<iValue, Document, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}skip`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -16,7 +17,8 @@ const file: iMessageFile = {
 			)
 		}
 
-		if (helper.cache.service) {
+		const service = helper.cache.service
+		if (service) {
 			const [count_str] = helper.input()!
 
 			const count = helper.getNumber(count_str, 1, 0)
@@ -27,7 +29,7 @@ const file: iMessageFile = {
 				)
 			}
 
-			const queue = [...helper.cache.service.queue]
+			const queue = [...service.queue]
 			if (count >= queue.length && count > 1) {
 				return helper.respond(
 					new ResponseBuilder(
@@ -37,12 +39,12 @@ const file: iMessageFile = {
 				)
 			}
 
-			helper.cache.service.queue = queue.slice(count - 1)
-			if (helper.cache.service.queue_loop) {
-				helper.cache.service.queue.push(...queue.slice(0, count - 1))
+			service.queue = queue.slice(count - 1)
+			if (service.queue_loop) {
+				service.queue.push(...queue.slice(0, count - 1))
 			}
 
-			helper.cache.service.player.stop()
+			service.player.stop()
 			helper.reactSuccess()
 			helper.cache.updateMusicChannel()
 		} else {
@@ -55,4 +57,4 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file

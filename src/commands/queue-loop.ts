@@ -1,9 +1,10 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	help: {
@@ -27,13 +28,14 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			helper.cache.service.loop = false
-			if (helper.cache.service.queue_loop) {
-				helper.cache.service.queue_loop = false
+		const service = helper.cache.service
+		if (service) {
+			service.loop = false
+			if (service.queue_loop) {
+				service.queue_loop = false
 				helper.respond(new ResponseBuilder(Emoji.GOOD, "Queue Loop disabled"))
 			} else {
-				helper.cache.service.queue_loop = true
+				service.queue_loop = true
 				helper.respond(new ResponseBuilder(Emoji.GOOD, "Queue Loop enabled"))
 			}
 			helper.cache.updateMusicChannel()
@@ -43,4 +45,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

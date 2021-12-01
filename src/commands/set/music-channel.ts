@@ -1,11 +1,12 @@
-import ResponseBuilder, { Emoji } from "../../utilities/ResponseBuilder"
+import Document, { iValue } from "../../models/Document"
+import GuildCache from "../../models/GuildCache"
+import { Emoji, iInteractionSubcommandFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, TextChannel } from "discord.js"
-import { iInteractionSubcommandFile } from "../../utilities/BotSetupHelper"
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
 
 const config = require("../../../config.json")
 
-const file: iInteractionSubcommandFile = {
+const file: iInteractionSubcommandFile<iValue, Document, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	help: {
@@ -50,10 +51,7 @@ const file: iInteractionSubcommandFile = {
 				await helper.cache.setMusicChannelId(channel.id)
 				helper.cache.updateMusicChannel()
 				helper.respond(
-					new ResponseBuilder(
-						Emoji.GOOD,
-						`Music channel reassigned to ${channel.toString()}`
-					)
+					new ResponseBuilder(Emoji.GOOD, `Music channel reassigned to ${channel.name}`)
 				)
 			}
 		} else if (channel === null) {
@@ -65,4 +63,4 @@ const file: iInteractionSubcommandFile = {
 	}
 }
 
-module.exports = file
+export default file

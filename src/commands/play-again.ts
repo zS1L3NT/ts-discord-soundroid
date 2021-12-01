@@ -1,9 +1,10 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	help: {
@@ -38,8 +39,9 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const song = helper.cache.service.queue.at(0)
+		const service = helper.cache.service
+		if (service) {
+			const song = service.queue.at(0)
 			if (!song) {
 				return helper.respond(new ResponseBuilder(Emoji.BAD, "No song playing right now"))
 			}
@@ -58,7 +60,7 @@ const file: iInteractionFile = {
 				)
 			}
 
-			helper.cache.service.queue.splice(1, 0, ...Array(count).fill(song))
+			service.queue.splice(1, 0, ...Array(count).fill(song))
 			helper.cache.updateMusicChannel()
 			helper.respond(
 				new ResponseBuilder(
@@ -72,4 +74,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

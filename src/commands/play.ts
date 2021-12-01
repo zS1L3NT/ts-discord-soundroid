@@ -1,7 +1,9 @@
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import Song from "../models/Song"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import {
 	GuildMember,
 	MessageActionRow,
@@ -9,10 +11,9 @@ import {
 	MessageSelectMenu,
 	VoiceChannel
 } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	help: {
@@ -145,4 +146,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

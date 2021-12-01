@@ -1,11 +1,12 @@
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
 import PageSelectBuilder from "../utilities/PageSelectBuilder"
 import QueueBuilder from "../utilities/QueueBuilder"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import { Emoji, iMenuFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, Message, TextChannel } from "discord.js"
-import { iMenuFile } from "../utilities/BotSetupHelper"
 import { useTryAsync } from "no-try"
 
-const file: iMenuFile = {
+const file: iMenuFile<iValue, Document, GuildCache> = {
 	defer: false,
 	ephemeral: true,
 	execute: async helper => {
@@ -47,4 +48,4 @@ const file: iMenuFile = {
 	}
 }
 
-module.exports = file
+export default file

@@ -1,7 +1,7 @@
-import { useTry } from "no-try"
+import Song from "../models/Song"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
-import Song from "../models/Song"
+import { useTry } from "no-try"
 
 const config = require("../../config.json")
 

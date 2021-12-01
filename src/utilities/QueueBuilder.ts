@@ -2,7 +2,7 @@ import DominantColorGetter from "./DominantColorGetter"
 import DurationHelper from "./DurationHelper"
 import GuildCache from "../models/GuildCache"
 import Song from "../models/Song"
-import { Emoji } from "./ResponseBuilder"
+import { Emoji } from "discordjs-nova"
 import {
 	GuildMember,
 	InteractionReplyOptions,

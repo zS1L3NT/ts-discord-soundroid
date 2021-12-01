@@ -1,6 +1,6 @@
+import ApiHelper from "../utilities/ApiHelper"
 import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice"
 import { raw as ytdl } from "youtube-dl-exec"
-import ApiHelper from "../utilities/ApiHelper"
 
 export default class Song {
 	public title: string

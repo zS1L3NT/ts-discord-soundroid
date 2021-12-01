@@ -1,8 +1,10 @@
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
 import QueueBuilder from "../utilities/QueueBuilder"
 import { GuildMember } from "discord.js"
-import { iButtonFile } from "../utilities/BotSetupHelper"
+import { iButtonFile } from "discordjs-nova"
 
-const file: iButtonFile = {
+const file: iButtonFile<iValue, Document, GuildCache> = {
 	defer: false,
 	ephemeral: true,
 	execute: async helper => {
@@ -12,4 +14,4 @@ const file: iButtonFile = {
 	}
 }
 
-module.exports = file
+export default file

@@ -1,7 +1,8 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
-import { iMessageFile } from "../utilities/BotSetupHelper"
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 
-const file: iMessageFile = {
+const file: iMessageFile<iValue, Document, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}move`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -36,8 +37,9 @@ const file: iMessageFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const queue = helper.cache.service.queue
+		const service = helper.cache.service
+		if (service) {
+			const queue = service.queue
 			const song = queue[from]
 
 			if (from >= queue.length) {
@@ -78,4 +80,4 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file

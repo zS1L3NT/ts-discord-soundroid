@@ -1,10 +1,12 @@
+import Document, { iValue } from "../models/Document"
 import DominantColorGetter from "../utilities/DominantColorGetter"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, MessageEmbed } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
+import { useTryAsync } from "no-try"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	help: {
@@ -42,8 +44,9 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const queue = helper.cache.service.queue
+		const service = helper.cache.service
+		if (service) {
+			const queue = service.queue
 			if (queue.length === 0) {
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now")
@@ -53,12 +56,11 @@ const file: iInteractionFile = {
 			const query = helper.string("query")
 			const song = queue[0]
 
-			let lyrics: string
-			try {
-				lyrics = await helper.cache.apiHelper.findGeniusLyrics(
-					query || `${song.title} ${song.artiste}`
-				)
-			} catch {
+			const [err, lyrics] = await useTryAsync(() =>
+				helper.cache.apiHelper.findGeniusLyrics(query || `${song.title} ${song.artiste}`)
+			)
+
+			if (err) {
 				if (query) {
 					return helper.respond(
 						new ResponseBuilder(
@@ -98,4 +100,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

@@ -1,11 +1,12 @@
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, VoiceChannel } from "discord.js"
-import { iMessageFile } from "../utilities/BotSetupHelper"
 import { useTry } from "no-try"
 
-const file: iMessageFile = {
+const file: iMessageFile<iValue, Document, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}play-range`),
 	execute: async helper => {
 		const member = helper.message.member as GuildMember
@@ -149,4 +150,4 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file

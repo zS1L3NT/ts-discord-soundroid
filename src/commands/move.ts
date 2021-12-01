@@ -1,9 +1,10 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	help: {
@@ -57,11 +58,12 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
+		const service = helper.cache.service
+		if (service) {
 			const from = helper.integer("from")!
 			const to = helper.integer("to")
 
-			const queue = helper.cache.service.queue
+			const queue = service.queue
 			const song = queue[from]
 
 			if (from < 1 || from >= queue.length) {
@@ -92,4 +94,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

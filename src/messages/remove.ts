@@ -1,7 +1,8 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
-import { iMessageFile } from "../utilities/BotSetupHelper"
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 
-const file: iMessageFile = {
+const file: iMessageFile<iValue, Document, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}remove`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -36,8 +37,9 @@ const file: iMessageFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			if (from >= helper.cache.service.queue.length) {
+		const service = helper.cache.service
+		if (service) {
+			if (from >= service.queue.length) {
 				helper.reactFailure()
 				helper.respond(
 					new ResponseBuilder(Emoji.BAD, "No such starting position in the queue"),
@@ -45,7 +47,7 @@ const file: iMessageFile = {
 				)
 			} else {
 				if (to) {
-					if (to <= from || to >= helper.cache.service.queue.length) {
+					if (to <= from || to >= service.queue.length) {
 						helper.reactFailure()
 						helper.respond(
 							new ResponseBuilder(
@@ -56,7 +58,7 @@ const file: iMessageFile = {
 						)
 					} else {
 						const delete_count = to - from + 1
-						helper.cache.service.queue.splice(from, delete_count)
+						service.queue.splice(from, delete_count)
 						helper.cache.updateMusicChannel()
 						helper.reactSuccess()
 						helper.respond(
@@ -68,7 +70,7 @@ const file: iMessageFile = {
 						)
 					}
 				} else {
-					const song = helper.cache.service.queue.splice(from, 1)[0]
+					const song = service.queue.splice(from, 1)[0]
 					helper.cache.updateMusicChannel()
 					helper.reactSuccess()
 					helper.respond(
@@ -90,4 +92,4 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file

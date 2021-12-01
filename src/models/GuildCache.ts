@@ -1,37 +1,28 @@
 import ApiHelper from "../utilities/ApiHelper"
-import ChannelCleaner from "../utilities/ChannelCleaner"
-import Document, { iDocument } from "./Document"
+import Document, { iValue } from "./Document"
 import MusicService from "./MusicService"
 import QueueBuilder from "../utilities/QueueBuilder"
-import { Client, Guild, GuildMember, Message, MessageEmbed, VoiceChannel } from "discord.js"
+import { BaseGuildCache, ChannelCleaner } from "discordjs-nova"
+import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 
-export default class GuildCache {
-	public bot: Client
-	public guild: Guild
-	public ref: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
-	private document: Document = Document.getEmpty()
-
-	public apiHelper: ApiHelper
+export default class GuildCache extends BaseGuildCache<iValue, Document, GuildCache> {
+	public apiHelper!: ApiHelper
 	public service?: MusicService
 
-	public constructor(
-		bot: Client,
-		guild: Guild,
-		apiHelper: ApiHelper,
-		ref: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,
-		resolve: (cache: GuildCache) => void
-	) {
-		this.bot = bot
-		this.guild = guild
-		this.apiHelper = apiHelper
-		this.ref = ref
+	public onConstruct(): void {}
+
+	public resolve(resolve: (cache: GuildCache) => void): void {
 		this.ref.onSnapshot(snap => {
 			if (snap.exists) {
-				this.document = new Document(snap.data() as iDocument)
+				this.document = new Document(snap.data() as iValue)
 				resolve(this)
 			}
 		})
+	}
+
+	public setApiHelper(apiHelper: ApiHelper) {
+		this.apiHelper = apiHelper
 	}
 
 	/**
@@ -51,7 +42,9 @@ export default class GuildCache {
 
 		const [message_err, message] = await useTryAsync(async () => {
 			const musicMessageId = this.getMusicMessageId()
-			const cleaner = new ChannelCleaner(this, musicChannelId, [musicMessageId])
+			const cleaner = new ChannelCleaner<iValue, Document, GuildCache>(this, musicChannelId, [
+				musicMessageId
+			])
 			await cleaner.clean()
 
 			const [newMusicMessageId] = cleaner.getMessageIds()

@@ -1,7 +1,8 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
-import { iMessageFile } from "../utilities/BotSetupHelper"
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 
-const file: iMessageFile = {
+const file: iMessageFile<iValue, Document, GuildCache> = {
 	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}loop`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -16,13 +17,14 @@ const file: iMessageFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			helper.cache.service.queue_loop = false
-			if (helper.cache.service.loop) {
-				helper.cache.service.loop = false
+		const service = helper.cache.service
+		if (service) {
+			service.queue_loop = false
+			if (service.loop) {
+				service.loop = false
 				helper.respond(new ResponseBuilder(Emoji.GOOD, "Loop disabled"), 3000)
 			} else {
-				helper.cache.service.loop = true
+				service.loop = true
 				helper.respond(new ResponseBuilder(Emoji.GOOD, "Loop enabled"), 3000)
 			}
 			helper.reactSuccess()
@@ -37,4 +39,4 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file

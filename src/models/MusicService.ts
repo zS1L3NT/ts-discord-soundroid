@@ -1,5 +1,4 @@
 import GuildCache from "./GuildCache"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import Song from "./Song"
 import {
 	AudioPlayer,

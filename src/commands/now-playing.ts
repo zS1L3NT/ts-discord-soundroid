@@ -1,15 +1,16 @@
+import Document, { iValue } from "../models/Document"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import GuildCache from "../models/GuildCache"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, MessageEmbed } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
 const thumb = "🔘"
 const track = "▬"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	help: {
@@ -31,8 +32,8 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const service = helper.cache.service
+		const service = helper.cache.service
+		if (service) {
 			if (service.queue.length === 0) {
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now")
@@ -40,9 +41,7 @@ const file: iInteractionFile = {
 			}
 
 			const song = service.queue[0]
-			const state = helper.cache.service.player.state as
-				| AudioPlayerPlayingState
-				| AudioPlayerPausedState
+			const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
 			const percent = (state.playbackDuration / 1000 / song.duration) * 100
 			const index = percent === 100 ? 24 : Math.floor(percent / 4)
@@ -76,4 +75,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

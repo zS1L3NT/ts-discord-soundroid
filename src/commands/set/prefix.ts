@@ -1,11 +1,12 @@
-import ResponseBuilder, { Emoji } from "../../utilities/ResponseBuilder"
+import Document, { iValue } from "../../models/Document"
+import GuildCache from "../../models/GuildCache"
+import { Emoji, iInteractionSubcommandFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionSubcommandFile } from "../../utilities/BotSetupHelper"
 import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
 
 const config = require("../../../config.json")
 
-const file: iInteractionSubcommandFile = {
+const file: iInteractionSubcommandFile<iValue, Document, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	help: {
@@ -45,4 +46,4 @@ const file: iInteractionSubcommandFile = {
 	}
 }
 
-module.exports = file
+export default file

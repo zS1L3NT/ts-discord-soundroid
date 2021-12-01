@@ -1,10 +1,11 @@
+import Document, { iValue } from "../models/Document"
+import GuildCache from "../models/GuildCache"
 import QueueBuilder from "../utilities/QueueBuilder"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	help: {
@@ -36,4 +37,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file
