@@ -2,21 +2,19 @@ import Song from "../models/Song"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import ytpl from "ytpl"
-import { YouTube } from "youtube-node"
+import youtubeVideoApi from "yt-search"
 import { useTry } from "no-try"
 
 const config = require("../../config.json")
 
 export default class ApiHelper {
 	private youtubeMusicApi: any
-	private youtubeVideoApi: YouTube
 	private spotifyApi: SpotifyWebApi
 	private geniusApi: any
 
 	public constructor() {
 		this.youtubeMusicApi = new (require("youtube-music-api"))()
 		this.youtubeMusicApi.initalize()
-		this.youtubeVideoApi = new YouTube()
 		this.spotifyApi = new SpotifyWebApi(config.spotify)
 		this.spotifyApi.setAccessToken(config.spotify.accessToken)
 		this.geniusApi = new (require("node-genius-api"))(config.genius)
@@ -74,8 +72,22 @@ export default class ApiHelper {
 		)
 	}
 
-	// @ts-ignore
-	public async searchYoutubeVideos(query: string, requester: string): Promise<Song> {}
+	public async searchYoutubeVideos(query: string, requester: string): Promise<Song[]> {
+		const { videos } = await youtubeVideoApi.search(query)
+		return videos
+			.map(
+				video =>
+					new Song(
+						video.title,
+						video.author.name,
+						video.thumbnail,
+						"https://youtu.be/" + video.videoId,
+						video.seconds,
+						requester
+					)
+			)
+			.slice(0, 10)
+	}
 
 	public async findYoutubeVideo(url: string, requester: string): Promise<Song> {
 		const info = (await ytdl.getBasicInfo(url)).videoDetails
@@ -98,8 +110,22 @@ export default class ApiHelper {
 		start: number,
 		end: number,
 		requester: string
-		// @ts-ignore
-	): Promise<Song[]> {}
+	): Promise<Song[]> {
+		const { items: videos } = await ytpl(playlistId, { limit: end })
+		return videos
+			.slice(start - 1)
+			.map(
+				video =>
+					new Song(
+						video.title,
+						video.author.name,
+						video.bestThumbnail.url || "",
+						"https://youtu.be/" + video.id,
+						video.durationSec || 0,
+						requester
+					)
+			)
+	}
 
 	public async refreshSpotify() {
 		const refresh_response = (await this.spotifyApi.refreshAccessToken()).body
