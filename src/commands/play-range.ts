@@ -5,7 +5,7 @@ import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, VoiceChannel } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
-import { useTry } from "no-try"
+import { useTry, useTryAsync } from "no-try"
 
 const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
@@ -92,13 +92,15 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 
 		const link = helper.string("link")!
 		const [err, playlistId] = useTry(() => {
-			const linkURI = new URL(link)
-			const linkMatch = linkURI.pathname.match(/^\/playlist\/(.*)$/)
-			if (!linkMatch || linkURI.host !== "open.spotify.com") {
-				throw new Error()
+			const url = new URL(link)
+			if (url.host === "open.spotify.com" && url.pathname.startsWith("/playlist/")) {
+				return url.pathname.slice("/playlist/".length)
+			}
+			if (url.host.endsWith(".youtube.com") && url.pathname === "/playlist") {
+				return url.searchParams.get("list")!
 			}
 
-			return linkMatch[1]
+			throw new Error()
 		})
 
 		if (err) {
@@ -136,7 +138,14 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 			}
 		}
 
-		const length = await helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
+		const [, sp_length] = await useTryAsync(() =>
+			helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
+		)
+		const [, yt_length] = await useTryAsync(() =>
+			helper.cache.apiHelper.findYoutubePlaylistLength(playlistId)
+		)
+		const length = sp_length || yt_length
+
 		if (to && to > length) {
 			return helper.respond(
 				new ResponseBuilder(
@@ -152,12 +161,13 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 
 		helper.respond(new ResponseBuilder(Emoji.GOOD, `Adding songs from #${from} to #${to}...`))
 
-		const songs = await helper.cache.apiHelper.findSpotifyPlaylist(
-			playlistId,
-			from,
-			to,
-			member.id
+		const [, sp_songs] = await useTryAsync(() =>
+			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, member.id)
 		)
+		const [, yt_songs] = await useTryAsync(() =>
+			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, member.id)
+		)
+		const songs =  sp_songs || yt_songs
 
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)
