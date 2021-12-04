@@ -1,19 +1,13 @@
+import ConversionHelper from "../utilities/ConversionHelper"
 import Document, { iValue } from "../models/Document"
 import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
-import Song from "../models/Song"
+import SearchSelectBuilder from "../utilities/SearchSelectBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
-import {
-	GuildMember,
-	MessageActionRow,
-	MessageEmbed,
-	MessageSelectMenu,
-	VoiceChannel
-} from "discord.js"
+import { GuildMember, VoiceChannel } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { useTry, useTryAsync } from "no-try"
-import ConversionHelper from "../utilities/ConversionHelper"
 
 const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
@@ -111,31 +105,9 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 				helper.respond(new ResponseBuilder(Emoji.BAD, err.message))
 			}
 		} else {
-			const results = await helper.cache.apiHelper.searchYoutubeSongs(query, member.id)
-			const emojis: string[] = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
-
-			helper.respond({
-				embeds: [
-					new MessageEmbed()
-						.setAuthor(
-							`YouTube search results for: "${query}"`,
-							`https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
-						)
-						.setColor("#FF0000")
-				],
-				components: [
-					new MessageActionRow().addComponents(
-						new MessageSelectMenu().setCustomId("search-query").addOptions(
-							results.map((result, i) => ({
-								emoji: emojis[i],
-								label: result.title,
-								value: result.url,
-								description: result.artiste
-							}))
-						)
-					)
-				]
-			})
+			helper.respond(
+				await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildVideo()
+			)
 		}
 	}
 }
