@@ -21,10 +21,6 @@ export default class GuildCache extends BaseGuildCache<iValue, Document, GuildCa
 		})
 	}
 
-	public setApiHelper(apiHelper: ApiHelper) {
-		this.apiHelper = apiHelper
-	}
-
 	/**
 	 * Method run every minute
 	 */

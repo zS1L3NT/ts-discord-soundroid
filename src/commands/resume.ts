@@ -5,7 +5,7 @@ import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile<iValue, Document, GuildCache> = {
-	defer: false,
+	defer: true,
 	ephemeral: true,
 	help: {
 		description: "Resume the current song",

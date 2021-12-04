@@ -4,11 +4,9 @@ import GuildCache from "./GuildCache"
 import { BaseBotCache } from "discordjs-nova"
 
 export default class BotCache extends BaseBotCache<iValue, Document, GuildCache> {
-	private apiHelper!: ApiHelper
+	private apiHelper: ApiHelper = new ApiHelper()
 
-	public onConstruct(): void {
-		this.apiHelper = new ApiHelper()
-	}
+	public onConstruct(): void {}
 
 	public onSetGuildCache(cache: GuildCache): void {
 		cache.apiHelper = this.apiHelper

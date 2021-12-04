@@ -12,6 +12,8 @@ import {
 	VoiceChannel
 } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
+import { useTry, useTryAsync } from "no-try"
+import ConversionHelper from "../utilities/ConversionHelper"
 
 const file: iInteractionFile<iValue, Document, GuildCache> = {
 	defer: true,
@@ -19,15 +21,16 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 	help: {
 		description: [
 			"Play a song with either",
-			"(1) YouTube Link",
-			"(2) Spotify Song Link",
-			"(3) Spotify Playlist Link",
-			"(4) YouTube Music Search Query"
+			"(1) YouTube Video Link",
+			"(2) YouTube Playlist Link",
+			"(3) Spotify Song Link",
+			"(4) Spotify Playlist Link",
+			"(5) YouTube Music Search Query"
 		].join("\n"),
 		params: [
 			{
 				name: "query",
-				description: "Can be either of the 4 options specified above",
+				description: "Can be either of the 5 options specified above",
 				requirements: "Text or URL",
 				required: true
 			}
@@ -58,65 +61,56 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 
 		const query = helper.string("query")!
 
-		try {
-			const URL_ = new URL(query)
+		const [, url] = useTry(() => new URL(query))
+		if (url) {
+			const [err] = await useTryAsync(async () => {
+				const songs = await new ConversionHelper(
+					helper.cache.apiHelper,
+					url,
+					member.id
+				).getSongs()
+				const [first] = songs
 
-			if (!helper.cache.service) {
-				helper.cache.service = new MusicService(
-					joinVoiceChannel({
-						channelId: channel.id,
-						guildId: channel.guild.id,
-						adapterCreator: channel.guild
-							.voiceAdapterCreator as DiscordGatewayAdapterCreator,
-						selfDeaf: false
-					}),
-					helper.cache
-				)
-			}
+				if (!first) {
+					return helper.respond(new ResponseBuilder(Emoji.BAD, "Playlist is empty"))
+				}
 
-			const playlistMatch = urlObject.pathname.match(/^\/playlist\/(.*)$/)
-			if (playlistMatch) {
-				try {
-					const [, playlistId] = playlistMatch
-					const songs = await helper.cache.apiHelper.findSpotifyPlaylist(
-						playlistId,
-						1,
-						100,
-						member.id
-					)
-					if (songs.length > 0) {
-						helper.cache.service!.enqueue(songs.shift()!)
-						helper.cache.service!.queue.push(...songs)
-						helper.cache.updateMusicChannel()
-						helper.respond(
-							new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`)
-						)
-					} else {
-						helper.respond(new ResponseBuilder(Emoji.BAD, "Playlist is empty"))
-					}
-				} catch (err) {
-					console.error(`[PLAY]:`, err)
-					helper.respond(
-						new ResponseBuilder(Emoji.BAD, "Error playing playlist from url")
+				if (!helper.cache.service) {
+					helper.cache.service = new MusicService(
+						joinVoiceChannel({
+							channelId: channel.id,
+							guildId: channel.guild.id,
+							adapterCreator: channel.guild
+								.voiceAdapterCreator as DiscordGatewayAdapterCreator,
+							selfDeaf: false
+						}),
+						helper.cache
 					)
 				}
-			} else {
-				try {
-					const song = await Song.from(helper.cache.apiHelper, query, member.id)
-					helper.cache.service!.enqueue(song)
-					helper.cache.updateMusicChannel()
+				const service = helper.cache.service
+
+				service.enqueue(first)
+				service.queue.push(...songs.slice(1))
+				helper.cache.updateMusicChannel()
+
+				if (songs.length === 1) {
 					helper.respond(
 						new ResponseBuilder(
 							Emoji.GOOD,
-							`Enqueued: "${song.title} - ${song.artiste}"`
+							`Enqueued: "${first.title} - ${first.artiste}"`
 						)
 					)
-				} catch (err) {
-					console.error(`[PLAY]:`, err)
-					helper.respond(new ResponseBuilder(Emoji.BAD, "Error playing song from url"))
+				} else {
+					helper.respond(
+						new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`)
+					)
 				}
+			})
+
+			if (err) {
+				helper.respond(new ResponseBuilder(Emoji.BAD, err.message))
 			}
-		} catch {
+		} else {
 			const results = await helper.cache.apiHelper.searchYoutubeSongs(query, member.id)
 			const emojis: string[] = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 

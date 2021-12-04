@@ -31,7 +31,7 @@ const file: iInteractionSubcommandFile<iValue, Document, GuildCache> = {
 		.setName("music-channel")
 		.setDescription("Set the channel where the bot sends information of playing songs")
 		.addChannelOption(option =>
-			option.setName("channel").setDescription("Leave empty to unset the music channel")
+			option.setName("channel").setDescription("Leave empty to unset the music channel").setRequired(false)
 		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
