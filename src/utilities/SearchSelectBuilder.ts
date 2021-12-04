@@ -6,7 +6,6 @@ import {
 	MessageOptions,
 	MessageSelectMenu
 } from "discord.js"
-import { query } from "express"
 
 export default class SearchSelectBuilder {
 	private static emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
@@ -28,7 +27,7 @@ export default class SearchSelectBuilder {
 			embeds: [
 				new MessageEmbed()
 					.setAuthor(
-						`YouTube Video search results for: "${query}"`,
+						`YouTube Video search results for: "${this.query}"`,
 						`https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
 					)
 					.setColor("#FF0000")
@@ -46,7 +45,7 @@ export default class SearchSelectBuilder {
 				),
 				new MessageActionRow().addComponents(
 					new MessageButton()
-						.setCustomId("search-songs")
+						.setCustomId("search-music")
 						.setEmoji("🎵")
 						.setLabel("Search YouTube Music")
 						.setStyle("PRIMARY")
@@ -62,8 +61,8 @@ export default class SearchSelectBuilder {
 			embeds: [
 				new MessageEmbed()
 					.setAuthor(
-						`YouTube Music search results for: "${query}"`,
-						`https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
+						`YouTube Music search results for: "${this.query}"`,
+						`https://brandlogos.net/wp-content/uploads/2021/11/youtube-music-logo-1-512x512.png`
 					)
 					.setColor("#FF0000")
 			],

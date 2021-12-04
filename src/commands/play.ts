@@ -106,7 +106,7 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 			}
 		} else {
 			helper.respond(
-				await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildVideo()
+				await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildMusic()
 			)
 		}
 	}

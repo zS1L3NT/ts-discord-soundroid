@@ -81,7 +81,7 @@ const file: iMessageFile<iValue, Document, GuildCache> = {
 		} else {
 			helper.reactSuccess()
 			helper.respond(
-				await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildVideo()
+				await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildMusic()
 			)
 		}
 	}

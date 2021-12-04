@@ -6,7 +6,7 @@ import GuildCache from "../models/GuildCache"
 import SearchSelectBuilder from "../utilities/SearchSelectBuilder"
 
 const file: iButtonFile<iValue, Document, GuildCache> = {
-	defer: true,
+	defer: false,
 	ephemeral: true,
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
@@ -19,13 +19,13 @@ const file: iButtonFile<iValue, Document, GuildCache> = {
 		})
 
 		if (err) {
-			helper.respond(
+			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, "Failed to get information about previous search")
 			)
 		}
 
 		await helper.interaction.update(
-			await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildVideo()
+			await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildMusic()
 		)
 	}
 }
