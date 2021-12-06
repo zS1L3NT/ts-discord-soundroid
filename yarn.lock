@@ -1275,13 +1275,12 @@ discord.js@^13.3.1:
     node-fetch "^2.6.1"
     ws "^8.2.3"
 
-discordjs-nova@../ts-npm-discordjs-nova/discordjs-nova-1.0.1.tgz:
-  version "1.0.1"
-  resolved "../ts-npm-discordjs-nova/discordjs-nova-1.0.1.tgz#fbad389ee85b4b97a85f891b3c975e12dcc2e54e"
+discordjs-nova@../ts-npm-discordjs-nova/discordjs-nova-1.0.2.tgz:
+  version "1.0.2"
+  resolved "../ts-npm-discordjs-nova/discordjs-nova-1.0.2.tgz#d72d62b22d580789253855e2c98a31319614879f"
   dependencies:
     "@discordjs/builders" "^0.8.2"
     "@discordjs/rest" "0.1.0-canary.0"
-    "@discordjs/voice" "^0.7.5"
     after-every "^1.0.4"
     discord-api-types "0.24.0"
     discord.js "^13.3.1"
@@ -1333,11 +1332,6 @@ dot-prop@^6.0.1:
   integrity sha512-tE7ztYzXHIeyvc7N+hR3oi7FIbf/NIjVP9hmAt3yMXzrQ072/fpjGLx2GxNxGxUl5V73MEqYzioOMoVhGMJ5cA==
   dependencies:
     is-obj "^2.0.0"
-
-dotenv@^10.0.0:
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-10.0.0.tgz#3d4227b8fb95f81096cdd2b66653fb2c7085ba81"
-  integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
 duplexify@^4.0.0, duplexify@^4.1.1:
   version "4.1.2"
