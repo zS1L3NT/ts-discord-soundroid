@@ -1,14 +1,13 @@
-import AfterEvery from "after-every"
-import { Client, Intents } from "discord.js"
+import axios from "axios"
+import BotCache from "./models/BotCache"
 import express from "express"
+import fs from "fs/promises"
+import GuildCache from "./models/GuildCache"
+import NovaBot from "discordjs-nova"
 import open from "open"
 import path from "path"
 import qs from "qs"
-import fs from "fs/promises"
-import GuildCache from "./models/GuildCache"
-import BotSetupHelper from "./utilities/BotSetupHelper"
-import axios from "axios"
-import SlashCommandDeployer from "./utilities/SlashCommandDeployer"
+import { Intents } from "discord.js"
 
 const config = require("../config.json")
 
@@ -73,72 +72,46 @@ const refresh_spotify = () => {
 }
 
 const start_bot = () => {
-	// region Initialize bot
-	const bot = new Client({
+	new NovaBot({
+		name: "SounDroid#5566",
 		intents: [
 			Intents.FLAGS.GUILD_VOICE_STATES,
 			Intents.FLAGS.GUILD_MESSAGES,
 			Intents.FLAGS.GUILDS
-		]
-	})
-	const botSetupHelper = new BotSetupHelper(bot)
-	const { botCache } = botSetupHelper
-	// endregion
+		],
+		cwd: __dirname,
+		config,
+		updatesMinutely: true,
 
-	void bot.login(config.discord.token)
-	bot.on("ready", async () => {
-		console.log("Logged in as SounDroid#5566")
-		bot.user!.setPresence({
-			activities: [
-				{
-					name: "/help",
-					type: "LISTENING"
-				}
-			]
-		})
+		help: {
+			message: cache =>
+				[
+					"Welcome to SounDroid!",
+					"SounDroid is a Music bot which plays songs from Spotify and YouTube",
+					cache.getPrefix()
+						? `My prefix for message commands is \`${cache.getPrefix()}\``
+						: `No message command prefix for this server`
+				].join("\n"),
+			icon: "https://cdn.discordapp.com/avatars/899858077027811379/56e8665909db40439b09e13627970b62.png?size=128"
+		},
 
-		let debugCount = 0
+		GuildCache,
+		BotCache,
 
-		let i = 0
-		let count = bot.guilds.cache.size
-		for (const guild of bot.guilds.cache.toJSON()) {
-			const tag = `${(++i).toString().padStart(count.toString().length, "0")}/${count}`
-			let cache: GuildCache | undefined
-			try {
-				cache = await botCache.getGuildCache(guild)
-			} catch (err) {
-				console.error(
-					`${tag} ❌ Couldn't find a Firebase Document for Guild(${guild.name})`
-				)
-				guild.leave()
-				continue
+		onSetup: botCache => {
+			botCache.bot.user!.setPresence({
+				activities: [
+					{
+						name: "/help",
+						type: "LISTENING"
+					}
+				]
+			})
+
+			for (const guild of botCache.bot.guilds.cache.toJSON()) {
+				guild.me?.setNickname("SounDroid")
 			}
-
-			try {
-				await new SlashCommandDeployer(guild.id, botSetupHelper.interactionFiles).deploy()
-			} catch (err) {
-				console.error(
-					`${tag} ❌ Couldn't get Slash Command permission for Guild(${guild.name})`
-				)
-				guild.leave()
-				continue
-			}
-
-			cache.updateMinutely(debugCount)
-			guild.me?.setNickname("SounDroid Bot")
-
-			console.log(`${tag} ✅ Restored cache for Guild(${guild.name})`)
 		}
-		console.log(`✅ All bot cache restored`)
-		console.log("|")
-
-		AfterEvery(1).minutes(async () => {
-			debugCount++
-			for (const guild of bot.guilds.cache.toJSON()) {
-				const cache = await botCache.getGuildCache(guild)
-				cache.updateMinutely(debugCount)
-			}
-		})
 	})
 }
 

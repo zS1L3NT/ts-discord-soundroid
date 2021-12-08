@@ -1,25 +1,24 @@
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, MessageEmbed } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
 const thumb = "🔘"
 const track = "▬"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description:
-			"Shows you the currently playing song with a progressbar showing how far into the song you are",
-		params: []
+	data: {
+		name: "now-playing",
+		description: {
+			slash: "Show the currently playing, along with the time",
+			help: "Shows the currently playing song with a progressbar showing how far into the song you are"
+		}
 	},
-	builder: new SlashCommandBuilder()
-		.setName("now-playing")
-		.setDescription("Shows what's currently playing, along with the time"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -31,8 +30,8 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const service = helper.cache.service
+		const service = helper.cache.service
+		if (service) {
 			if (service.queue.length === 0) {
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now")
@@ -40,9 +39,7 @@ const file: iInteractionFile = {
 			}
 
 			const song = service.queue[0]
-			const state = helper.cache.service.player.state as
-				| AudioPlayerPlayingState
-				| AudioPlayerPausedState
+			const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
 			const percent = (state.playbackDuration / 1000 / song.duration) * 100
 			const index = percent === 100 ? 24 : Math.floor(percent / 4)
@@ -76,4 +73,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

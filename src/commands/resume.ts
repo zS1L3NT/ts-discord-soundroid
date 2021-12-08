@@ -1,16 +1,18 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
-	defer: false,
+const file: iInteractionFile<Entry, GuildCache> = {
+	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Resume the current song",
-		params: []
+	data: {
+		name: "resume",
+		description: {
+			slash: "Resume the current song",
+			help: "Resumes the current song"
+		}
 	},
-	builder: new SlashCommandBuilder().setName("resume").setDescription("Resume the current song"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -22,8 +24,9 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			helper.cache.service.player.unpause()
+		const service = helper.cache.service
+		if (service) {
+			service.player.unpause()
 			helper.cache.updateMusicChannel()
 		} else {
 			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
@@ -31,4 +34,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

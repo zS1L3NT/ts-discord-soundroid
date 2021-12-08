@@ -1,18 +1,18 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
-	defer: false,
+const file: iInteractionFile<Entry, GuildCache> = {
+	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Shuffles the songs in the queue",
-		params: []
+	data: {
+		name: "shuffle",
+		description: {
+			slash: "Shuffle the songs in the queue",
+			help: "Shuffles the songs in the queue"
+		}
 	},
-	builder: new SlashCommandBuilder()
-		.setName("shuffle")
-		.setDescription("Shuffles the songs in the queue to a random order"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -24,9 +24,10 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const queue = helper.cache.service.queue
-			helper.cache.service.queue = [
+		const service = helper.cache.service
+		if (service) {
+			const queue = service.queue
+			service.queue = [
 				queue[0],
 				...queue
 					.slice(1)
@@ -41,4 +42,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

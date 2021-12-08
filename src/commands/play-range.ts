@@ -1,34 +1,53 @@
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, VoiceChannel } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
-import { useTry } from "no-try"
+import { useTry, useTryAsync } from "no-try"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description:
-			"Plays a Spotify playlist, except you can specify which song you want to start playing from",
-		params: [
+	data: {
+		name: "play-range",
+		description: {
+			slash: "Plays a YouTube/Spotify Playlist and allows choosing the playlist range",
+			help: [
+				"Plays a YouTube/Spotify Playlist by it's link",
+				"You can define a range to play the playlist",
+				"Cannot add more than 1000 songs"
+			].join("\n")
+		},
+		options: [
 			{
 				name: "link",
-				description: "Spotify playlist link",
+				description: {
+					slash: "YouTube/Spotify Playlist link",
+					help: "The YouTube/Spotify Playlist link"
+				},
+				type: "string",
 				requirements: "URL",
 				required: true
 			},
 			{
 				name: "from",
-				description: "The first position of the playlist to play from",
+				description: {
+					slash: "First position of the playlist to play from",
+					help: "The first position of the playlist to play from"
+				},
+				type: "number",
 				requirements: "Number that references a song in the Spotify playlist",
 				required: false,
 				default: "1"
 			},
 			{
 				name: "to",
-				description: "The last position of the playlist to play from",
+				description: {
+					slash: "Last position of the playlist to play from",
+					help: "The last position of the playlist to play from"
+				},
+				type: "number",
 				requirements: [
 					"Number that references a song in the Spotify playlist",
 					"Cannot be smaller than `from` position specified earlier",
@@ -39,31 +58,6 @@ const file: iInteractionFile = {
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("play-range")
-		.setDescription("Play a Spotify playlist from a specific range")
-		.addStringOption(option =>
-			option
-				.setName("link")
-				.setDescription("Must be a Spotify Playlist link")
-				.setRequired(true)
-		)
-		.addIntegerOption(option =>
-			option
-				.setName("from")
-				.setDescription(
-					"The first song in the playlist to add to queue. Leave empty for first song"
-				)
-				.setRequired(false)
-		)
-		.addIntegerOption(option =>
-			option
-				.setName("to")
-				.setDescription(
-					"The last song in the playlist to add to queue. Leave empty for last song"
-				)
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel
@@ -91,13 +85,15 @@ const file: iInteractionFile = {
 
 		const link = helper.string("link")!
 		const [err, playlistId] = useTry(() => {
-			const linkURI = new URL(link)
-			const linkMatch = linkURI.pathname.match(/^\/playlist\/(.*)$/)
-			if (!linkMatch || linkURI.host !== "open.spotify.com") {
-				throw new Error()
+			const url = new URL(link)
+			if (url.host === "open.spotify.com" && url.pathname.startsWith("/playlist/")) {
+				return url.pathname.slice("/playlist/".length)
+			}
+			if (url.host.endsWith(".youtube.com") && url.pathname === "/playlist") {
+				return url.searchParams.get("list")!
 			}
 
-			return linkMatch[1]
+			throw new Error()
 		})
 
 		if (err) {
@@ -135,7 +131,14 @@ const file: iInteractionFile = {
 			}
 		}
 
-		const length = await helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
+		const [, sp_length] = await useTryAsync(() =>
+			helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
+		)
+		const [, yt_length] = await useTryAsync(() =>
+			helper.cache.apiHelper.findYoutubePlaylistLength(playlistId)
+		)
+		const length = sp_length || yt_length
+
 		if (to && to > length) {
 			return helper.respond(
 				new ResponseBuilder(
@@ -151,12 +154,13 @@ const file: iInteractionFile = {
 
 		helper.respond(new ResponseBuilder(Emoji.GOOD, `Adding songs from #${from} to #${to}...`))
 
-		const songs = await helper.cache.apiHelper.findSpotifyPlaylist(
-			playlistId,
-			from,
-			to,
-			member.id
+		const [, sp_songs] = await useTryAsync(() =>
+			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, member.id)
 		)
+		const [, yt_songs] = await useTryAsync(() =>
+			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, member.id)
+		)
+		const songs = sp_songs || yt_songs
 
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)
@@ -165,4 +169,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

@@ -1,32 +1,31 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Plays the current playing song again as many times as specified",
-		params: [
+	data: {
+		name: "play-again",
+		description: {
+			slash: "Play the current song again",
+			help: "Plays the current playing song again as many times as specified"
+		},
+		options: [
 			{
 				name: "count",
-				description: "This is the number of times you want the song to repeat",
+				description: {
+					slash: "Number of times to play the current song again",
+					help: "This is the number of times you want the song to play again"
+				},
+				type: "number",
 				requirements: "Number between 1 and 1000",
 				required: false,
 				default: "1"
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("play-again")
-		.setDescription("Play the current song again")
-		.addIntegerOption(option =>
-			option
-				.setName("count")
-				.setDescription("Number of times to play the song again. Defaults to 1")
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -38,8 +37,9 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const song = helper.cache.service.queue.at(0)
+		const service = helper.cache.service
+		if (service) {
+			const song = service.queue.at(0)
 			if (!song) {
 				return helper.respond(new ResponseBuilder(Emoji.BAD, "No song playing right now"))
 			}
@@ -58,7 +58,7 @@ const file: iInteractionFile = {
 				)
 			}
 
-			helper.cache.service.queue.splice(1, 0, ...Array(count).fill(song))
+			service.queue.splice(1, 0, ...Array(count).fill(song))
 			helper.cache.updateMusicChannel()
 			helper.respond(
 				new ResponseBuilder(
@@ -72,4 +72,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

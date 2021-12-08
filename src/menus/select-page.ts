@@ -1,40 +1,41 @@
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
 import PageSelectBuilder from "../utilities/PageSelectBuilder"
 import QueueBuilder from "../utilities/QueueBuilder"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import { Emoji, iMenuFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, Message, TextChannel } from "discord.js"
-import { iMenuFile } from "../utilities/BotSetupHelper"
 import { useTryAsync } from "no-try"
 
-const file: iMenuFile = {
+const file: iMenuFile<Entry, GuildCache> = {
 	defer: false,
 	ephemeral: true,
 	execute: async helper => {
-		const [channel_id, message_id, page_str, more_str] = helper.value()!.split("-")
+		const [channelId, messageId, pageStr, moreStr] = helper.value()!.split("-")
 		const guild = helper.cache.guild
-		const more = +more_str
-		const page = +page_str
+		const more = +moreStr
+		const page = +pageStr
 
-		const [channel_err, channel] = await useTryAsync<TextChannel>(
-			() => guild.channels.fetch(channel_id) as Promise<TextChannel>
+		const [channelErr, channel] = await useTryAsync<TextChannel>(
+			() => guild.channels.fetch(channelId) as Promise<TextChannel>
 		)
 
-		if (channel_err) {
+		if (channelErr) {
 			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, "Channel with the message not found")
 			)
 		}
 
-		const [message_err, message] = await useTryAsync<Message>(
-			() => channel.messages.fetch(message_id) as Promise<Message>
+		const [messageErr, message] = await useTryAsync<Message>(
+			() => channel.messages.fetch(messageId) as Promise<Message>
 		)
 
-		if (message_err) {
+		if (messageErr) {
 			return helper.respond(new ResponseBuilder(Emoji.BAD, "Queue message not found"))
 		}
 
-		if (page_str === "more") {
+		if (pageStr === "more") {
 			return helper.update(
-				new PageSelectBuilder(message.embeds[0], channel_id, message_id).build(more)
+				new PageSelectBuilder(message.embeds[0], channelId, messageId).build(more)
 			)
 		}
 
@@ -47,4 +48,4 @@ const file: iMenuFile = {
 	}
 }
 
-module.exports = file
+export default file

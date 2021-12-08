@@ -1,36 +1,35 @@
 import DominantColorGetter from "../utilities/DominantColorGetter"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, MessageEmbed } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
+import { useTryAsync } from "no-try"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Gives you the lyrics for the current song",
-		params: [
+	data: {
+		name: "lyrics",
+		description: {
+			slash: "Shows the lyrics for a song",
+			help: [
+				"Shows the lyrics for the current song",
+				"If `query` given, searches the lyrics of the query instead"
+			].join("\n")
+		},
+		options: [
 			{
 				name: "query",
-				description: "Use this if you want to search for the lyrics of a song",
+				description: {
+					slash: "Query for the lyrics",
+					help: "The query for the lyrics"
+				},
+				type: "string",
 				requirements: "Text",
 				required: false
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("lyrics")
-		.setDescription(
-			"Shows the lyrics of the current song. If no query defined, searches lyrics for current song"
-		)
-		.addStringOption(option =>
-			option
-				.setName("query")
-				.setDescription(
-					"Use this to manually search the server for song lyrics for the current song"
-				)
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -42,8 +41,9 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const queue = helper.cache.service.queue
+		const service = helper.cache.service
+		if (service) {
+			const queue = service.queue
 			if (queue.length === 0) {
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now")
@@ -53,12 +53,11 @@ const file: iInteractionFile = {
 			const query = helper.string("query")
 			const song = queue[0]
 
-			let lyrics: string
-			try {
-				lyrics = await helper.cache.apiHelper.findGeniusLyrics(
-					query || `${song.title} ${song.artiste}`
-				)
-			} catch {
+			const [err, lyrics] = await useTryAsync(() =>
+				helper.cache.apiHelper.findGeniusLyrics(query || `${song.title} ${song.artiste}`)
+			)
+
+			if (err) {
 				if (query) {
 					return helper.respond(
 						new ResponseBuilder(
@@ -98,4 +97,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

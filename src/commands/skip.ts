@@ -1,32 +1,31 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
-	defer: false,
+const file: iInteractionFile<Entry, GuildCache> = {
+	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Skips songs in the queue as many times as specified",
-		params: [
+	data: {
+		name: "skip",
+		description: {
+			slash: "Skip current playing song and songs in queue",
+			help: "Skips songs in the queue as many times as specified"
+		},
+		options: [
 			{
 				name: "count",
-				description: "This is the number of times you want to skip the song",
+				description: {
+					slash: "Number of songs to skip",
+					help: "The number of times you want to skip the current song"
+				},
+				type: "number",
 				requirements: "Number",
 				required: false,
 				default: "1"
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("skip")
-		.setDescription("Skip current playing song and songs in queue")
-		.addIntegerOption(option =>
-			option
-				.setName("count")
-				.setDescription("Number of songs to skip. Defaults to 1 (only skip current song)")
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -38,7 +37,8 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
+		const service = helper.cache.service
+		if (service) {
 			const count = helper.integer("count") || 1
 			if (count < 1) {
 				return helper.respond(
@@ -46,7 +46,7 @@ const file: iInteractionFile = {
 				)
 			}
 
-			const queue = [...helper.cache.service.queue]
+			const queue = [...service.queue]
 			if (count >= queue.length && count > 1) {
 				return helper.respond(
 					new ResponseBuilder(
@@ -56,12 +56,12 @@ const file: iInteractionFile = {
 				)
 			}
 
-			helper.cache.service.queue = queue.slice(count - 1)
-			if (helper.cache.service.queue_loop) {
-				helper.cache.service.queue.push(...queue.slice(0, count - 1))
+			service.queue = queue.slice(count - 1)
+			if (service.queue_loop) {
+				service.queue.push(...queue.slice(0, count - 1))
 			}
 
-			helper.cache.service.player.stop()
+			service.player.stop()
 			helper.cache.updateMusicChannel()
 			helper.respond(
 				new ResponseBuilder(
@@ -76,4 +76,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

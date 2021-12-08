@@ -1,7 +1,9 @@
-import { useTry } from "no-try"
+import Song from "../models/Song"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
-import Song from "../models/Song"
+import ytpl from "ytpl"
+import youtubeVideoApi from "yt-search"
+import { useTry } from "no-try"
 
 const config = require("../../config.json")
 
@@ -18,13 +20,9 @@ export default class ApiHelper {
 		this.geniusApi = new (require("node-genius-api"))(config.genius)
 	}
 
-	public async searchYoutubeSongs(
-		query: string,
-		requester: string,
-		limit: number = 10
-	): Promise<Song[]> {
+	public async searchYoutubeSongs(query: string, requester: string): Promise<Song[]> {
 		const results = (await this.youtubeMusicApi.search(query, "song")).content
-		if (results.length > limit) results.length = limit
+		if (results.length > 10) results.length = 10
 
 		const songs: Promise<Song>[] = results.map(
 			async (result: any) =>
@@ -74,6 +72,23 @@ export default class ApiHelper {
 		)
 	}
 
+	public async searchYoutubeVideos(query: string, requester: string): Promise<Song[]> {
+		const { videos } = await youtubeVideoApi.search(query)
+		return videos
+			.map(
+				video =>
+					new Song(
+						video.title,
+						video.author.name,
+						video.thumbnail,
+						"https://youtu.be/" + video.videoId,
+						video.seconds,
+						requester
+					)
+			)
+			.slice(0, 10)
+	}
+
 	public async findYoutubeVideo(url: string, requester: string): Promise<Song> {
 		const info = (await ytdl.getBasicInfo(url)).videoDetails
 		return new Song(
@@ -86,6 +101,32 @@ export default class ApiHelper {
 		)
 	}
 
+	public async findYoutubePlaylistLength(playlistId: string): Promise<number> {
+		return (await ytpl(playlistId)).estimatedItemCount
+	}
+
+	public async findYoutubePlaylist(
+		playlistId: string,
+		start: number,
+		end: number,
+		requester: string
+	): Promise<Song[]> {
+		const { items: videos } = await ytpl(playlistId, { limit: end })
+		return videos
+			.slice(start - 1)
+			.map(
+				video =>
+					new Song(
+						video.title,
+						video.author.name,
+						video.bestThumbnail.url || "",
+						"https://youtu.be/" + video.id,
+						video.durationSec || 0,
+						requester
+					)
+			)
+	}
+
 	public async refreshSpotify() {
 		const refresh_response = (await this.spotifyApi.refreshAccessToken()).body
 		this.spotifyApi.setAccessToken(refresh_response.access_token)
@@ -94,7 +135,7 @@ export default class ApiHelper {
 		)
 	}
 
-	public async findSpotifyPlaylistLength(playlistId: string) {
+	public async findSpotifyPlaylistLength(playlistId: string): Promise<number> {
 		await this.refreshSpotify()
 		return (await this.spotifyApi.getPlaylist(playlistId)).body.tracks.total
 	}
@@ -104,7 +145,7 @@ export default class ApiHelper {
 		start: number,
 		end: number,
 		requester: string
-	) {
+	): Promise<Song[]> {
 		await this.refreshSpotify()
 
 		const tracks: Song[] = []

@@ -1,30 +1,32 @@
-import ResponseBuilder, { Emoji } from "../../utilities/ResponseBuilder"
+import Entry from "../../models/Entry"
+import GuildCache from "../../models/GuildCache"
+import { Emoji, iInteractionSubcommandFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionSubcommandFile } from "../../utilities/BotSetupHelper"
-import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
 
 const config = require("../../../config.json")
 
-const file: iInteractionSubcommandFile = {
+const file: iInteractionSubcommandFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Sets the prefix for message commands in this server",
-		params: [
+	data: {
+		name: "prefix",
+		description: {
+			slash: "Change the prefix for message commands",
+			help: "Changes the prefix for message commands in this server"
+		},
+		options: [
 			{
 				name: "prefix",
-				description: "Message prefix to activate message commands",
+				description: {
+					slash: "Message Command prefix",
+					help: "Message prefix to activate message commands"
+				},
+				type: "string",
 				requirements: "Any single character",
 				required: true
 			}
 		]
 	},
-	builder: new SlashCommandSubcommandBuilder()
-		.setName("prefix")
-		.setDescription("Change the prefix for message commands")
-		.addStringOption(option =>
-			option.setName("prefix").setDescription("Prefix to change to").setRequired(true)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		const prefix = helper.string("prefix")!
@@ -45,4 +47,4 @@ const file: iInteractionSubcommandFile = {
 	}
 }
 
-module.exports = file
+export default file

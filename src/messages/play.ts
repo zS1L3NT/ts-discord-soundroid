@@ -1,11 +1,14 @@
+import ConversionHelper from "../utilities/ConversionHelper"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
-import Song from "../models/Song"
+import SearchSelectBuilder from "../utilities/SearchSelectBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { iMessageFile } from "../utilities/BotSetupHelper"
-import { MessageActionRow, MessageEmbed, MessageSelectMenu, VoiceChannel } from "discord.js"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
+import { useTry, useTryAsync } from "no-try"
+import { VoiceChannel } from "discord.js"
 
-const file: iMessageFile = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}play`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -23,107 +26,65 @@ const file: iMessageFile = {
 
 		const query = helper.input()!.join(" ")
 
-		try {
-			const urlObject = new URL(query)
+		const [, url] = useTry(() => new URL(query))
+		if (url) {
+			const [err] = await useTryAsync(async () => {
+				const songs = await new ConversionHelper(
+					helper.cache.apiHelper,
+					url,
+					member.id
+				).getSongs()
+				const [first] = songs
 
-			if (!helper.cache.service) {
-				helper.cache.service = new MusicService(
-					joinVoiceChannel({
-						channelId: channel.id,
-						guildId: channel.guild.id,
-						adapterCreator: channel.guild
-							.voiceAdapterCreator as DiscordGatewayAdapterCreator,
-						selfDeaf: false
-					}),
-					helper.cache
-				)
-			}
-
-			const playlistMatch = urlObject.pathname.match(/^\/playlist\/(.*)$/)
-			if (playlistMatch) {
-				try {
-					const [, playlistId] = playlistMatch
-					const songs = await helper.cache.apiHelper.findSpotifyPlaylist(
-						playlistId,
-						1,
-						100,
-						member.id
-					)
-					if (songs.length > 0) {
-						helper.cache.service!.enqueue(songs.shift()!)
-						helper.cache.service!.queue.push(...songs)
-						helper.cache.updateMusicChannel()
-						helper.reactSuccess()
-						helper.respond(
-							new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`),
-							5000
-						)
-					} else {
-						helper.reactFailure()
-						helper.respond(new ResponseBuilder(Emoji.BAD, "Playlist is empty"), 5000)
-					}
-				} catch (err) {
-					console.error(`[PLAY]:`, err)
+				if (!first) {
 					helper.reactFailure()
-					helper.respond(
-						new ResponseBuilder(Emoji.BAD, "Error playing playlist from url"),
-						5000
+					return helper.respond(new ResponseBuilder(Emoji.BAD, "Playlist is empty"), 5000)
+				}
+
+				if (!helper.cache.service) {
+					helper.cache.service = new MusicService(
+						joinVoiceChannel({
+							channelId: channel.id,
+							guildId: channel.guild.id,
+							adapterCreator: channel.guild
+								.voiceAdapterCreator as DiscordGatewayAdapterCreator,
+							selfDeaf: false
+						}),
+						helper.cache
 					)
 				}
-			} else {
-				try {
-					const song = await Song.from(helper.cache.apiHelper, query, member.id)
-					helper.cache.service!.enqueue(song)
-					helper.cache.updateMusicChannel()
-					helper.reactSuccess()
+				const service = helper.cache.service
+
+				service.enqueue(first)
+				service.queue.push(...songs.slice(1))
+				helper.cache.updateMusicChannel()
+
+				helper.reactSuccess()
+				if (songs.length === 1) {
 					helper.respond(
 						new ResponseBuilder(
 							Emoji.GOOD,
-							`Enqueued: "${song.title} - ${song.artiste}"`
-						),
-						5000
+							`Enqueued: "${first.title} - ${first.artiste}"`
+						)
 					)
-				} catch (err) {
-					console.error(`[PLAY]:`, err)
-					helper.reactFailure()
+				} else {
 					helper.respond(
-						new ResponseBuilder(Emoji.BAD, "Error playing song from url"),
-						5000
+						new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`)
 					)
 				}
-			}
-		} catch {
-			const results = await helper.cache.apiHelper.searchYoutubeSongs(query, member.id)
-			const emojis: string[] = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
+			})
 
+			if (err) {
+				helper.reactFailure()
+				helper.respond(new ResponseBuilder(Emoji.BAD, err.message))
+			}
+		} else {
 			helper.reactSuccess()
 			helper.respond(
-				{
-					embeds: [
-						new MessageEmbed()
-							.setAuthor(
-								`YouTube search results for: "${query}"`,
-								`https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
-							)
-							.setColor("#FF0000")
-					],
-					components: [
-						new MessageActionRow().addComponents(
-							new MessageSelectMenu().setCustomId("search-query").addOptions(
-								results.map((result, i) => ({
-									emoji: emojis[i],
-									label: result.title,
-									value: result.url,
-									description: result.artiste
-								}))
-							)
-						)
-					]
-				},
-				60_000
+				await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildMusic()
 			)
 		}
 	}
 }
 
-module.exports = file
+export default file

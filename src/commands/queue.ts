@@ -1,23 +1,23 @@
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
 import QueueBuilder from "../utilities/QueueBuilder"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: [
-			"Shows a detailed message about all the songs in the queue",
-			"You are able to refresh the queue to see the up to date version of the queue",
-			"You are able to change the page of the queue"
-		].join("\n"),
-		params: []
+	data: {
+		name: "queue",
+		description: {
+			slash: "Show the queue of songs playing",
+			help: [
+				"Shows a detailed message about all the songs in the queue",
+				"You are able to refresh the queue to see the up to date version of the queue",
+				"You are able to change the page of the queue"
+			].join("\n")
+		}
 	},
-	builder: new SlashCommandBuilder()
-		.setName("queue")
-		.setDescription("Show the queue of songs playing"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -36,4 +36,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

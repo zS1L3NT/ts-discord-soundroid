@@ -1,51 +1,45 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Move a song in the queue to a specified position",
-		params: [
+	data: {
+		name: "move",
+		description: {
+			slash: "Change a song's position in the queue",
+			help: "Move a song in the queue to a specified position"
+		},
+		options: [
 			{
 				name: "from",
-				description: "This is the song's position in the queue that you want to move",
+				description: {
+					slash: "Song in the queue that you want to move",
+					help: "This is the song's position in the queue that you want to move"
+				},
+				type: "number",
 				requirements: "Number that references a song in the queue",
 				required: true
 			},
 			{
 				name: "to",
-				description: [
-					"This is the position in the queue to move the song to",
-					"Moves a song to the top of a queue if this isn't provided"
-				].join("\n"),
+				description: {
+					slash: "Position to move the song to. The song currently at this position will get pushed down",
+					help: [
+						"This is the position in the queue to move the song to",
+						"The song at this position in the queue will get pushed down",
+						"Moves the song to the top of a queue if this isn't provided"
+					].join("\n")
+				},
+				type: "number",
 				requirements: "Number that references a position in the queue",
 				required: false,
 				default: "1"
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("move")
-		.setDescription("Change a song's position in the queue")
-		.addIntegerOption(option =>
-			option
-				.setName("from")
-				.setDescription(
-					'Position of the song to move. If "to" is not defined, moves this song to the top'
-				)
-				.setRequired(true)
-		)
-		.addIntegerOption(option =>
-			option
-				.setName("to")
-				.setDescription(
-					"Position to move the song to. The song currently at this position will get pushed down"
-				)
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -57,11 +51,12 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
+		const service = helper.cache.service
+		if (service) {
 			const from = helper.integer("from")!
 			const to = helper.integer("to")
 
-			const queue = helper.cache.service.queue
+			const queue = service.queue
 			const song = queue[from]
 
 			if (from < 1 || from >= queue.length) {
@@ -92,4 +87,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

@@ -1,6 +1,6 @@
+import ApiHelper from "../utilities/ApiHelper"
 import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice"
 import { raw as ytdl } from "youtube-dl-exec"
-import ApiHelper from "../utilities/ApiHelper"
 
 export default class Song {
 	public title: string
@@ -27,9 +27,9 @@ export default class Song {
 	}
 
 	public static async from(apiHelper: ApiHelper, url: string, requester: string) {
-		const urlObject = new URL(url)
-		if (urlObject.host === "open.spotify.com") {
-			return await apiHelper.findSpotifySong(urlObject.pathname.slice(7), requester)
+		const URL_ = new URL(url)
+		if (URL_.host === "open.spotify.com") {
+			return await apiHelper.findSpotifySong(URL_.pathname.slice(7), requester)
 		} else {
 			try {
 				return await apiHelper.findYoutubeSong(url, requester)
@@ -42,8 +42,8 @@ export default class Song {
 	public createAudioResource(apiHelper: ApiHelper): Promise<AudioResource<Song>> {
 		return new Promise(async (resolve, reject) => {
 			let source = this.url
-			const urlObject = new URL(source)
-			if (urlObject.host === "open.spotify.com") {
+			const URL_ = new URL(source)
+			if (URL_.host === "open.spotify.com") {
 				const youtubeResult = await apiHelper.findYoutubeSong(
 					`${this.title} ${this.artiste}`,
 					this.requester

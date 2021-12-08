@@ -1,11 +1,12 @@
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, VoiceChannel } from "discord.js"
-import { iMessageFile } from "../utilities/BotSetupHelper"
-import { useTry } from "no-try"
+import { useTry, useTryAsync } from "no-try"
 
-const file: iMessageFile = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}play-range`),
 	execute: async helper => {
 		const member = helper.message.member as GuildMember
@@ -51,34 +52,36 @@ const file: iMessageFile = {
 			)
 		}
 
-		const [link, from_str, to_str] = input
+		const [link, fromStr, toStr] = input
 
-		const from = helper.getNumber(from_str, 1, 0)
+		const from = helper.getNumber(fromStr, 1, 0)
 		if (from < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from_str}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${fromStr}`),
 				5000
 			)
 		}
 
-		let to = helper.getNumber(to_str, null, 0)
+		let to = helper.getNumber(toStr, null, 0)
 		if (to && to < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to_str}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${toStr}`),
 				5000
 			)
 		}
 
 		const [err, playlistId] = useTry(() => {
-			const linkURI = new URL(link)
-			const linkMatch = linkURI.pathname.match(/^\/playlist\/(.*)$/)
-			if (!linkMatch || linkURI.host !== "open.spotify.com") {
-				throw new Error()
+			const url = new URL(link)
+			if (url.host === "open.spotify.com" && url.pathname.startsWith("/playlist/")) {
+				return url.pathname.slice("/playlist/".length)
+			}
+			if (url.host.endsWith(".youtube.com") && url.pathname === "/playlist") {
+				return url.searchParams.get("list")!
 			}
 
-			return linkMatch[1]
+			throw new Error()
 		})
 
 		if (err) {
@@ -113,7 +116,14 @@ const file: iMessageFile = {
 			}
 		}
 
-		const length = await helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
+		const [, spLength] = await useTryAsync(() =>
+			helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
+		)
+		const [, ytLength] = await useTryAsync(() =>
+			helper.cache.apiHelper.findYoutubePlaylistLength(playlistId)
+		)
+		const length = spLength || ytLength
+
 		if (to && to > length) {
 			helper.reactFailure()
 			return helper.respond(
@@ -134,12 +144,13 @@ const file: iMessageFile = {
 			5000
 		)
 
-		const songs = await helper.cache.apiHelper.findSpotifyPlaylist(
-			playlistId,
-			from,
-			to,
-			member.id
+		const [, spSongs] = await useTryAsync(() =>
+			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, member.id)
 		)
+		const [, ytSongs] = await useTryAsync(() =>
+			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, member.id)
+		)
+		const songs = spSongs || ytSongs
 
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)
@@ -149,4 +160,4 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file

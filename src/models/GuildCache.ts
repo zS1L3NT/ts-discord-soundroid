@@ -1,34 +1,21 @@
 import ApiHelper from "../utilities/ApiHelper"
-import ChannelCleaner from "../utilities/ChannelCleaner"
-import Document, { iDocument } from "./Document"
+import Entry from "./Entry"
 import MusicService from "./MusicService"
 import QueueBuilder from "../utilities/QueueBuilder"
-import { Client, Guild, GuildMember, Message, MessageEmbed, VoiceChannel } from "discord.js"
+import { BaseGuildCache, ChannelCleaner } from "discordjs-nova"
+import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 
-export default class GuildCache {
-	public bot: Client
-	public guild: Guild
-	public ref: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>
-	private document: Document = Document.getEmpty()
-
-	public apiHelper: ApiHelper
+export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
+	public apiHelper!: ApiHelper
 	public service?: MusicService
 
-	public constructor(
-		bot: Client,
-		guild: Guild,
-		apiHelper: ApiHelper,
-		ref: FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,
-		resolve: (cache: GuildCache) => void
-	) {
-		this.bot = bot
-		this.guild = guild
-		this.apiHelper = apiHelper
-		this.ref = ref
+	public onConstruct(): void {}
+
+	public resolve(resolve: (cache: GuildCache) => void): void {
 		this.ref.onSnapshot(snap => {
 			if (snap.exists) {
-				this.document = new Document(snap.data() as iDocument)
+				this.entry = snap.data() as Entry
 				resolve(this)
 			}
 		})
@@ -51,7 +38,9 @@ export default class GuildCache {
 
 		const [message_err, message] = await useTryAsync(async () => {
 			const musicMessageId = this.getMusicMessageId()
-			const cleaner = new ChannelCleaner(this, musicChannelId, [musicMessageId])
+			const cleaner = new ChannelCleaner<Entry, GuildCache>(this, musicChannelId, [
+				musicMessageId
+			])
 			await cleaner.clean()
 
 			const [newMusicMessageId] = cleaner.getMessageIds()
@@ -108,24 +97,24 @@ export default class GuildCache {
 	}
 
 	public getMusicChannelId() {
-		return this.document.value.music_channel_id
+		return this.entry.music_channel_id
 	}
 
 	public async setMusicChannelId(music_channel_id: string) {
-		this.document.value.music_channel_id = music_channel_id
+		this.entry.music_channel_id = music_channel_id
 		await this.ref.update({ music_channel_id })
 	}
 
 	public getMusicMessageId() {
-		return this.document.value.music_message_id
+		return this.entry.music_message_id
 	}
 
 	public async setMusicMessageId(music_message_id: string) {
-		this.document.value.music_message_id = music_message_id
+		this.entry.music_message_id = music_message_id
 		await this.ref.update({ music_message_id })
 	}
 
 	public getPrefix() {
-		return this.document.value.prefix
+		return this.entry.prefix
 	}
 }

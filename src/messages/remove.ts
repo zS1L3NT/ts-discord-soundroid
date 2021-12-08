@@ -1,7 +1,8 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
-import { iMessageFile } from "../utilities/BotSetupHelper"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 
-const file: iMessageFile = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}remove`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -16,9 +17,9 @@ const file: iMessageFile = {
 			)
 		}
 
-		const [from_str, to_str] = helper.input()!
+		const [fromStr, toStr] = helper.input()!
 
-		const from = helper.getNumber(from_str, 0, 0)
+		const from = helper.getNumber(fromStr, 0, 0)
 		if (from < 1) {
 			helper.reactFailure()
 			return helper.respond(
@@ -27,7 +28,7 @@ const file: iMessageFile = {
 			)
 		}
 
-		const to = helper.getNumber(to_str, null, 0)
+		const to = helper.getNumber(toStr, null, 0)
 		if (to && to < 1) {
 			helper.reactFailure()
 			return helper.respond(
@@ -36,8 +37,9 @@ const file: iMessageFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			if (from >= helper.cache.service.queue.length) {
+		const service = helper.cache.service
+		if (service) {
+			if (from >= service.queue.length) {
 				helper.reactFailure()
 				helper.respond(
 					new ResponseBuilder(Emoji.BAD, "No such starting position in the queue"),
@@ -45,7 +47,7 @@ const file: iMessageFile = {
 				)
 			} else {
 				if (to) {
-					if (to <= from || to >= helper.cache.service.queue.length) {
+					if (to <= from || to >= service.queue.length) {
 						helper.reactFailure()
 						helper.respond(
 							new ResponseBuilder(
@@ -55,20 +57,20 @@ const file: iMessageFile = {
 							5000
 						)
 					} else {
-						const delete_count = to - from + 1
-						helper.cache.service.queue.splice(from, delete_count)
+						const deleteCount = to - from + 1
+						service.queue.splice(from, deleteCount)
 						helper.cache.updateMusicChannel()
 						helper.reactSuccess()
 						helper.respond(
 							new ResponseBuilder(
 								Emoji.GOOD,
-								`Removed ${delete_count} songs from the queue`
+								`Removed ${deleteCount} songs from the queue`
 							),
 							5000
 						)
 					}
 				} else {
-					const song = helper.cache.service.queue.splice(from, 1)[0]
+					const song = service.queue.splice(from, 1)[0]
 					helper.cache.updateMusicChannel()
 					helper.reactSuccess()
 					helper.respond(
@@ -90,4 +92,4 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file

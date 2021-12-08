@@ -1,21 +1,21 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: [
-			"Toggles between looping and unlooping the entire queue",
-			"If loop is active and you are enabling queue-loop, disables loop"
-		].join("\n"),
-		params: []
+	data: {
+		name: "queue-loop",
+		description: {
+			slash: "Loop the current queue, disables loop mode",
+			help: [
+				"Toggles between looping and unlooping the entire queue",
+				"If loop is active and you are enabling queue-loop, disables loop"
+			].join("\n")
+		}
 	},
-	builder: new SlashCommandBuilder()
-		.setName("queue-loop")
-		.setDescription("Loop the current queue, disables loop mode"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -27,13 +27,14 @@ const file: iInteractionFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			helper.cache.service.loop = false
-			if (helper.cache.service.queue_loop) {
-				helper.cache.service.queue_loop = false
+		const service = helper.cache.service
+		if (service) {
+			service.loop = false
+			if (service.queue_loop) {
+				service.queue_loop = false
 				helper.respond(new ResponseBuilder(Emoji.GOOD, "Queue Loop disabled"))
 			} else {
-				helper.cache.service.queue_loop = true
+				service.queue_loop = true
 				helper.respond(new ResponseBuilder(Emoji.GOOD, "Queue Loop enabled"))
 			}
 			helper.cache.updateMusicChannel()
@@ -43,4 +44,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

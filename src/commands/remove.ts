@@ -1,27 +1,38 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { iInteractionFile } from "../utilities/BotSetupHelper"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Removes songs from the queue with either the song position or a range",
-		params: [
+	data: {
+		name: "remove",
+		description: {
+			slash: "Removes a song or a few songs from the queue",
+			help: "Removes songs from the queue with either the song position or a range"
+		},
+		options: [
 			{
 				name: "from",
-				description: [
-					"If you define a `to` position later, this will be the starting position in the queue to remove",
-					"If not, this will be the song to remove"
-				].join("\n"),
+				description: {
+					slash: "The song to remove or the position to start removing from",
+					help: [
+						"If you define a `to` position later, this will be the starting position in the queue to remove",
+						"If not, this will be the song to remove"
+					].join("\n")
+				},
+				type: "number",
 				requirements: "Number that references a song in the queue",
 				required: true
 			},
 			{
 				name: "to",
-				description:
-					"If this is defined, will remove all the songs between `from` defined earlier and this position",
+				description: {
+					slash: "The last song to remove in the queue",
+					help: "If this is defined, will remove all the songs between `from` defined earlier and this position"
+				},
+				type: "number",
 				requirements: [
 					"Number that references a song in the queue",
 					"Cannot be smaller than `from` position specified earlier"
@@ -30,25 +41,6 @@ const file: iInteractionFile = {
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("remove")
-		.setDescription(
-			"Remove a song from the queue. If ending is set, removes songs from start to end"
-		)
-		.addIntegerOption(option =>
-			option
-				.setName("from")
-				.setDescription(
-					'Starting position of the song in the queue to remove. If "to" is not defined, removes this song only'
-				)
-				.setRequired(true)
-		)
-		.addIntegerOption(option =>
-			option
-				.setName("to")
-				.setDescription("Ending position of the songs in the queue to remove.")
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -63,14 +55,15 @@ const file: iInteractionFile = {
 		const from = helper.integer("from")!
 		const to = helper.integer("to")
 
-		if (helper.cache.service) {
-			if (from < 1 || from >= helper.cache.service.queue.length) {
+		const service = helper.cache.service
+		if (service) {
+			if (from < 1 || from >= service.queue.length) {
 				helper.respond(
 					new ResponseBuilder(Emoji.BAD, "No such starting position in the queue")
 				)
 			} else {
 				if (to) {
-					if (to <= from || to >= helper.cache.service.queue.length) {
+					if (to <= from || to >= service.queue.length) {
 						helper.respond(
 							new ResponseBuilder(
 								Emoji.BAD,
@@ -79,7 +72,7 @@ const file: iInteractionFile = {
 						)
 					} else {
 						const delete_count = to - from + 1
-						helper.cache.service.queue.splice(from, delete_count)
+						service.queue.splice(from, delete_count)
 						helper.cache.updateMusicChannel()
 						helper.respond(
 							new ResponseBuilder(
@@ -89,7 +82,7 @@ const file: iInteractionFile = {
 						)
 					}
 				} else {
-					const song = helper.cache.service.queue.splice(from, 1)[0]
+					const song = service.queue.splice(from, 1)[0]
 					helper.cache.updateMusicChannel()
 					helper.respond(
 						new ResponseBuilder(
@@ -105,4 +98,4 @@ const file: iInteractionFile = {
 	}
 }
 
-module.exports = file
+export default file

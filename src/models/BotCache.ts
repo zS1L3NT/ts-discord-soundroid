@@ -1,63 +1,36 @@
-import { Client, Collection, Guild } from "discord.js"
-import admin from "firebase-admin"
 import ApiHelper from "../utilities/ApiHelper"
-import Document from "./Document"
+import Entry from "./Entry"
 import GuildCache from "./GuildCache"
+import { BaseBotCache } from "discordjs-nova"
 
-const config = require("../../config.json")
+export default class BotCache extends BaseBotCache<Entry, GuildCache> {
+	private apiHelper: ApiHelper = new ApiHelper()
 
-export default class BotCache {
-	public bot: Client
-	private ref: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
-	private guilds: Collection<string, GuildCache>
-	private readonly apiHelper: ApiHelper
+	public onConstruct(): void {}
 
-	public constructor(bot: Client) {
-		admin.initializeApp({
-			credential: admin.credential.cert(config.firebase.service_account)
-		})
-		this.bot = bot
-		this.ref = admin.firestore().collection(config.firebase.collection)
-		this.guilds = new Collection<string, GuildCache>()
-		this.apiHelper = new ApiHelper()
+	public onSetGuildCache(cache: GuildCache): void {
+		cache.apiHelper = this.apiHelper
 	}
 
-	public getGuildCache(guild: Guild): Promise<GuildCache> {
-		return new Promise<GuildCache>((resolve, reject) => {
-			const cache = this.guilds.get(guild.id)
-			if (!cache) {
-				this.guilds.set(
-					guild.id,
-					new GuildCache(this.bot, guild, this.apiHelper, this.ref.doc(guild.id), resolve)
-				)
-
-				this.ref
-					.doc(guild.id)
-					.get()
-					.then(snap => {
-						if (!snap.exists) reject()
-					})
-			} else {
-				resolve(cache)
-			}
-		})
-	}
-
-	public async createGuildCache(guild: Guild) {
-		const doc = await this.ref.doc(guild.id).get()
+	public async registerGuildCache(guildId: string): Promise<void> {
+		const doc = await this.ref.doc(guildId).get()
 		if (!doc.exists) {
-			await this.ref.doc(guild.id).set(Document.getEmpty().value)
+			await this.ref.doc(guildId).set(this.getEmptyEntry())
 		}
-		await this.getGuildCache(guild)
 	}
 
-	public async deleteGuildCache(guildId: string) {
+	public async eraseGuildCache(guildId: string): Promise<void> {
 		const doc = await this.ref.doc(guildId).get()
 		if (doc.exists) {
 			await this.ref.doc(guildId).delete()
 		}
-		this.guilds.delete(guildId)
+	}
 
-		// Clean up collections if you need to
+	public getEmptyEntry(): Entry {
+		return {
+			prefix: "",
+			music_channel_id: "",
+			music_message_id: ""
+		}
 	}
 }

@@ -1,10 +1,10 @@
 import DominantColorGetter from "../utilities/DominantColorGetter"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
-import { iMessageFile } from "../utilities/BotSetupHelper"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 import { MessageEmbed } from "discord.js"
-import { useTryAsync } from "no-try"
 
-const file: iMessageFile = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}lyrics`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -19,8 +19,9 @@ const file: iMessageFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			const queue = helper.cache.service.queue
+		const service = helper.cache.service
+		if (service) {
+			const queue = service.queue
 			if (queue.length === 0) {
 				helper.reactFailure()
 				return helper.respond(
@@ -85,4 +86,7 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file
+function useTryAsync(arg0: () => Promise<string>): [any, any] | PromiseLike<[any, any]> {
+	throw new Error("Function not implemented.")
+}

@@ -1,7 +1,8 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
-import { iMessageFile } from "../utilities/BotSetupHelper"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
+import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 
-const file: iMessageFile = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}resume`),
 	execute: async helper => {
 		const member = helper.message.member!
@@ -16,8 +17,9 @@ const file: iMessageFile = {
 			)
 		}
 
-		if (helper.cache.service) {
-			helper.cache.service.player.unpause()
+		const service = helper.cache.service
+		if (service) {
+			service.player.unpause()
 			helper.reactSuccess()
 			helper.cache.updateMusicChannel()
 		} else {
@@ -30,4 +32,4 @@ const file: iMessageFile = {
 	}
 }
 
-module.exports = file
+export default file

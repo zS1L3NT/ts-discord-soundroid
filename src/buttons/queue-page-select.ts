@@ -1,9 +1,10 @@
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
 import PageSelectBuilder from "../utilities/PageSelectBuilder"
-import { iButtonFile } from "../utilities/BotSetupHelper"
+import { Emoji, iButtonFile, ResponseBuilder } from "discordjs-nova"
 import { Message } from "discord.js"
 
-const file: iButtonFile = {
+const file: iButtonFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	execute: async helper => {
@@ -20,4 +21,4 @@ const file: iButtonFile = {
 	}
 }
 
-module.exports = file
+export default file

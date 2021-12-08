@@ -1,11 +1,12 @@
+import Entry from "../models/Entry"
+import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
-import ResponseBuilder, { Emoji } from "../utilities/ResponseBuilder"
 import Song from "../models/Song"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { Emoji, iMenuFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, VoiceChannel } from "discord.js"
-import { iMenuFile } from "../utilities/BotSetupHelper"
 
-const file: iMenuFile = {
+const file: iMenuFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	execute: async helper => {
@@ -47,4 +48,4 @@ const file: iMenuFile = {
 	}
 }
 
-module.exports = file
+export default file
