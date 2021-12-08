@@ -32,14 +32,12 @@ export default class ConversionHelper {
 				try {
 					return await this.apiHelper.findSpotifyPlaylist(dir[1], 1, 100, this.requester)
 				} catch (err) {
-					console.trace(err)
 					throw new Error("Error playing playlist from Spotify url")
 				}
 			case "track":
 				try {
 					return [await this.apiHelper.findSpotifySong(dir[1], this.requester)]
 				} catch (err) {
-					console.trace(err)
 					throw new Error("Error playing song from Spotify url")
 				}
 		}
@@ -56,7 +54,6 @@ export default class ConversionHelper {
 					try {
 						return await this.apiHelper.findYoutubePlaylist(id, 1, 100, this.requester)
 					} catch (err) {
-						console.trace(err)
 						throw new Error("Error playing playlist from Youtube url")
 					}
 				}
@@ -66,7 +63,6 @@ export default class ConversionHelper {
 					try {
 						return [await this.apiHelper.findYoutubeSong(id, this.requester)]
 					} catch (err) {
-						console.trace(err)
 						throw new Error("Error playing song from Youtube url")
 					}
 				}
@@ -81,7 +77,6 @@ export default class ConversionHelper {
 				await this.apiHelper.findYoutubeSong(this.url.pathname.slice(1), this.requester)
 			]
 		} catch (err) {
-			console.trace(err)
 			throw new Error("Error playing song from Youtube url")
 		}
 	}
