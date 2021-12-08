@@ -1,4 +1,4 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import PageSelectBuilder from "../utilities/PageSelectBuilder"
 import { Emoji, iButtonFile, ResponseBuilder } from "discordjs-nova"

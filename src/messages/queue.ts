@@ -1,4 +1,4 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import QueueBuilder from "../utilities/QueueBuilder"
 import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"

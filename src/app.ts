@@ -1,6 +1,5 @@
 import axios from "axios"
 import BotCache from "./models/BotCache"
-import Document from "./models/Document"
 import express from "express"
 import fs from "fs/promises"
 import GuildCache from "./models/GuildCache"
@@ -74,12 +73,12 @@ const refresh_spotify = () => {
 
 const start_bot = () => {
 	new NovaBot({
+		name: "SounDroid#5566",
 		intents: [
 			Intents.FLAGS.GUILD_VOICE_STATES,
 			Intents.FLAGS.GUILD_MESSAGES,
 			Intents.FLAGS.GUILDS
 		],
-		name: "SounDroid#5566",
 		cwd: __dirname,
 		config,
 		updatesMinutely: true,
@@ -96,7 +95,6 @@ const start_bot = () => {
 			icon: "https://cdn.discordapp.com/avatars/899858077027811379/56e8665909db40439b09e13627970b62.png?size=128"
 		},
 
-		Document,
 		GuildCache,
 		BotCache,
 

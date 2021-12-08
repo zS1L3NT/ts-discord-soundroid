@@ -1,22 +1,21 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
-		description: [
-			"Toggles between looping and unlooping the current song",
-			"If queue-loop is active and you are enabling loop, disables queue-loop"
-		].join("\n"),
-		options: []
+		name: "loop",
+		description: {
+			slash: "Loop the current song in the queue, disables queue-loop mode",
+			help: [
+				"Toggles between looping and unlooping the current song",
+				"If queue-loop is active and you are enabling loop, disables queue-loop"
+			].join("\n")
+		}
 	},
-	builder: new SlashCommandBuilder()
-		.setName("loop")
-		.setDescription("Loop the current song in the queue, disables queue-loop mode"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

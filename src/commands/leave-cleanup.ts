@@ -1,22 +1,21 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
-		description: [
-			"Removes all songs in the queue that were added by users who aren't currently in the voice channel",
-			"Does not skip the currently playing song no matter who it was added by"
-		].join("\n"),
-		options: []
+		name: "leave-cleanup",
+		description: {
+			slash: "Clear all songs in the queue from users that have left the voice channel",
+			help: [
+				"Removes all songs in the queue that were added by users who aren't currently in the voice channel",
+				"Does not skip the currently playing song no matter who it was added by"
+			].join("\n")
+		}
 	},
-	builder: new SlashCommandBuilder()
-		.setName("leave-cleanup")
-		.setDescription("Clear all songs in the queue from users that have left the voice channel"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

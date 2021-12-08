@@ -1,22 +1,18 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
+		name: "shuffle",
 		description: {
-			slash: "",
+			slash: "Shuffle the songs in the queue",
 			help: "Shuffles the songs in the queue"
 		}
-		options: []
 	},
-	builder: new SlashCommandBuilder()
-		.setName("shuffle")
-		.setDescription("Shuffles the songs in the queue to a random order"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

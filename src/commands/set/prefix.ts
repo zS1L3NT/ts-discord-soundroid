@@ -1,4 +1,4 @@
-import Document, { iValue } from "../../models/Document"
+import Entry from "../../models/Entry"
 import GuildCache from "../../models/GuildCache"
 import { Emoji, iInteractionSubcommandFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
@@ -9,28 +9,24 @@ const file: iInteractionSubcommandFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
+		name: "prefix",
 		description: {
-			slash: "",
-			help: "Sets the prefix for message commands in this server"
+			slash: "Change the prefix for message commands",
+			help: "Changes the prefix for message commands in this server"
 		},
 		options: [
 			{
 				name: "prefix",
 				description: {
-					slash: "",
+					slash: "Message Command prefix",
 					help: "Message prefix to activate message commands"
-				}
+				},
+				type: "string",
 				requirements: "Any single character",
 				required: true
 			}
 		]
 	},
-	builder: new SlashCommandSubcommandBuilder()
-		.setName("prefix")
-		.setDescription("Change the prefix for message commands")
-		.addStringOption(option =>
-			option.setName("prefix").setDescription("Prefix to change to").setRequired(true)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		const prefix = helper.string("prefix")!

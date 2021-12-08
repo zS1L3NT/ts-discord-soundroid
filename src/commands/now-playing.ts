@@ -1,11 +1,10 @@
-import Document, { iValue } from "../models/Document"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, MessageEmbed } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
 const thumb = "🔘"
 const track = "▬"
@@ -14,13 +13,12 @@ const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
-		description:
-			"Shows you the currently playing song with a progressbar showing how far into the song you are",
-		options: []
+		name: "now-playing",
+		description: {
+			slash: "Show the currently playing, along with the time",
+			help: "Shows the currently playing song with a progressbar showing how far into the song you are"
+		}
 	},
-	builder: new SlashCommandBuilder()
-		.setName("now-playing")
-		.setDescription("Shows what's currently playing, along with the time"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

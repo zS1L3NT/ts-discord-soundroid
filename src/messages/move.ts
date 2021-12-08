@@ -1,4 +1,4 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 
@@ -17,9 +17,9 @@ const file: iMessageFile<Entry, GuildCache> = {
 			)
 		}
 
-		const [from_str, to_str] = helper.input()!
+		const [fromStr, toStr] = helper.input()!
 
-		const from = helper.getNumber(from_str, 0, 0)
+		const from = helper.getNumber(fromStr, 0, 0)
 		if (from < 1) {
 			helper.reactFailure()
 			return helper.respond(
@@ -28,7 +28,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			)
 		}
 
-		const to = helper.getNumber(to_str, null, 0)
+		const to = helper.getNumber(toStr, null, 0)
 		if (to && to < 1) {
 			helper.reactFailure()
 			return helper.respond(

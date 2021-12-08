@@ -1,9 +1,9 @@
-import { GuildMember } from "discord.js"
-import { Emoji, iButtonFile, ResponseBuilder } from "discordjs-nova"
-import { useTry } from "no-try"
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import SearchSelectBuilder from "../utilities/SearchSelectBuilder"
+import { Emoji, iButtonFile, ResponseBuilder } from "discordjs-nova"
+import { GuildMember } from "discord.js"
+import { useTry } from "no-try"
 
 const file: iButtonFile<Entry, GuildCache> = {
 	defer: false,

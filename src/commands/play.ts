@@ -1,49 +1,43 @@
 import ConversionHelper from "../utilities/ConversionHelper"
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
 import SearchSelectBuilder from "../utilities/SearchSelectBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, VoiceChannel } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 import { useTry, useTryAsync } from "no-try"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
-		description: [
-			"Play a song with either",
-			"(1) YouTube Video Link",
-			"(2) YouTube Playlist Link",
-			"(3) Spotify Song Link",
-			"(4) Spotify Playlist Link",
-			"(5) YouTube Music Search Query"
-		].join("\n"),
-		options
+		name: "play",
+		description: {
+			slash: "Play Song/Playlist from YouTube/Spotify",
+			help: [
+				"Play a song with either",
+				"(1) YouTube Video Link",
+				"(2) YouTube Playlist Link",
+				"(3) Spotify Song Link",
+				"(4) Spotify Playlist Link",
+				"(5) YouTube Music Search Query",
+				"(6) YouTube Video Search Query"
+			].join("\n")
+		},
+		options: [
 			{
 				name: "query",
 				description: {
-					slash: "",
-					help: "Can be either of the 5 options specified above"
-				}
+					slash: "Can be a YouTube/Spotify Song/Playlist or Search Query",
+					help: "Can be a YouTube/Spotify Song/Playlist or Search Query"
+				},
+				type: "string",
 				requirements: "Text or URL",
 				required: true
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("play")
-		.setDescription("Play a song from a url or search")
-		.addStringOption(option =>
-			option
-				.setName("query")
-				.setDescription(
-					"Can be a YouTube link, Spotify Song/Playlist link or a youtube search query"
-				)
-				.setRequired(true)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel

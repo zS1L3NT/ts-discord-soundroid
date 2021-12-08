@@ -1,34 +1,42 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, VoiceChannel } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 import { useTry, useTryAsync } from "no-try"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
-		description:
-			"Plays a Spotify playlist, except you can specify which song you want to start playing from",
-		options
+		name: "play-range",
+		description: {
+			slash: "Plays a YouTube/Spotify Playlist and allows choosing the playlist range",
+			help: [
+				"Plays a YouTube/Spotify Playlist by it's link",
+				"You can define a range to play the playlist",
+				"Cannot add more than 1000 songs"
+			].join("\n")
+		},
+		options: [
 			{
 				name: "link",
 				description: {
-					slash: "",
-					help: "Spotify playlist link"
-				}
+					slash: "YouTube/Spotify Playlist link",
+					help: "The YouTube/Spotify Playlist link"
+				},
+				type: "string",
 				requirements: "URL",
 				required: true
 			},
 			{
 				name: "from",
 				description: {
-					slash: "",
+					slash: "First position of the playlist to play from",
 					help: "The first position of the playlist to play from"
-				}
+				},
+				type: "number",
 				requirements: "Number that references a song in the Spotify playlist",
 				required: false,
 				default: "1"
@@ -36,9 +44,10 @@ const file: iInteractionFile<Entry, GuildCache> = {
 			{
 				name: "to",
 				description: {
-					slash: "",
+					slash: "Last position of the playlist to play from",
 					help: "The last position of the playlist to play from"
-				}
+				},
+				type: "number",
 				requirements: [
 					"Number that references a song in the Spotify playlist",
 					"Cannot be smaller than `from` position specified earlier",
@@ -49,31 +58,6 @@ const file: iInteractionFile<Entry, GuildCache> = {
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("play-range")
-		.setDescription("Play a Spotify playlist from a specific range")
-		.addStringOption(option =>
-			option
-				.setName("link")
-				.setDescription("Must be a Spotify Playlist link")
-				.setRequired(true)
-		)
-		.addIntegerOption(option =>
-			option
-				.setName("from")
-				.setDescription(
-					"The first song in the playlist to add to queue. Leave empty for first song"
-				)
-				.setRequired(false)
-		)
-		.addIntegerOption(option =>
-			option
-				.setName("to")
-				.setDescription(
-					"The last song in the playlist to add to queue. Leave empty for last song"
-				)
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel
@@ -176,7 +160,7 @@ const file: iInteractionFile<Entry, GuildCache> = {
 		const [, yt_songs] = await useTryAsync(() =>
 			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, member.id)
 		)
-		const songs =  sp_songs || yt_songs
+		const songs = sp_songs || yt_songs
 
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)

@@ -1,5 +1,5 @@
 import ApiHelper from "../utilities/ApiHelper"
-import Document, { iValue } from "./Document"
+import Entry from "./Entry"
 import MusicService from "./MusicService"
 import QueueBuilder from "../utilities/QueueBuilder"
 import { BaseGuildCache, ChannelCleaner } from "discordjs-nova"
@@ -15,7 +15,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	public resolve(resolve: (cache: GuildCache) => void): void {
 		this.ref.onSnapshot(snap => {
 			if (snap.exists) {
-				this.document = new Document(snap.data() as iValue)
+				this.entry = snap.data() as Entry
 				resolve(this)
 			}
 		})
@@ -97,24 +97,24 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	}
 
 	public getMusicChannelId() {
-		return this.document.value.music_channel_id
+		return this.entry.music_channel_id
 	}
 
 	public async setMusicChannelId(music_channel_id: string) {
-		this.document.value.music_channel_id = music_channel_id
+		this.entry.music_channel_id = music_channel_id
 		await this.ref.update({ music_channel_id })
 	}
 
 	public getMusicMessageId() {
-		return this.document.value.music_message_id
+		return this.entry.music_message_id
 	}
 
 	public async setMusicMessageId(music_message_id: string) {
-		this.document.value.music_message_id = music_message_id
+		this.entry.music_message_id = music_message_id
 		await this.ref.update({ music_message_id })
 	}
 
 	public getPrefix() {
-		return this.document.value.prefix
+		return this.entry.prefix
 	}
 }

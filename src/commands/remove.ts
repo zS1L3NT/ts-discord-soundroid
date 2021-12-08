@@ -1,31 +1,38 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
+		name: "remove",
 		description: {
-			slash: "",
+			slash: "Removes a song or a few songs from the queue",
 			help: "Removes songs from the queue with either the song position or a range"
 		},
 		options: [
 			{
 				name: "from",
-				description: [
-					"If you define a `to` position later, this will be the starting position in the queue to remove",
-					"If not, this will be the song to remove"
-				].join("\n"),
+				description: {
+					slash: "The song to remove or the position to start removing from",
+					help: [
+						"If you define a `to` position later, this will be the starting position in the queue to remove",
+						"If not, this will be the song to remove"
+					].join("\n")
+				},
+				type: "number",
 				requirements: "Number that references a song in the queue",
 				required: true
 			},
 			{
 				name: "to",
-				description:
-					"If this is defined, will remove all the songs between `from` defined earlier and this position",
+				description: {
+					slash: "The last song to remove in the queue",
+					help: "If this is defined, will remove all the songs between `from` defined earlier and this position"
+				},
+				type: "number",
 				requirements: [
 					"Number that references a song in the queue",
 					"Cannot be smaller than `from` position specified earlier"
@@ -34,25 +41,6 @@ const file: iInteractionFile<Entry, GuildCache> = {
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("remove")
-		.setDescription(
-			"Remove a song from the queue. If ending is set, removes songs from start to end"
-		)
-		.addIntegerOption(option =>
-			option
-				.setName("from")
-				.setDescription(
-					'Starting position of the song in the queue to remove. If "to" is not defined, removes this song only'
-				)
-				.setRequired(true)
-		)
-		.addIntegerOption(option =>
-			option
-				.setName("to")
-				.setDescription("Ending position of the songs in the queue to remove.")
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

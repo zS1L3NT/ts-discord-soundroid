@@ -1,5 +1,5 @@
 import ApiHelper from "../utilities/ApiHelper"
-import Document, { iValue } from "./Document"
+import Entry from "./Entry"
 import GuildCache from "./GuildCache"
 import { BaseBotCache } from "discordjs-nova"
 
@@ -15,7 +15,7 @@ export default class BotCache extends BaseBotCache<Entry, GuildCache> {
 	public async registerGuildCache(guildId: string): Promise<void> {
 		const doc = await this.ref.doc(guildId).get()
 		if (!doc.exists) {
-			await this.ref.doc(guildId).set(new Document().getEmpty().value)
+			await this.ref.doc(guildId).set(this.getEmptyEntry())
 		}
 	}
 
@@ -24,6 +24,13 @@ export default class BotCache extends BaseBotCache<Entry, GuildCache> {
 		if (doc.exists) {
 			await this.ref.doc(guildId).delete()
 		}
-		this.guilds.delete(guildId)
+	}
+
+	public getEmptyEntry(): Entry {
+		return {
+			prefix: "",
+			music_channel_id: "",
+			music_message_id: ""
+		}
 	}
 }

@@ -1,44 +1,35 @@
-import Document, { iValue } from "../models/Document"
 import DominantColorGetter from "../utilities/DominantColorGetter"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, MessageEmbed } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 import { useTryAsync } from "no-try"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
+		name: "lyrics",
 		description: {
-			slash: "",
-			help: "Gives you the lyrics for the current song"
+			slash: "Shows the lyrics for a song",
+			help: [
+				"Shows the lyrics for the current song",
+				"If `query` given, searches the lyrics of the query instead"
+			].join("\n")
 		},
 		options: [
 			{
 				name: "query",
 				description: {
-					slash: "",
-					help: "Use this if you want to search for the lyrics of a song"
-				}
+					slash: "Query for the lyrics",
+					help: "The query for the lyrics"
+				},
+				type: "string",
 				requirements: "Text",
 				required: false
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("lyrics")
-		.setDescription(
-			"Shows the lyrics of the current song. If no query defined, searches lyrics for current song"
-		)
-		.addStringOption(option =>
-			option
-				.setName("query")
-				.setDescription(
-					"Use this to manually search the server for song lyrics for the current song"
-				)
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

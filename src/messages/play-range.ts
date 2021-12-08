@@ -1,4 +1,4 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
@@ -52,22 +52,22 @@ const file: iMessageFile<Entry, GuildCache> = {
 			)
 		}
 
-		const [link, from_str, to_str] = input
+		const [link, fromStr, toStr] = input
 
-		const from = helper.getNumber(from_str, 1, 0)
+		const from = helper.getNumber(fromStr, 1, 0)
 		if (from < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from_str}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${fromStr}`),
 				5000
 			)
 		}
 
-		let to = helper.getNumber(to_str, null, 0)
+		let to = helper.getNumber(toStr, null, 0)
 		if (to && to < 1) {
 			helper.reactFailure()
 			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to_str}`),
+				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${toStr}`),
 				5000
 			)
 		}
@@ -116,13 +116,13 @@ const file: iMessageFile<Entry, GuildCache> = {
 			}
 		}
 
-		const [, sp_length] = await useTryAsync(() =>
+		const [, spLength] = await useTryAsync(() =>
 			helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
 		)
-		const [, yt_length] = await useTryAsync(() =>
+		const [, ytLength] = await useTryAsync(() =>
 			helper.cache.apiHelper.findYoutubePlaylistLength(playlistId)
 		)
-		const length = sp_length || yt_length
+		const length = spLength || ytLength
 
 		if (to && to > length) {
 			helper.reactFailure()
@@ -144,13 +144,13 @@ const file: iMessageFile<Entry, GuildCache> = {
 			5000
 		)
 
-		const [, sp_songs] = await useTryAsync(() =>
+		const [, spSongs] = await useTryAsync(() =>
 			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, member.id)
 		)
-		const [, yt_songs] = await useTryAsync(() =>
+		const [, ytSongs] = await useTryAsync(() =>
 			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, member.id)
 		)
-		const songs =  sp_songs || yt_songs
+		const songs = spSongs || ytSongs
 
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)

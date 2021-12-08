@@ -1,39 +1,31 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
+		name: "skip",
 		description: {
-			slash: "",
+			slash: "Skip current playing song and songs in queue",
 			help: "Skips songs in the queue as many times as specified"
 		},
 		options: [
 			{
 				name: "count",
 				description: {
-					slash: "",
-					help: "This is the number of times you want to skip the song"
-				}
+					slash: "Number of songs to skip",
+					help: "The number of times you want to skip the current song"
+				},
+				type: "number",
 				requirements: "Number",
 				required: false,
 				default: "1"
 			}
 		]
 	},
-	builder: new SlashCommandBuilder()
-		.setName("skip")
-		.setDescription("Skip current playing song and songs in queue")
-		.addIntegerOption(option =>
-			option
-				.setName("count")
-				.setDescription("Number of songs to skip. Defaults to 1 (only skip current song)")
-				.setRequired(false)
-		),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

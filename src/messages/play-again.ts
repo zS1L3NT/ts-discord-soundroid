@@ -1,4 +1,4 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
@@ -29,9 +29,9 @@ const file: iMessageFile<Entry, GuildCache> = {
 				)
 			}
 
-			const [count_str] = helper.input()!
+			const [countStr] = helper.input()!
 
-			const count = helper.getNumber(count_str, 1, 0)
+			const count = helper.getNumber(countStr, 1, 0)
 			if (count < 1) {
 				helper.reactFailure()
 				return helper.respond(

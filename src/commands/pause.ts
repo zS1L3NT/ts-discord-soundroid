@@ -1,20 +1,18 @@
-import Document, { iValue } from "../models/Document"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { SlashCommandBuilder } from "@discordjs/builders"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {
+		name: "pause",
 		description: {
-			slash: "",
-			help: "Pause the current song"
+			slash: "Pause the current song",
+			help: "Pauses the current song"
 		}
-		options: []
 	},
-	builder: new SlashCommandBuilder().setName("pause").setDescription("Pause the current song"),
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -30,6 +28,7 @@ const file: iInteractionFile<Entry, GuildCache> = {
 		if (service) {
 			service.player.pause()
 			helper.cache.updateMusicChannel()
+			helper.respond(new ResponseBuilder(Emoji.GOOD, "Paused song"))
 		} else {
 			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}

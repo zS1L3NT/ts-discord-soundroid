@@ -1,5 +1,5 @@
-import Document, { iValue } from "../models/Document"
 import DominantColorGetter from "../utilities/DominantColorGetter"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 import { MessageEmbed } from "discord.js"

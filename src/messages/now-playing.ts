@@ -1,6 +1,6 @@
-import Document, { iValue } from "../models/Document"
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import DurationHelper from "../utilities/DurationHelper"
+import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
 import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
