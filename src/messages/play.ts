@@ -8,7 +8,7 @@ import { useTry, useTryAsync } from "no-try"
 import ConversionHelper from "../utilities/ConversionHelper"
 import SearchSelectBuilder from "../utilities/SearchSelectBuilder"
 
-const file: iMessageFile<iValue, Document, GuildCache> = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}play`),
 	execute: async helper => {
 		const member = helper.message.member!

@@ -3,7 +3,7 @@ import GuildCache from "../models/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 
-const file: iMessageFile<iValue, Document, GuildCache> = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}play-again`),
 	execute: async helper => {
 		const member = helper.message.member as GuildMember

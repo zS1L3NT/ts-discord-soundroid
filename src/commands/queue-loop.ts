@@ -4,15 +4,15 @@ import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
+	data: {
 		description: [
 			"Toggles between looping and unlooping the entire queue",
 			"If loop is active and you are enabling queue-loop, disables loop"
 		].join("\n"),
-		params: []
+		options: []
 	},
 	builder: new SlashCommandBuilder()
 		.setName("queue-loop")

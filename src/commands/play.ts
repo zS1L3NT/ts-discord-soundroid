@@ -9,10 +9,10 @@ import { GuildMember, VoiceChannel } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { useTry, useTryAsync } from "no-try"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
+	data: {
 		description: [
 			"Play a song with either",
 			"(1) YouTube Video Link",
@@ -21,10 +21,13 @@ const file: iInteractionFile<iValue, Document, GuildCache> = {
 			"(4) Spotify Playlist Link",
 			"(5) YouTube Music Search Query"
 		].join("\n"),
-		params: [
+		options
 			{
 				name: "query",
-				description: "Can be either of the 5 options specified above",
+				description: {
+					slash: "",
+					help: "Can be either of the 5 options specified above"
+				}
 				requirements: "Text or URL",
 				required: true
 			}

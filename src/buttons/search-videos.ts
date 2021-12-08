@@ -5,7 +5,7 @@ import Document, { iValue } from "../models/Document"
 import GuildCache from "../models/GuildCache"
 import SearchSelectBuilder from "../utilities/SearchSelectBuilder"
 
-const file: iButtonFile<iValue, Document, GuildCache> = {
+const file: iButtonFile<Entry, GuildCache> = {
 	defer: false,
 	ephemeral: true,
 	execute: async helper => {

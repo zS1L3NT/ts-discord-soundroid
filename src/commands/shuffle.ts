@@ -4,12 +4,15 @@ import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Shuffles the songs in the queue",
-		params: []
+	data: {
+		description: {
+			slash: "",
+			help: "Shuffles the songs in the queue"
+		}
+		options: []
 	},
 	builder: new SlashCommandBuilder()
 		.setName("shuffle")

@@ -2,20 +2,19 @@ import Document, { iValue } from "../../models/Document"
 import GuildCache from "../../models/GuildCache"
 import { Emoji, iInteractionSubcommandFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, TextChannel } from "discord.js"
-import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
 
 const config = require("../../../config.json")
 
-const file: iInteractionSubcommandFile<iValue, Document, GuildCache> = {
+const file: iInteractionSubcommandFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
+	data: {
 		description: [
 			"Sets the channel which the bot will attatch to and show the current playing song and queue",
 			"This channel will be owned by the bot and unrelated messages will be cleared every minute",
 			"Use this so you don't need to keep refreshing the queue message"
 		].join("\n"),
-		params: [
+		options
 			{
 				name: "channel",
 				description: [

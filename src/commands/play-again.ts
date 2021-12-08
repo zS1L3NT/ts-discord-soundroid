@@ -4,15 +4,21 @@ import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Plays the current playing song again as many times as specified",
-		params: [
+	data: {
+		description: {
+			slash: "",
+			help: "Plays the current playing song again as many times as specified"
+		},
+		options: [
 			{
 				name: "count",
-				description: "This is the number of times you want the song to repeat",
+				description: {
+					slash: "",
+					help: "This is the number of times you want the song to repeat"
+				}
 				requirements: "Number between 1 and 1000",
 				required: false,
 				default: "1"

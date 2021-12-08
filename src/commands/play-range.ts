@@ -7,29 +7,38 @@ import { GuildMember, VoiceChannel } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { useTry, useTryAsync } from "no-try"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
+	data: {
 		description:
 			"Plays a Spotify playlist, except you can specify which song you want to start playing from",
-		params: [
+		options
 			{
 				name: "link",
-				description: "Spotify playlist link",
+				description: {
+					slash: "",
+					help: "Spotify playlist link"
+				}
 				requirements: "URL",
 				required: true
 			},
 			{
 				name: "from",
-				description: "The first position of the playlist to play from",
+				description: {
+					slash: "",
+					help: "The first position of the playlist to play from"
+				}
 				requirements: "Number that references a song in the Spotify playlist",
 				required: false,
 				default: "1"
 			},
 			{
 				name: "to",
-				description: "The last position of the playlist to play from",
+				description: {
+					slash: "",
+					help: "The last position of the playlist to play from"
+				}
 				requirements: [
 					"Number that references a song in the Spotify playlist",
 					"Cannot be smaller than `from` position specified earlier",

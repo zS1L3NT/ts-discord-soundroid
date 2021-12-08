@@ -10,13 +10,13 @@ import { SlashCommandBuilder } from "@discordjs/builders"
 const thumb = "🔘"
 const track = "▬"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
+	data: {
 		description:
 			"Shows you the currently playing song with a progressbar showing how far into the song you are",
-		params: []
+		options: []
 	},
 	builder: new SlashCommandBuilder()
 		.setName("now-playing")

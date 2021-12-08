@@ -3,7 +3,7 @@ import Document, { iValue } from "./Document"
 import GuildCache from "./GuildCache"
 import { BaseBotCache } from "discordjs-nova"
 
-export default class BotCache extends BaseBotCache<iValue, Document, GuildCache> {
+export default class BotCache extends BaseBotCache<Entry, GuildCache> {
 	private apiHelper: ApiHelper = new ApiHelper()
 
 	public onConstruct(): void {}

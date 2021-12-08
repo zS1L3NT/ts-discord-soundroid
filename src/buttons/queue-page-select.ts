@@ -4,7 +4,7 @@ import PageSelectBuilder from "../utilities/PageSelectBuilder"
 import { Emoji, iButtonFile, ResponseBuilder } from "discordjs-nova"
 import { Message } from "discord.js"
 
-const file: iButtonFile<iValue, Document, GuildCache> = {
+const file: iButtonFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	execute: async helper => {

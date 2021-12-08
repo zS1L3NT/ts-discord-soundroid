@@ -4,15 +4,21 @@ import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Skips songs in the queue as many times as specified",
-		params: [
+	data: {
+		description: {
+			slash: "",
+			help: "Skips songs in the queue as many times as specified"
+		},
+		options: [
 			{
 				name: "count",
-				description: "This is the number of times you want to skip the song",
+				description: {
+					slash: "",
+					help: "This is the number of times you want to skip the song"
+				}
 				requirements: "Number",
 				required: false,
 				default: "1"

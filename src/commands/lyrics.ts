@@ -6,15 +6,21 @@ import { GuildMember, MessageEmbed } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { useTryAsync } from "no-try"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Gives you the lyrics for the current song",
-		params: [
+	data: {
+		description: {
+			slash: "",
+			help: "Gives you the lyrics for the current song"
+		},
+		options: [
 			{
 				name: "query",
-				description: "Use this if you want to search for the lyrics of a song",
+				description: {
+					slash: "",
+					help: "Use this if you want to search for the lyrics of a song"
+				}
 				requirements: "Text",
 				required: false
 			}

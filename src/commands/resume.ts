@@ -4,12 +4,15 @@ import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Resume the current song",
-		params: []
+	data: {
+		description: {
+			slash: "",
+			help: "Resume the current song"
+		}
+		options: []
 	},
 	builder: new SlashCommandBuilder().setName("resume").setDescription("Resume the current song"),
 	execute: async helper => {

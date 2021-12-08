@@ -4,15 +4,21 @@ import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Move a song in the queue to a specified position",
-		params: [
+	data: {
+		description: {
+			slash: "",
+			help: "Move a song in the queue to a specified position"
+		},
+		options: [
 			{
 				name: "from",
-				description: "This is the song's position in the queue that you want to move",
+				description: {
+					slash: "",
+					help: "This is the song's position in the queue that you want to move"
+				}
 				requirements: "Number that references a song in the queue",
 				required: true
 			},

@@ -4,12 +4,15 @@ import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Removes songs from the queue with either the song position or a range",
-		params: [
+	data: {
+		description: {
+			slash: "",
+			help: "Removes songs from the queue with either the song position or a range"
+		},
+		options: [
 			{
 				name: "from",
 				description: [

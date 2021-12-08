@@ -2,7 +2,7 @@ import Document, { iValue } from "../models/Document"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 
-const file: iMessageFile<iValue, Document, GuildCache> = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}clear-queue`),
 	execute: async helper => {
 		const member = helper.message.member!

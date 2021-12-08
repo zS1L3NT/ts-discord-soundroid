@@ -4,7 +4,7 @@ import QueueBuilder from "../utilities/QueueBuilder"
 import { GuildMember } from "discord.js"
 import { iButtonFile } from "discordjs-nova"
 
-const file: iButtonFile<iValue, Document, GuildCache> = {
+const file: iButtonFile<Entry, GuildCache> = {
 	defer: false,
 	ephemeral: true,
 	execute: async helper => {

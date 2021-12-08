@@ -2,19 +2,24 @@ import Document, { iValue } from "../../models/Document"
 import GuildCache from "../../models/GuildCache"
 import { Emoji, iInteractionSubcommandFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
-import { SlashCommandSubcommandBuilder } from "@discordjs/builders"
 
 const config = require("../../../config.json")
 
-const file: iInteractionSubcommandFile<iValue, Document, GuildCache> = {
+const file: iInteractionSubcommandFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
-		description: "Sets the prefix for message commands in this server",
-		params: [
+	data: {
+		description: {
+			slash: "",
+			help: "Sets the prefix for message commands in this server"
+		},
+		options: [
 			{
 				name: "prefix",
-				description: "Message prefix to activate message commands",
+				description: {
+					slash: "",
+					help: "Message prefix to activate message commands"
+				}
 				requirements: "Any single character",
 				required: true
 			}

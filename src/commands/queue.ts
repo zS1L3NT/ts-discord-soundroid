@@ -5,16 +5,16 @@ import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
+	data: {
 		description: [
 			"Shows a detailed message about all the songs in the queue",
 			"You are able to refresh the queue to see the up to date version of the queue",
 			"You are able to change the page of the queue"
 		].join("\n"),
-		params: []
+		options: []
 	},
 	builder: new SlashCommandBuilder()
 		.setName("queue")

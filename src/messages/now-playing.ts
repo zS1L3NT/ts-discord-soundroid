@@ -9,7 +9,7 @@ import { MessageEmbed } from "discord.js"
 const thumb = "🔘"
 const track = "▬"
 
-const file: iMessageFile<iValue, Document, GuildCache> = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}now-playing`),
 	execute: async helper => {
 		const member = helper.message.member!

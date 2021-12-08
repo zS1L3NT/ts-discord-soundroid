@@ -6,7 +6,7 @@ import { BaseGuildCache, ChannelCleaner } from "discordjs-nova"
 import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 
-export default class GuildCache extends BaseGuildCache<iValue, Document, GuildCache> {
+export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	public apiHelper!: ApiHelper
 	public service?: MusicService
 
@@ -38,7 +38,7 @@ export default class GuildCache extends BaseGuildCache<iValue, Document, GuildCa
 
 		const [message_err, message] = await useTryAsync(async () => {
 			const musicMessageId = this.getMusicMessageId()
-			const cleaner = new ChannelCleaner<iValue, Document, GuildCache>(this, musicChannelId, [
+			const cleaner = new ChannelCleaner<Entry, GuildCache>(this, musicChannelId, [
 				musicMessageId
 			])
 			await cleaner.clean()

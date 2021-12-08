@@ -4,15 +4,15 @@ import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember } from "discord.js"
 import { SlashCommandBuilder } from "@discordjs/builders"
 
-const file: iInteractionFile<iValue, Document, GuildCache> = {
+const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
-	help: {
+	data: {
 		description: [
 			"Removes all songs in the queue that were added by users who aren't currently in the voice channel",
 			"Does not skip the currently playing song no matter who it was added by"
 		].join("\n"),
-		params: []
+		options: []
 	},
 	builder: new SlashCommandBuilder()
 		.setName("leave-cleanup")

@@ -6,7 +6,7 @@ import { Emoji, iMenuFile, ResponseBuilder } from "discordjs-nova"
 import { GuildMember, Message, TextChannel } from "discord.js"
 import { useTryAsync } from "no-try"
 
-const file: iMenuFile<iValue, Document, GuildCache> = {
+const file: iMenuFile<Entry, GuildCache> = {
 	defer: false,
 	ephemeral: true,
 	execute: async helper => {

@@ -4,7 +4,7 @@ import GuildCache from "../models/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
 import { MessageEmbed } from "discord.js"
 
-const file: iMessageFile<iValue, Document, GuildCache> = {
+const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}lyrics`),
 	execute: async helper => {
 		const member = helper.message.member!
