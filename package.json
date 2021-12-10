@@ -9,7 +9,6 @@
 		"dev": "ts-node --files src/app.ts"
 	},
 	"dependencies": {
-		"@discordjs/builders": "^0.8.2",
 		"@discordjs/opus": "^0.7.0",
 		"@discordjs/voice": "^0.7.5",
 		"axios": "^0.24.0",
