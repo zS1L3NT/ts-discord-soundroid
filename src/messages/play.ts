@@ -4,7 +4,7 @@ import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
 import SearchSelectBuilder from "../utilities/SearchSelectBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 import { useTry, useTryAsync } from "no-try"
 import { VoiceChannel } from "discord.js"
 

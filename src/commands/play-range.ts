@@ -2,7 +2,7 @@ import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iInteractionFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 

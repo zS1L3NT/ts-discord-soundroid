@@ -2,7 +2,7 @@ import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import PageSelectBuilder from "../utilities/PageSelectBuilder"
 import QueueBuilder from "../utilities/QueueBuilder"
-import { Emoji, iMenuFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iMenuFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, Message, TextChannel } from "discord.js"
 import { useTryAsync } from "no-try"
 

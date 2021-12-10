@@ -1,7 +1,7 @@
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
-import { Emoji, iMessageFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 import { MessageEmbed } from "discord.js"
 
 const file: iMessageFile<Entry, GuildCache> = {

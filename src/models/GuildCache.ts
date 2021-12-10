@@ -2,7 +2,7 @@ import ApiHelper from "../utilities/ApiHelper"
 import Entry from "./Entry"
 import MusicService from "./MusicService"
 import QueueBuilder from "../utilities/QueueBuilder"
-import { BaseGuildCache, ChannelCleaner } from "discordjs-nova"
+import { BaseGuildCache, ChannelCleaner } from "nova-bot"
 import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 

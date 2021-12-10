@@ -1,7 +1,7 @@
 import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import PageSelectBuilder from "../utilities/PageSelectBuilder"
-import { Emoji, iButtonFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iButtonFile, ResponseBuilder } from "nova-bot"
 import { Message } from "discord.js"
 
 const file: iButtonFile<Entry, GuildCache> = {

@@ -1,6 +1,6 @@
 import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
-import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iInteractionFile, ResponseBuilder } from "nova-bot"
 import { GuildMember } from "discord.js"
 
 const file: iInteractionFile<Entry, GuildCache> = {

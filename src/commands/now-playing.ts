@@ -3,7 +3,7 @@ import DurationHelper from "../utilities/DurationHelper"
 import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
-import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iInteractionFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, MessageEmbed } from "discord.js"
 
 const thumb = "🔘"

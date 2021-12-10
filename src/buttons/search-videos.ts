@@ -1,7 +1,7 @@
 import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import SearchSelectBuilder from "../utilities/SearchSelectBuilder"
-import { Emoji, iButtonFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iButtonFile, ResponseBuilder } from "nova-bot"
 import { GuildMember } from "discord.js"
 import { useTry } from "no-try"
 

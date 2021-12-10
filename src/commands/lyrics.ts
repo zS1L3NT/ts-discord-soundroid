@@ -1,7 +1,7 @@
 import DominantColorGetter from "../utilities/DominantColorGetter"
 import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
-import { Emoji, iInteractionFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iInteractionFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, MessageEmbed } from "discord.js"
 import { useTryAsync } from "no-try"
 

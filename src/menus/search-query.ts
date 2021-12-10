@@ -3,7 +3,7 @@ import GuildCache from "../models/GuildCache"
 import MusicService from "../models/MusicService"
 import Song from "../models/Song"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { Emoji, iMenuFile, ResponseBuilder } from "discordjs-nova"
+import { Emoji, iMenuFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, VoiceChannel } from "discord.js"
 
 const file: iMenuFile<Entry, GuildCache> = {
