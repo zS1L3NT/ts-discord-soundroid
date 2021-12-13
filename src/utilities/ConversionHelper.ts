@@ -61,7 +61,7 @@ export default class ConversionHelper {
 				id = this.url.searchParams.get("v")
 				if (id) {
 					try {
-						return [await this.apiHelper.findYoutubeSong(id, this.requester)]
+						return [await this.apiHelper.findYoutubeVideo(id, this.requester)]
 					} catch (err) {
 						throw new Error("Error playing song from Youtube url")
 					}
@@ -74,7 +74,7 @@ export default class ConversionHelper {
 	private async handleYoutubeShort() {
 		try {
 			return [
-				await this.apiHelper.findYoutubeSong(this.url.pathname.slice(1), this.requester)
+				await this.apiHelper.findYoutubeVideo(this.url.pathname.slice(1), this.requester)
 			]
 		} catch (err) {
 			throw new Error("Error playing song from Youtube url")
