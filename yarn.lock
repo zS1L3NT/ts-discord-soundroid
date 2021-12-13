@@ -2698,10 +2698,10 @@ normalize-package-data@^3.0.0:
     semver "^7.3.4"
     validate-npm-package-license "^3.0.1"
 
-nova-bot@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/nova-bot/-/nova-bot-1.0.0.tgz#461e2ccf852cf7a9f9e4992caff3e3645c0933e3"
-  integrity sha512-jOgrpxNaLitumAxLZCnL77hAR/bsNnTYsfGtVZyt4FczBiXHYOfhe2gPjTPJ1y7Tbcq3j0+O7XrwikugOQ2S3A==
+nova-bot@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/nova-bot/-/nova-bot-1.0.1.tgz#c6227a17c43616939578fd53ec655bd778a09647"
+  integrity sha512-O7I4bAa/hlqnBHJ50CGIT3AA/FwZqY6eEeqKjSYs5552IfbEUcahfX77rYlHFbMm9DCtWIIegMzMjvkT3iNRrw==
   dependencies:
     "@discordjs/builders" "^0.8.2"
     "@discordjs/rest" "0.1.0-canary.0"
