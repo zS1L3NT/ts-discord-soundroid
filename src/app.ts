@@ -1,3 +1,4 @@
+require("dotenv").config()
 import axios from "axios"
 import BotCache from "./models/BotCache"
 import express from "express"
