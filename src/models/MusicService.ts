@@ -174,7 +174,7 @@ export default class MusicService {
 
 				this.disconnectTimeout = setTimeout(() => {
 					this.destroy()
-				}, 15_000)
+				}, 60_000)
 			}
 			return
 		}
