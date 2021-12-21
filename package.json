@@ -1,7 +1,7 @@
 {
 	"name": "ts-discord-soundroid",
 	"version": "1.0.0",
-	"description": "SounDroid Bot",
+	"description": "SounDroid",
 	"main": "build/app.js",
 	"author": "zS1L3NT",
 	"scripts": {

@@ -93,7 +93,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	}
 
 	public setNickname(nickname?: string) {
-		this.guild.me?.setNickname(nickname || "SounDroid Bot")
+		this.guild.me?.setNickname(nickname || "SounDroid")
 	}
 
 	public getMusicChannelId() {

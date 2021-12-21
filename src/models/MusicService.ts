@@ -130,7 +130,7 @@ export default class MusicService {
 			if (current) {
 				this.cache.setNickname(`${icon} ${current.title} - ${current.artiste}`.slice(0, 32))
 			} else {
-				this.cache.setNickname(`SounDroid Bot`)
+				this.cache.setNickname(`SounDroid`)
 			}
 		})
 
