@@ -181,6 +181,7 @@ export default class MusicService {
 
 		if (this.disconnectTimeout) {
 			clearTimeout(this.disconnectTimeout)
+			this.disconnectTimeout = null
 		}
 
 		// Lock the queue to guarantee safe access
