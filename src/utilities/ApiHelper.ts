@@ -1,59 +1,60 @@
 import Song from "../models/Song"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
+import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
-import youtubeVideoApi from "yt-search"
 import { useTry } from "no-try"
 
 const config = require("../../config.json")
 
 export default class ApiHelper {
-	private youtubeMusicApi: any
+	private ytmusic: YTMusic
 	private spotifyApi: SpotifyWebApi
 	private geniusApi: any
 
 	public constructor() {
-		this.youtubeMusicApi = new (require("youtube-music-api"))()
-		this.youtubeMusicApi.initalize()
+		this.ytmusic = new YTMusic()
+		this.ytmusic.initialize()
 		this.spotifyApi = new SpotifyWebApi(config.spotify)
 		this.spotifyApi.setAccessToken(config.spotify.accessToken)
 		this.geniusApi = new (require("node-genius-api"))(config.genius)
 	}
 
 	public async searchYoutubeSongs(query: string, requester: string): Promise<Song[]> {
-		const results = (await this.youtubeMusicApi.search(query, "song")).content
-		if (results.length > 10) results.length = 10
+		const songs = await this.ytmusic.search(query, "SONG")
+		if (songs.length > 10) songs.length = 10
 
-		const songs: Promise<Song>[] = results.map(
-			async (result: any) =>
-				new Song(
-					result.name,
-					Array.isArray(result.artist)
-						? result.artist.map((a: any) => a.name).join(", ")
-						: result.artist.name,
-					result.thumbnails.at(-1).url,
-					`https://youtu.be/${result.videoId}`,
-					0,
-					requester
-				)
+		return await Promise.all(
+			songs.map(
+				async result =>
+					new Song(
+						result.name,
+						result.artists.map(a => a.name).join(", "),
+						result.thumbnails.at(-1)?.url || "",
+						`https://youtu.be/${result.videoId}`,
+						result.duration,
+						requester
+					)
+			)
 		)
-
-		return await Promise.all(songs)
 	}
 
 	public async findYoutubeSong(query: string, requester: string): Promise<Song> {
-		const result = (await this.youtubeMusicApi.search(query, "song")).content[0]
+		const song = (await this.ytmusic.search(query, "SONG")).at(0)
 		let duration = 0
+
+		if (!song || !song.videoId) throw new Error()
 
 		const [err] = useTry(() => new URL(query))
 		if (err) {
+			// Query
 			try {
-				const info = await ytdl.getBasicInfo(result.videoId)
-				duration = parseInt(info.videoDetails.lengthSeconds) || 0
+				duration = (await this.ytmusic.getSong(song.videoId)).duration
 			} catch {}
 		} else {
+			// URL
 			const query_info = await ytdl.getBasicInfo(query)
-			const result_info = await ytdl.getBasicInfo(result.videoId)
+			const result_info = await ytdl.getBasicInfo(song.videoId)
 			duration = parseInt(result_info.videoDetails.lengthSeconds) || 0
 			if (result_info.videoDetails.videoId !== query_info.videoDetails.videoId) {
 				throw new Error()
@@ -61,28 +62,26 @@ export default class ApiHelper {
 		}
 
 		return new Song(
-			result.name,
-			Array.isArray(result.artist)
-				? result.artist.map((a: any) => a.name).join(", ")
-				: result.artist.name,
-			result.thumbnails.at(-1).url,
-			`https://youtu.be/${result.videoId}`,
+			song.name,
+			song.artists.map(a => a.name).join(", "),
+			song.thumbnails.at(-1)?.url || "",
+			`https://youtu.be/${song.videoId}`,
 			duration,
 			requester
 		)
 	}
 
 	public async searchYoutubeVideos(query: string, requester: string): Promise<Song[]> {
-		const { videos } = await youtubeVideoApi.search(query)
+		const videos = await this.ytmusic.search(query, "VIDEO")
 		return videos
 			.map(
 				video =>
 					new Song(
-						video.title,
-						video.author.name,
-						video.thumbnail,
-						"https://youtu.be/" + video.videoId,
-						video.seconds,
+						video.name,
+						video.artists.map(a => a.name).join(", "),
+						video.thumbnails.at(-1)?.url || "",
+						`https://youtu.be/${video.videoId}`,
+						video.duration,
 						requester
 					)
 			)
@@ -102,7 +101,7 @@ export default class ApiHelper {
 	}
 
 	public async findYoutubePlaylistLength(playlistId: string): Promise<number> {
-		return (await ytpl(playlistId)).estimatedItemCount
+		return (await this.ytmusic.getPlaylist(playlistId)).videoCount
 	}
 
 	public async findYoutubePlaylist(
