@@ -1,6 +1,7 @@
 require("dotenv").config()
 import axios from "axios"
 import BotCache from "./models/BotCache"
+import config from "./config.json"
 import express from "express"
 import fs from "fs/promises"
 import GuildCache from "./models/GuildCache"
@@ -9,8 +10,6 @@ import open from "open"
 import path from "path"
 import qs from "qs"
 import { Intents } from "discord.js"
-
-const config = require("../config.json")
 
 const refresh_spotify = () => {
 	const PORT = 4296

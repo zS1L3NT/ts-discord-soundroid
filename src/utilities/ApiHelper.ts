@@ -1,11 +1,10 @@
+import config from "../config.json"
 import Song from "../models/Song"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
 import { useTry } from "no-try"
-
-const config = require("../../config.json")
 
 export default class ApiHelper {
 	private ytmusic: YTMusic

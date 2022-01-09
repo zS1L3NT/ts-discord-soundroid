@@ -1,9 +1,8 @@
 import BotCache from "../models/BotCache"
+import config from "../config.json"
 import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { iEventFile } from "nova-bot"
-
-const config = require("../../config.json")
 
 const file: iEventFile<Entry, GuildCache, BotCache, "voiceStateUpdate"> = {
 	name: "voiceStateUpdate",
