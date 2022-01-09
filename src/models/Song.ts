@@ -1,4 +1,6 @@
 import ApiHelper from "../utilities/ApiHelper"
+import GuildCache from "./GuildCache"
+import MusicService, { StopStatus } from "./MusicService"
 import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice"
 import { raw as ytdl } from "youtube-dl-exec"
 
@@ -39,7 +41,10 @@ export default class Song {
 		}
 	}
 
-	public createAudioResource(apiHelper: ApiHelper): Promise<AudioResource<Song>> {
+	public createAudioResource(
+		service: MusicService,
+		apiHelper: ApiHelper
+	): Promise<AudioResource<Song>> {
 		return new Promise(async (resolve, reject) => {
 			let source = this.url
 			const URL_ = new URL(source)
@@ -82,6 +87,7 @@ export default class Song {
 							if (!process.killed) process.kill()
 							stream.resume()
 							reject(err)
+							service.stop_status = StopStatus.KILLED
 							console.warn("Source demuxprobe error")
 						})
 				})
@@ -90,6 +96,10 @@ export default class Song {
 					if (!process.killed) process.kill()
 					stream.resume()
 					reject(err)
+
+					if (service.stop_status !== StopStatus.SKIPPED) {
+						service.stop_status = StopStatus.KILLED
+					}
 				})
 		})
 	}

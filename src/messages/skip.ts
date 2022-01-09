@@ -1,6 +1,7 @@
 import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+import { StopStatus } from "../models/MusicService"
 
 const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}skip`),
@@ -45,6 +46,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			}
 
 			service.player.stop()
+			service.stop_status = StopStatus.SKIPPED
 			helper.reactSuccess()
 			helper.cache.updateMusicChannel()
 		} else {

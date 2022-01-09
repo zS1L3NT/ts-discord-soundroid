@@ -2,6 +2,7 @@ import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iInteractionFile, ResponseBuilder } from "nova-bot"
 import { GuildMember } from "discord.js"
+import { StopStatus } from "../models/MusicService"
 
 const file: iInteractionFile<Entry, GuildCache> = {
 	defer: true,
@@ -62,6 +63,7 @@ const file: iInteractionFile<Entry, GuildCache> = {
 			}
 
 			service.player.stop()
+			service.stop_status = StopStatus.SKIPPED
 			helper.cache.updateMusicChannel()
 			helper.respond(
 				new ResponseBuilder(
