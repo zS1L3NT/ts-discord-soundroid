@@ -174,8 +174,6 @@ export default class MusicService {
 	 * Attempts to play a Song from the queue
 	 */
 	private async processQueue(): Promise<void> {
-		this.stop_status = StopStatus.NORMAL
-
 		// If the queue is empty, locked (already being processed), or the audio player is already playing something, return
 		if (
 			this.queue.length === 0 ||
@@ -205,6 +203,7 @@ export default class MusicService {
 		try {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
 			const resource = await song.createAudioResource(this, this.cache.apiHelper)
+			this.stop_status = StopStatus.NORMAL
 			this.cache.updateMusicChannel()
 			this.player.play(resource)
 			this.queue_lock = false

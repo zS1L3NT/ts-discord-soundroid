@@ -62,8 +62,8 @@ const file: iInteractionFile<Entry, GuildCache> = {
 				service.queue.push(...queue.slice(0, count - 1))
 			}
 
-			service.player.stop()
 			service.stop_status = StopStatus.SKIPPED
+			service.player.stop()
 			helper.cache.updateMusicChannel()
 			helper.respond(
 				new ResponseBuilder(

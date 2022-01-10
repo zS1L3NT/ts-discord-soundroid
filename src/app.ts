@@ -41,7 +41,7 @@ const refresh_spotify = () => {
 
 		// Replace old access token with new access token
 		console.log(`Got Spotify API Access token`)
-		const config_path = path.join(__dirname, "../config.json")
+		const config_path = path.join(__dirname, "./config.json")
 		const config_data = await fs.readFile(config_path, "utf8")
 		await fs.writeFile(
 			config_path,

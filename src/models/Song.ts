@@ -83,22 +83,30 @@ export default class Song {
 							)
 						)
 						.catch(err => {
-							err.message = `[SOURCE>DEMUXPROBE]: ` + err.message
 							if (!process.killed) process.kill()
 							stream.resume()
+							
+							err.message = `[SOURCE>DEMUXPROBE]: ` + err.message
 							reject(err)
+
 							service.stop_status = StopStatus.KILLED
 							console.warn("Source demuxprobe error")
 						})
 				})
 				.catch(err => {
-					err.message = `[SOURCE>PROCESS]: ` + err.message
+					// Crash => Command failed with ERR_STREAM_PREMATURE_CLOSE: ...
+					// Skip => Command failed with ERR_STREAM_PREMATURE_CLOSE: ...
+					// Normal => Command failed with exit code 1: ...
+
 					if (!process.killed) process.kill()
 					stream.resume()
-					reject(err)
 
-					if (service.stop_status !== StopStatus.SKIPPED) {
-						service.stop_status = StopStatus.KILLED
+					if (err.message.startsWith("Command failed with ERR_STREAM_PREMATURE_CLOSE")) {
+						if (service.stop_status !== StopStatus.SKIPPED) {
+							service.stop_status = StopStatus.KILLED
+							err.message = `[SOURCE>PROCESS]: ` + err.message
+							reject(err)
+						}
 					}
 				})
 		})
