@@ -24,8 +24,8 @@ export default class PageSelectBuilder {
 	public build(start_page?: number): InteractionReplyOptions {
 		const pageInfo = this.embed.fields.find(field => field.name === `Page`)!.value
 		const [pageStr, maxPagesStr] = pageInfo.split("/")
-		this.current_page = start_page || +pageStr
-		this.max_pages = +maxPagesStr
+		this.current_page = start_page || +pageStr!
+		this.max_pages = +maxPagesStr!
 
 		this.setStartPage()
 		this.setEndPage()

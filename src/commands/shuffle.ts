@@ -27,8 +27,14 @@ const file: iInteractionFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			const queue = service.queue
+			if (queue.length === 0) {
+				return helper.respond(
+					new ResponseBuilder(Emoji.BAD, "Cannot shuffle an empty queue")
+				)
+			}
+
 			service.queue = [
-				queue[0],
+				queue[0]!,
 				...queue
 					.slice(1)
 					.map(value => ({ value, sort: Math.random() }))

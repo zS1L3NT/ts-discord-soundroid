@@ -11,9 +11,9 @@ export default class DominantColorGetter {
 		try {
 			const [r, g, b] = (await ColorThief.getColor(this.url)) as number[]
 
-			let rs = r.toString(16)
-			let gs = g.toString(16)
-			let bs = b.toString(16)
+			let rs = r!.toString(16)
+			let gs = g!.toString(16)
+			let bs = b!.toString(16)
 
 			if (rs.length == 1) rs = "0" + rs
 			if (gs.length == 1) gs = "0" + gs

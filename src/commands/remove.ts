@@ -83,6 +83,12 @@ const file: iInteractionFile<Entry, GuildCache> = {
 					}
 				} else {
 					const song = service.queue.splice(from, 1)[0]
+					if (!song) {
+						return helper.respond(
+							new ResponseBuilder(Emoji.BAD, `No song at position ${from}`)
+						)
+					}
+
 					helper.cache.updateMusicChannel()
 					helper.respond(
 						new ResponseBuilder(

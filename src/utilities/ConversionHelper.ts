@@ -26,17 +26,19 @@ export default class ConversionHelper {
 	}
 
 	private async handleSpotify() {
-		const dir = this.url.pathname.split("/").slice(1)
-		switch (dir[0]) {
+		const [type, id] = this.url.pathname.split("/").slice(1)
+		if (!id) throw new Error("Error playing item from Spotify url")
+
+		switch (type) {
 			case "playlist":
 				try {
-					return await this.apiHelper.findSpotifyPlaylist(dir[1], 1, 100, this.requester)
+					return await this.apiHelper.findSpotifyPlaylist(id, 1, 100, this.requester)
 				} catch (err) {
 					throw new Error("Error playing playlist from Spotify url")
 				}
 			case "track":
 				try {
-					return [await this.apiHelper.findSpotifySong(dir[1], this.requester)]
+					return [await this.apiHelper.findSpotifySong(id, this.requester)]
 				} catch (err) {
 					throw new Error("Error playing song from Spotify url")
 				}
@@ -57,6 +59,7 @@ export default class ConversionHelper {
 						throw new Error("Error playing playlist from Youtube url")
 					}
 				}
+				break
 			case "/watch":
 				id = this.url.searchParams.get("v")
 				if (id) {

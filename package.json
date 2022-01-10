@@ -1,11 +1,10 @@
 {
 	"name": "ts-discord-soundroid",
-	"version": "1.0.0",
 	"description": "SounDroid",
-	"main": "build/app.js",
+	"main": "dist/app.js",
 	"author": "zS1L3NT",
 	"scripts": {
-		"start": "node build/app.js",
+		"start": "node dist/app.js",
 		"dev": "ts-node --files src/app.ts"
 	},
 	"dependencies": {
@@ -30,9 +29,7 @@
 		"ytpl": "^2.2.3"
 	},
 	"devDependencies": {
-		"@types/luxon": "^2.0.7",
 		"@types/node": "^16.11.11",
-		"@types/node-fetch": "^3.0.3",
 		"@types/open": "^6.2.1",
 		"@types/spotify-web-api-node": "^5.0.4"
 	}

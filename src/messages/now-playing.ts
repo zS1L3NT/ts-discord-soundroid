@@ -37,6 +37,10 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const song = service.queue[0]
 			const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
+			if (!song) {
+				return helper.respond(new ResponseBuilder(Emoji.BAD, `No song currently playing!`))
+			}
+
 			const percent = (state.playbackDuration / 1000 / song.duration) * 100
 			const index = percent === 100 ? 24 : Math.floor(percent / 4)
 			const seekbar = track.repeat(index) + thumb + track.repeat(24 - index)

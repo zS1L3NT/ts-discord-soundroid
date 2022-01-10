@@ -38,7 +38,7 @@ const file: iInteractionFile<Entry, GuildCache> = {
 				)
 			}
 
-			const song = service.queue[0]
+			const song = service.queue[0]!
 			const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
 			const percent = (state.playbackDuration / 1000 / song.duration) * 100

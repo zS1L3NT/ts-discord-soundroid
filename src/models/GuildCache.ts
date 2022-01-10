@@ -44,9 +44,9 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 			await cleaner.clean()
 
 			const [newMusicMessageId] = cleaner.getMessageIds()
-			const message = cleaner.getMessages().get(newMusicMessageId)!
+			const message = cleaner.getMessages().get(newMusicMessageId!)!
 			if (newMusicMessageId !== musicMessageId) {
-				this.setMusicMessageId(newMusicMessageId)
+				this.setMusicMessageId(newMusicMessageId!)
 			}
 
 			return message
@@ -62,10 +62,9 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 		}
 
 		const [page_err, page] = useTry(() => {
-			const embed = message.embeds[0]
+			const embed = message.embeds[0]!
 			const pageInfo = embed.fields.find(field => field.name === `Page`)!.value
-			const [page_str] = pageInfo.split("/")
-			return +page_str
+			return +pageInfo.split("/")[0]!
 		})
 
 		if (this.service) {

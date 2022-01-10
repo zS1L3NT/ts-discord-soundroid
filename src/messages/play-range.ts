@@ -73,7 +73,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		}
 
 		const [err, playlistId] = useTry(() => {
-			const url = new URL(link)
+			const url = new URL(link!)
 			if (url.host === "open.spotify.com" && url.pathname.startsWith("/playlist/")) {
 				return url.pathname.slice("/playlist/".length)
 			}

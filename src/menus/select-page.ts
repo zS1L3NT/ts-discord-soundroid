@@ -12,11 +12,11 @@ const file: iMenuFile<Entry, GuildCache> = {
 	execute: async helper => {
 		const [channelId, messageId, pageStr, moreStr] = helper.value()!.split("-")
 		const guild = helper.cache.guild
-		const more = +moreStr
-		const page = +pageStr
+		const more = +moreStr!
+		const page = +pageStr!
 
 		const [channelErr, channel] = await useTryAsync<TextChannel>(
-			() => guild.channels.fetch(channelId) as Promise<TextChannel>
+			() => guild.channels.fetch(channelId!) as Promise<TextChannel>
 		)
 
 		if (channelErr) {
@@ -26,16 +26,16 @@ const file: iMenuFile<Entry, GuildCache> = {
 		}
 
 		const [messageErr, message] = await useTryAsync<Message>(
-			() => channel.messages.fetch(messageId) as Promise<Message>
+			() => channel.messages.fetch(messageId!) as Promise<Message>
 		)
 
-		if (messageErr) {
+		if (messageErr || message.embeds.length === 0) {
 			return helper.respond(new ResponseBuilder(Emoji.BAD, "Queue message not found"))
 		}
 
 		if (pageStr === "more") {
 			return helper.update(
-				new PageSelectBuilder(message.embeds[0], channelId, messageId).build(more)
+				new PageSelectBuilder(message.embeds[0]!, channelId!, messageId!).build(more)
 			)
 		}
 

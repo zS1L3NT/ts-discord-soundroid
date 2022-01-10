@@ -58,6 +58,10 @@ const file: iMessageFile<Entry, GuildCache> = {
 				)
 			}
 
+			if (!song) {
+				return helper.respond(new ResponseBuilder(Emoji.BAD, `No song at position ${from}`))
+			}
+
 			queue.splice(to || 1, 0, ...queue.splice(from, 1))
 			helper.cache.updateMusicChannel()
 			helper.reactSuccess()

@@ -51,7 +51,7 @@ const file: iInteractionFile<Entry, GuildCache> = {
 			}
 
 			const query = helper.string("query")
-			const song = queue[0]
+			const song = queue[0]!
 
 			const [err, lyrics] = await useTryAsync(() =>
 				helper.cache.apiHelper.findGeniusLyrics(query || `${song.title} ${song.artiste}`)

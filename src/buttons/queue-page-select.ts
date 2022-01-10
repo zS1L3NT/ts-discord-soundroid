@@ -12,7 +12,7 @@ const file: iButtonFile<Entry, GuildCache> = {
 		const embed = message.embeds[0]
 
 		if (!embed) {
-			helper.respond(
+			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, "Failed to get information about queue page number")
 			)
 		}

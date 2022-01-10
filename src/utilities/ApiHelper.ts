@@ -163,7 +163,7 @@ export default class ApiHelper {
 							new Song(
 								result.name,
 								result.artists.map(a => a.name).join(", "),
-								result.album.images[0].url,
+								result.album.images[0]?.url || "",
 								`https://open.spotify.com/track/${result.id}`,
 								Math.floor(result.duration_ms / 1000),
 								requester
@@ -189,7 +189,7 @@ export default class ApiHelper {
 		return new Song(
 			result.name,
 			result.artists.map(a => a.name).join(", "),
-			result.album.images[0].url,
+			result.album.images[0]?.url || "",
 			`https://open.spotify.com/track/${trackId}`,
 			Math.floor(result.duration_ms / 1000),
 			requester

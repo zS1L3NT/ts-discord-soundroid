@@ -201,7 +201,7 @@ export default class MusicService {
 
 		// Lock the queue to guarantee safe access
 		this.queue_lock = true
-		const song = this.queue[0]
+		const song = this.queue[0]!
 		try {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
 			const resource = await song.createAudioResource(this, this.cache.apiHelper)

@@ -3,6 +3,7 @@ import Entry from "../models/Entry"
 import GuildCache from "../models/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 import { MessageEmbed } from "discord.js"
+import { useTryAsync } from "no-try"
 
 const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}lyrics`),
@@ -32,6 +33,10 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 			const query = helper.input()!.join(" ")
 			const song = queue[0]
+
+			if (!song) {
+				return helper.respond(new ResponseBuilder(Emoji.BAD, `No song currently playing!`))
+			}
 
 			const [err, lyrics] = await useTryAsync(() => {
 				return helper.cache.apiHelper.findGeniusLyrics(
@@ -87,6 +92,3 @@ const file: iMessageFile<Entry, GuildCache> = {
 }
 
 export default file
-function useTryAsync(arg0: () => Promise<string>): [any, any] | PromiseLike<[any, any]> {
-	throw new Error("Function not implemented.")
-}

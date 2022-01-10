@@ -13,7 +13,7 @@ const file: iButtonFile<Entry, GuildCache> = {
 
 		const [err, query] = useTry(() => {
 			const embed = helper.interaction.message.embeds[0]
-			const author = embed.author!.name
+			const author = embed!.author!.name
 			const [, query] = author.match(/results for: "(.*)"$/)!
 			return query
 		})
@@ -25,7 +25,7 @@ const file: iButtonFile<Entry, GuildCache> = {
 		}
 
 		await helper.interaction.update(
-			await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildMusic()
+			await new SearchSelectBuilder(helper.cache.apiHelper, query!, member.id).buildMusic()
 		)
 	}
 }
