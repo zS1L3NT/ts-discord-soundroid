@@ -96,7 +96,10 @@ export default class QueueBuilder {
 			return {
 				embeds: [
 					new MessageEmbed()
-						.setAuthor("I am not currently in a voice channel", Emoji.BAD)
+						.setAuthor({
+							name: "I am not currently in a voice channel",
+							iconURL: Emoji.BAD
+						})
 						.setColor("#DD2E44")
 				],
 				components: []

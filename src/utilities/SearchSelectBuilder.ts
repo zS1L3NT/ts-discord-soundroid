@@ -26,10 +26,10 @@ export default class SearchSelectBuilder {
 		return {
 			embeds: [
 				new MessageEmbed()
-					.setAuthor(
-						`YouTube Video search results for: "${this.query}"`,
-						`https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
-					)
+					.setAuthor({
+						name: `YouTube Video search results for: "${this.query}"`,
+						iconURL: `https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
+					})
 					.setColor("#FF0000")
 			],
 			components: [
@@ -60,10 +60,10 @@ export default class SearchSelectBuilder {
 		return {
 			embeds: [
 				new MessageEmbed()
-					.setAuthor(
-						`YouTube Music search results for: "${this.query}"`,
-						`https://brandlogos.net/wp-content/uploads/2021/11/youtube-music-logo-1-512x512.png`
-					)
+					.setAuthor({
+						name: `YouTube Music search results for: "${this.query}"`,
+						iconURL: `https://brandlogos.net/wp-content/uploads/2021/11/youtube-music-logo-1-512x512.png`
+					})
 					.setColor("#FF0000")
 			],
 			components: [
