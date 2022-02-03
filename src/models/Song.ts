@@ -56,24 +56,20 @@ export default class Song {
 				source = youtubeResult.url
 			}
 
-			const process = ytdl(
+			const childProcess = exec(
 				source,
-				{
-					o: "-",
-					q: "0",
-					f: "bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio",
-					r: "100K"
-				},
+				{ format: "bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio", output: "-" },
 				{ stdio: ["ignore", "pipe", "ignore"] }
 			)
-			if (!process.stdout) {
+			const { stdout } = childProcess
+			if (!stdout) {
 				reject(new Error("[SOURCE>STDOUT]: No stduout from source"))
 				return
 			}
-			const stream = process.stdout
-			process
+
+			childProcess
 				.once("spawn", () => {
-					demuxProbe(stream)
+					demuxProbe(stdout)
 						.then(probe =>
 							resolve(
 								createAudioResource(probe.stream, {
@@ -83,9 +79,9 @@ export default class Song {
 							)
 						)
 						.catch(err => {
-							if (!process.killed) process.kill()
-							stream.resume()
-							
+							if (!childProcess.killed) childProcess.kill()
+							stdout.resume()
+
 							err.message = `[SOURCE>DEMUXPROBE]: ` + err.message
 							reject(err)
 
@@ -98,8 +94,8 @@ export default class Song {
 					// Skip => Command failed with ERR_STREAM_PREMATURE_CLOSE: ...
 					// Normal => Command failed with exit code 1: ...
 
-					if (!process.killed) process.kill()
-					stream.resume()
+					if (!childProcess.killed) childProcess.kill()
+					stdout.resume()
 
 					if (err.message.startsWith("Command failed with ERR_STREAM_PREMATURE_CLOSE")) {
 						if (service.stop_status !== StopStatus.SKIPPED) {
