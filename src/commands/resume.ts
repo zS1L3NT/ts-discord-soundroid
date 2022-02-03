@@ -28,6 +28,7 @@ const file: iInteractionFile<Entry, GuildCache> = {
 		if (service) {
 			service.player.unpause()
 			helper.cache.updateMusicChannel()
+			helper.respond(new ResponseBuilder(Emoji.GOOD, "Resumed song"))
 		} else {
 			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}

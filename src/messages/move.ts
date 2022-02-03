@@ -59,6 +59,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			}
 
 			if (!song) {
+				helper.reactFailure()
 				return helper.respond(new ResponseBuilder(Emoji.BAD, `No song at position ${from}`))
 			}
 

@@ -90,7 +90,6 @@ const file: iInteractionFile<Entry, GuildCache> = {
 						)
 				]
 			})
-			helper.respond(new ResponseBuilder(Emoji.GOOD, "Showing lyrics"))
 		} else {
 			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
 		}

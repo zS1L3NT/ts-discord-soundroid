@@ -41,6 +41,7 @@ const file: iInteractionFile<Entry, GuildCache> = {
 					.sort((a, b) => a.sort - b.sort)
 					.map(({ value }) => value)
 			]
+			helper.respond(new ResponseBuilder(Emoji.GOOD, "Shuffled Queue"))
 			helper.cache.updateMusicChannel()
 		} else {
 			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))

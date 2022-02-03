@@ -35,6 +35,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const song = queue[0]
 
 			if (!song) {
+				helper.reactFailure()
 				return helper.respond(new ResponseBuilder(Emoji.BAD, `No song currently playing!`))
 			}
 

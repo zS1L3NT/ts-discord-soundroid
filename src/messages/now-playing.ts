@@ -38,6 +38,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
 			if (!song) {
+				helper.reactFailure()
 				return helper.respond(new ResponseBuilder(Emoji.BAD, `No song currently playing!`))
 			}
 

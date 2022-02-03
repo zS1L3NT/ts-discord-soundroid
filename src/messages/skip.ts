@@ -24,6 +24,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 			const count = helper.getNumber(countStr, 1, 0)
 			if (count < 1) {
+				helper.reactFailure()
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, `Invalid skip count: ${count}`),
 					5000
@@ -32,6 +33,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 			const queue = [...service.queue]
 			if (count >= queue.length && count > 1) {
+				helper.reactFailure()
 				return helper.respond(
 					new ResponseBuilder(
 						Emoji.BAD,
