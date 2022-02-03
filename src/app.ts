@@ -1,6 +1,6 @@
-require("dotenv").config()
 import axios from "axios"
 import BotCache from "./models/BotCache"
+import colors from "colors"
 import config from "./config.json"
 import express from "express"
 import fs from "fs/promises"
@@ -9,14 +9,57 @@ import NovaBot from "nova-bot"
 import open from "open"
 import path from "path"
 import qs from "qs"
+import Tracer from "tracer"
 import { Intents } from "discord.js"
+import { useTry } from "no-try"
+require("dotenv").config()
+
+/**
+ * log: Used for basic primitive information
+ * debug: Only used for debugging if not don't use this
+ * info: Used for general information
+ * alert: Used for possible minor problems or user erros
+ * warn: Used for caught errors which need attention
+ * error: Used for errors that are not fixed
+ */
+global.logger = Tracer.colorConsole({
+	level: process.env.LOG_LEVEL || "log",
+	format: [
+		"[{{timestamp}}] <{{path}}> {{message}}",
+		{
+			//@ts-ignore
+			alert: "[{{timestamp}}] <{{path}}, Line {{line}}> {{message}}",
+			warn: "[{{timestamp}}] <{{path}}, Line {{line}}> {{message}}",
+			error: "[{{timestamp}}] <{{path}}, Line {{line}} at {{pos}}> {{message}}"
+		}
+	],
+	methods: ["log", "debug", "info", "alert", "warn", "error"],
+	dateformat: "dd mmm yyyy, hh:MM:sstt",
+	filters: {
+		log: colors.grey,
+		debug: colors.blue,
+		info: colors.green,
+		//@ts-ignore
+		alert: colors.yellow,
+		warn: colors.bgYellow.black,
+		error: colors.bgRed.white
+	},
+	preprocess: data => {
+		useTry(() => {
+			data.path = data.path.split("\\src\\")[1]!.replaceAll("\\", "/")
+		})
+		useTry(() => {
+			data.path = data.path.split("\\node_modules\\")[1]!.replaceAll("\\", "/")
+		})
+	}
+})
 
 const refresh_spotify = () => {
 	const PORT = 4296
 	const app = express()
 
 	app.get("/", async (req, res) => {
-		console.log(`Got Spotify API Authorization token`)
+		logger.info(`Got Spotify API Authorization token`)
 		const code = req.query.code as string
 
 		// Get spotify access token from authorization code
@@ -40,7 +83,7 @@ const refresh_spotify = () => {
 		)
 
 		// Replace old access token with new access token
-		console.log(`Got Spotify API Access token`)
+		logger.info(`Got Spotify API Access token`)
 		const config_path = path.join(__dirname, "./config.json")
 		const config_data = await fs.readFile(config_path, "utf8")
 		await fs.writeFile(
@@ -49,7 +92,7 @@ const refresh_spotify = () => {
 				.replace(config.spotify.accessToken, spotify_res.data.access_token)
 				.replace(config.spotify.refreshToken, spotify_res.data.refresh_token)
 		)
-		console.log(`Replaced Spotify API Access token`)
+		logger.info(`Replaced Spotify API Access token`)
 
 		res.send("<script>window.close();</script>")
 		server.close()
@@ -59,7 +102,7 @@ const refresh_spotify = () => {
 	})
 
 	const server = app.listen(PORT, async () => {
-		console.log(`Server running on port ${PORT}`)
+		logger.info(`Server running on port ${PORT}`)
 
 		// Get spotify authorization code
 		const spotify_url = new URL("https://accounts.spotify.com/authorize")
@@ -82,6 +125,7 @@ const start_bot = () => {
 		cwd: __dirname,
 		config,
 		updatesMinutely: true,
+		logger: global.logger,
 
 		help: {
 			message: cache =>

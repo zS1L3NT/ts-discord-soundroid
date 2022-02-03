@@ -24,12 +24,8 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	/**
 	 * Method run every minute
 	 */
-	public async updateMinutely(debug: number) {
-		console.time(`Updated Channels for Guild(${this.guild.name}) [${debug}]`)
-
+	public async updateMinutely(_: number) {
 		await this.updateMusicChannel()
-
-		console.timeEnd(`Updated Channels for Guild(${this.guild.name}) [${debug}]`)
 	}
 
 	public async updateMusicChannel() {
@@ -54,7 +50,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 
 		if (message_err) {
 			if (message_err.message === "no-channel") {
-				console.warn(`Guild(${this.guild.name}) has no Channel(${musicChannelId})`)
+				logger.alert!(`Guild(${this.guild.name}) has no Channel(${musicChannelId})`)
 				await this.setMusicChannelId("")
 				return
 			}

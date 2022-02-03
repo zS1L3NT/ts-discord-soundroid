@@ -55,7 +55,9 @@ export default class MusicService {
 						await entersState(this.connection, VoiceConnectionStatus.Connecting, 15_000)
 						// Probably moved voice channel
 					} catch {
-						console.warn("[CONNECTION]: Bot didn't enter connecting state")
+						logger.alert!(
+							"Bot didn't enter connecting state after 15, destroying session"
+						)
 						this.destroy()
 						// Probably removed from voice channel
 					}
@@ -63,16 +65,14 @@ export default class MusicService {
 					/*
 						The disconnect in this case is recoverable, and we also have <5 repeated attempts so we will reconnect.
 					*/
-					console.warn(
-						`[CONNECTION]: Reconnecting, attempt ${this.connection.rejoinAttempts + 1}`
-					)
+					logger.alert!(`Reconnecting, attempt ${this.connection.rejoinAttempts + 1}`)
 					await time((this.connection.rejoinAttempts + 1) * 5_000)
 					this.connection.rejoin()
 				} else {
 					/*
 						The disconnect in this case may be recoverable, but we have no more remaining attempts - destroy.
 					*/
-					console.warn("[CONNECTION]: Disconnected after 5 attempts")
+					logger.alert!("Disconnected after 5 attempts")
 					this.destroy()
 				}
 			} else if (newState.status === VoiceConnectionStatus.Destroyed) {
@@ -94,6 +94,7 @@ export default class MusicService {
 				try {
 					await entersState(this.connection, VoiceConnectionStatus.Ready, 20_000)
 				} catch {
+					logger.log("Connection didn't become ready in 20 seconds, destroying")
 					if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
 						this.destroy()
 					}
@@ -112,17 +113,21 @@ export default class MusicService {
 					if (this.queue_loop) {
 						const current = this.queue.shift()
 						if (current) {
+							logger.log("On queue loop, queueing current song")
 							this.queue.push(current)
+						} else {
+							logger.log("On queue loop, no current song")
 						}
 					} else if (this.loop) {
-						if (this.stop_status === StopStatus.SKIPPED) {
-							this.queue.shift()
-						}
+						logger.log("On loop, replaying current song")
 					} else {
+						logger.log("Not looping, trying to play next song")
 						this.queue.shift()
 					}
+				} else {
+					logger.warn("Player killed, playing song again")
 				}
-				void this.processQueue()
+				this.processQueue()
 			}
 
 			let icon = ""
@@ -143,7 +148,7 @@ export default class MusicService {
 			if (current) {
 				this.cache.setNickname(`${icon} ${current.title} - ${current.artiste}`.slice(0, 32))
 			} else {
-				this.cache.setNickname(`SounDroid`)
+				this.cache.setNickname()
 			}
 		})
 
@@ -157,6 +162,7 @@ export default class MusicService {
 		this.cache.setNickname()
 		this.cache.updateMusicChannel()
 		delete this.cache.service
+		logger.log("Destroyed music service")
 	}
 
 	/**
@@ -182,10 +188,13 @@ export default class MusicService {
 		) {
 			if (this.queue.length === 0) {
 				if (this.disconnectTimeout) {
+					logger.log("Clearing previous disconnect timeout")
 					clearTimeout(this.disconnectTimeout)
 				}
 
+				logger.log("Setting one minute disconnect timeout")
 				this.disconnectTimeout = setTimeout(() => {
+					logger.log("One minute without any activity, disconnecting")
 					this.destroy()
 				}, 60_000)
 			}
@@ -193,6 +202,7 @@ export default class MusicService {
 		}
 
 		if (this.disconnectTimeout) {
+			logger.log("Clearing existing disconnect timeout")
 			clearTimeout(this.disconnectTimeout)
 			this.disconnectTimeout = null
 		}
@@ -207,10 +217,10 @@ export default class MusicService {
 			this.cache.updateMusicChannel()
 			this.player.play(resource)
 			this.queue_lock = false
-		} catch (error) {
+		} catch (err) {
 			// If an error occurred, try the next item of the queue instead
 			this.queue_lock = false
-			console.error("Error playing track:", error)
+			logger.error("Error playing track", err)
 			return this.processQueue()
 		}
 	}

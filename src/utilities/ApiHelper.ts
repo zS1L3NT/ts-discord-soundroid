@@ -4,7 +4,6 @@ import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
-import { useTry } from "no-try"
 
 export default class ApiHelper {
 	private ytmusic: YTMusic
@@ -40,24 +39,18 @@ export default class ApiHelper {
 
 	public async findYoutubeSong(query: string, requester: string): Promise<Song> {
 		const song = (await this.ytmusic.search(query, "SONG")).at(0)
-		let duration = 0
 
-		if (!song || !song.videoId) throw new Error()
+		if (!song || !song.videoId) {
+			if (!song) logger.alert!("No song found for query", { query })
+			else if (!song.videoId) logger.alert!("No video id found for song", { song })
+			throw new Error()
+		}
 
-		const [err] = useTry(() => new URL(query))
-		if (err) {
-			// Query
-			try {
-				duration = (await this.ytmusic.getSong(song.videoId)).duration
-			} catch {}
-		} else {
-			// URL
-			const query_info = await ytdl.getBasicInfo(query)
-			const result_info = await ytdl.getBasicInfo(song.videoId)
-			duration = parseInt(result_info.videoDetails.lengthSeconds) || 0
-			if (result_info.videoDetails.videoId !== query_info.videoDetails.videoId) {
-				throw new Error()
-			}
+		const query_info = await ytdl.getBasicInfo(query)
+		const result_info = await ytdl.getBasicInfo(song.videoId)
+		if (result_info.videoDetails.videoId !== query_info.videoDetails.videoId) {
+			logger.alert!("ytmusic-api and ytdl search result mismatch", { query, song })
+			throw new Error()
 		}
 
 		return new Song(
@@ -65,7 +58,7 @@ export default class ApiHelper {
 			song.artists.map(a => a.name).join(", "),
 			song.thumbnails.at(-1)?.url || "",
 			`https://youtu.be/${song.videoId}`,
-			duration,
+			song.duration,
 			requester
 		)
 	}
