@@ -84,10 +84,10 @@ const file: iInteractionFile<Entry, GuildCache> = {
 						.setColor(await new DominantColorGetter(song.cover).getColor())
 						.setThumbnail(song.cover)
 						.setDescription(lyrics)
-						.setFooter(
-							`Requested by @${member.displayName}`,
-							member.user.displayAvatarURL()
-						)
+						.setFooter({
+							text: `Requested by @${member.displayName}`,
+							iconURL: member.user.displayAvatarURL()
+						})
 				]
 			})
 		} else {

@@ -64,10 +64,10 @@ const file: iMessageFile<Entry, GuildCache> = {
 									state.playbackDuration / 1000
 								).format()} / ${new DurationHelper(song.duration).format()}\``
 							)
-							.setFooter(
-								`Requested by @${member.displayName}`,
-								member.user.displayAvatarURL()
-							)
+							.setFooter({
+								text: `Requested by @${member.displayName}`,
+								iconURL: member.user.displayAvatarURL()
+							})
 					]
 				},
 				10000

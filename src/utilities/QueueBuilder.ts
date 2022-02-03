@@ -70,10 +70,10 @@ export default class QueueBuilder {
 			embed.addField(`Loop`, this.cache.service.loop ? "✅" : "❌", true)
 			embed.addField(`Queue Loop`, this.cache.service.queue_loop ? "✅" : "❌", true)
 			if (this.member) {
-				embed.setFooter(
-					`Requested by @${this.member.displayName}`,
-					this.member.user.displayAvatarURL()
-				)
+				embed.setFooter({
+					text: `Requested by @${this.member.displayName}`,
+					iconURL: this.member.user.displayAvatarURL()
+				})
 			}
 
 			return {
