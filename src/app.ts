@@ -41,16 +41,20 @@ global.logger = Tracer.colorConsole({
 		info: colors.green,
 		//@ts-ignore
 		alert: colors.yellow,
-		warn: colors.bgYellow.black,
-		error: colors.bgRed.white
+		warn: colors.yellow.bold.italic,
+		error: colors.red.bold.italic
 	},
 	preprocess: data => {
-		useTry(() => {
-			data.path = data.path.split("\\src\\")[1]!.replaceAll("\\", "/")
-		})
-		useTry(() => {
-			data.path = data.path.split("\\node_modules\\")[1]!.replaceAll("\\", "/")
-		})
+		data.path = data.path
+			.split("nova-bot")
+			.at(-1)!
+			.replace(/^(\/|\\)dist/, "nova-bot")
+			.replaceAll("\\", "/")
+		data.path = data.path
+			.split("ts-discord-soundroid")
+			.at(-1)!
+			.replace(/^(\/|\\)(dist|src)/, "src")
+			.replaceAll("\\", "/")
 	}
 })
 
