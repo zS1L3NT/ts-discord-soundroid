@@ -192,9 +192,9 @@ export default class MusicService {
 					clearTimeout(this.disconnectTimeout)
 				}
 
-				logger.log("Setting one minute disconnect timeout")
+				logger.log("Nothing in queue, setting one minute disconnect timeout")
 				this.disconnectTimeout = setTimeout(() => {
-					logger.log("One minute without any activity, disconnecting")
+					logger.log("One minute without anything in queue, disconnecting")
 					this.destroy()
 				}, 60_000)
 			}

@@ -16,6 +16,7 @@ const file: iEventFile<Entry, GuildCache, BotCache, "voiceStateUpdate"> = {
 				newState.channel.members.find(m => m.id === config.discord.bot_id) &&
 				cache.service.disconnectTimeout
 			) {
+				logger.log("Clearing previous disconnect timeout")
 				clearTimeout(cache.service.disconnectTimeout)
 				cache.service.disconnectTimeout = null
 			}
@@ -29,7 +30,9 @@ const file: iEventFile<Entry, GuildCache, BotCache, "voiceStateUpdate"> = {
 				oldState.channel.members.size === 1 &&
 				oldState.channel.members.at(0)!.id === config.discord.bot_id
 			) {
+				logger.log("No one in VC, setting one minute disconnect timeout")
 				cache.service.disconnectTimeout = setTimeout(() => {
+					logger.log("One minute without any users in VC, disconnecting")
 					cache.service?.destroy()
 				}, 60_000)
 			}
