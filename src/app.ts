@@ -11,7 +11,6 @@ import path from "path"
 import qs from "qs"
 import Tracer from "tracer"
 import { Intents } from "discord.js"
-import { useTry } from "no-try"
 require("dotenv").config()
 
 /**
@@ -33,10 +32,12 @@ global.logger = Tracer.colorConsole({
 			error: "[{{timestamp}}] <{{path}}, Line {{line}} at {{pos}}> {{message}}"
 		}
 	],
-	methods: ["log", "debug", "info", "alert", "warn", "error"],
+	methods: ["log", "discord", "debug", "info", "alert", "warn", "error"],
 	dateformat: "dd mmm yyyy, hh:MM:sstt",
 	filters: {
 		log: colors.grey,
+		//@ts-ignore
+		discord: colors.cyan,
 		debug: colors.blue,
 		info: colors.green,
 		//@ts-ignore
@@ -129,6 +130,7 @@ const start_bot = () => {
 		cwd: __dirname,
 		config,
 		updatesMinutely: true,
+		//@ts-ignore
 		logger: global.logger,
 
 		help: {
