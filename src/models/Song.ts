@@ -57,7 +57,11 @@ export default class Song {
 
 			const childProcess = exec(
 				source,
-				{ format: "bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio", output: "-" },
+				{
+					limitRate: "10M",
+					format: "bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio",
+					output: "-"
+				},
 				{ stdio: ["ignore", "pipe", "ignore"] }
 			)
 			const { stdout } = childProcess
