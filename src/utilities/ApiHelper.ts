@@ -4,6 +4,7 @@ import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
+import { useTry, useTryAsync } from "no-try"
 
 export default class ApiHelper {
 	private ytmusic: YTMusic
@@ -46,11 +47,13 @@ export default class ApiHelper {
 			throw new Error()
 		}
 
-		const query_info = await ytdl.getBasicInfo(query)
-		const result_info = await ytdl.getBasicInfo(song.videoId)
-		if (result_info.videoDetails.videoId !== query_info.videoDetails.videoId) {
-			logger.alert!("ytmusic-api and ytdl search result mismatch", { query, song })
-			throw new Error()
+		// Check if query is a URL
+		if (!useTry(() => new URL(query))[0]) {
+			const query_info = await ytdl.getBasicInfo(query)
+			const result_info = await ytdl.getBasicInfo(song.videoId)
+			if (result_info.videoDetails.videoId !== query_info.videoDetails.videoId) {
+				throw new Error()
+			}
 		}
 
 		return new Song(
