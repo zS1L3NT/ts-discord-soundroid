@@ -89,7 +89,6 @@ DiscordJS provided a template for a music playing bot [here](https://github.com/
 ## Built with
 
 -   TypeScript
-    -   [![ts-node](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/ts-node?style=flat-square)](https://npmjs.com/package/ts-node)
     -   [![typescript](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/typescript?style=flat-square)](https://npmjs.com/package/typescript)
     -   [![@types/node](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dev/@types/node?style=flat-square)](https://npmjs.com/package/@types/node)
     -   [![@types/open](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dev/@types/open?style=flat-square)](https://npmjs.com/package/@types/open)
