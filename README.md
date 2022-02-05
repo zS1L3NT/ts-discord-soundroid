@@ -4,6 +4,17 @@
 
 SounDroid (Discord) is a Discord Music bot that plays music from Spotify or YouTube. SounDroid (Discord) is part of a bigger project consisting of a [Mobile Application](https://github.com/zS1L3NT/android-soundroid-v2), [Discord Bot](https://github.com/zS1L3NT/ts-discord-soundroid) and Web Application (coming in the far future). You can add it to your server by clicking [this](https://soundroid-bot.zectan.com) link and selecting your server. Do make sure to give SounDroid admin permissions.
 
+## Motivation
+
+I always liked [Rythm Bot](https://rythm.fm/)'s capibilities of playing music in a voice channel based on what song was requested, be it Spotify or YouTube. I also used to have a music bot (IUFanBot) that works like Rythm.
+However, many events happened which lead to the creation of SounDroid bot
+
+-   I lost the source code to IUFanBot because I built it long before I started using Git
+-   On 6 August 2021, [discord.js v13](https://github.com/discordjs/discord.js/releases/tag/13.0.0) was released where they changed a lot of things relating to how music bots should be built
+-   On 15 September 2021, Rythm Bot (Discord's most popular music bot) was forced to shut down, leading to a need for an alternative
+
+Because I just finished building [SounDroid Android](https://github.com/zS1L3NT/android-soundroid-v1) for a school project, I decided to name this new Discord bot after the app.
+
 ## Features
 
 -   Discord Commands (Interactions)
@@ -70,6 +81,10 @@ With `npm`
 $ npm i
 $ npm run dev
 ```
+
+## Credits
+
+DiscordJS provided a template for a music playing bot [here](https://github.com/discordjs/voice/tree/3dabc30fca79212809d1191e0c2f2b54c3f8cdc7/examples/music-bot). My music player was built on top of this example bot.
 
 ## Built with
 
