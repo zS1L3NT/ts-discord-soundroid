@@ -89,10 +89,10 @@ DiscordJS provided a template for a music playing bot [here](https://github.com/
 ## Built with
 
 -   TypeScript
-    -   [![typescript](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/typescript?style=flat-square)](https://npmjs.com/package/typescript)
     -   [![@types/node](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dev/@types/node?style=flat-square)](https://npmjs.com/package/@types/node)
     -   [![@types/open](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dev/@types/open?style=flat-square)](https://npmjs.com/package/@types/open)
     -   [![@types/spotify-web-api-node](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dev/@types/spotify-web-api-node?style=flat-square)](https://npmjs.com/package/@types/spotify-web-api-node)
+    -   [![typescript](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/typescript?style=flat-square)](https://npmjs.com/package/typescript)
 -   DiscordJS
     -   [![@discordjs/opus](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/@discordjs/opus?style=flat-square)](https://npmjs.com/package/@discordjs/opus)
     -   [![@discordjs/voice](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/@discordjs/voice?style=flat-square)](https://npmjs.com/package/@discordjs/voice)
