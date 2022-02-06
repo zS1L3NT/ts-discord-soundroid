@@ -37,7 +37,7 @@ export default class SearchSelectBuilder {
 					new MessageSelectMenu().setCustomId("search-query").addOptions(
 						results.map((result, i) => ({
 							emoji: SearchSelectBuilder.emojis[i],
-							label: result.title,
+							label: result.title.slice(0, 95),
 							value: result.url,
 							description: result.artiste
 						}))
@@ -71,7 +71,7 @@ export default class SearchSelectBuilder {
 					new MessageSelectMenu().setCustomId("search-query").addOptions(
 						results.map((result, i) => ({
 							emoji: SearchSelectBuilder.emojis[i],
-							label: result.title,
+							label: result.title.slice(0, 95),
 							value: result.url,
 							description: result.artiste
 						}))
