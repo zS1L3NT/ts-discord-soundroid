@@ -4,11 +4,11 @@ import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
 import SearchSelectBuilder from "../../utilities/SearchSelectBuilder"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { Emoji, iInteractionFile, ResponseBuilder } from "nova-bot"
+import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 
-const file: iInteractionFile<Entry, GuildCache> = {
+const file: iSlashFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {

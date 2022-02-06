@@ -1,11 +1,11 @@
 import DominantColorGetter from "../../utilities/DominantColorGetter"
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import { Emoji, iInteractionFile, ResponseBuilder } from "nova-bot"
+import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, MessageEmbed } from "discord.js"
 import { useTryAsync } from "no-try"
 
-const file: iInteractionFile<Entry, GuildCache> = {
+const file: iSlashFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {

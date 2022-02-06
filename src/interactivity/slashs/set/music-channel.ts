@@ -1,10 +1,10 @@
 import config from "../../../config.json"
 import Entry from "../../../data/Entry"
 import GuildCache from "../../../data/GuildCache"
-import { Emoji, iInteractionSubcommandFile, ResponseBuilder } from "nova-bot"
+import { Emoji, iSlashSubFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, TextChannel } from "discord.js"
 
-const file: iInteractionSubcommandFile<Entry, GuildCache> = {
+const file: iSlashSubFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {

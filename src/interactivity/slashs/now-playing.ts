@@ -3,13 +3,13 @@ import DurationHelper from "../../utilities/DurationHelper"
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
-import { Emoji, iInteractionFile, ResponseBuilder } from "nova-bot"
+import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, MessageEmbed } from "discord.js"
 
 const thumb = "🔘"
 const track = "▬"
 
-const file: iInteractionFile<Entry, GuildCache> = {
+const file: iSlashFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	data: {

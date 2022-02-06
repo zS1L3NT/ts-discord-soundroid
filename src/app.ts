@@ -59,7 +59,7 @@ global.logger = Tracer.colorConsole({
 	}
 })
 
-process.setUncaughtExceptionCaptureCallback(err => {
+process.on("uncaughtException", err => {
 	if (err.message !== "The user aborted a request.") {
 		logger.error("Uncaught Exception:", { err })
 	}
@@ -133,7 +133,7 @@ const start_bot = () => {
 			Intents.FLAGS.GUILD_MESSAGES,
 			Intents.FLAGS.GUILDS
 		],
-		cwd: __dirname,
+		directory: path.join(__dirname, "interactivity"),
 		config,
 		updatesMinutely: true,
 		//@ts-ignore

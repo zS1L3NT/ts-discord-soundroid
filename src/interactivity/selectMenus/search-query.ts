@@ -3,10 +3,10 @@ import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
 import Song from "../../data/Song"
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { Emoji, iMenuFile, ResponseBuilder } from "nova-bot"
+import { Emoji, iSelectMenuFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, VoiceChannel } from "discord.js"
 
-const file: iMenuFile<Entry, GuildCache> = {
+const file: iSelectMenuFile<Entry, GuildCache> = {
 	defer: true,
 	ephemeral: true,
 	execute: async helper => {
