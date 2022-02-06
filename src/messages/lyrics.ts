@@ -8,6 +8,14 @@ import { useTryAsync } from "no-try"
 const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}lyrics`),
 	execute: async helper => {
+		return helper.respond(
+			new ResponseBuilder(
+				Emoji.BAD,
+				"Feature deprecated until another lyrics provider is found"
+			),
+			5000
+		)
+
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			helper.reactFailure()
@@ -22,6 +30,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		const service = helper.cache.service
 		if (service) {
+			//@ts-ignore
 			const queue = service.queue
 			if (queue.length === 0) {
 				helper.reactFailure()
@@ -41,6 +50,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 			const [err, lyrics] = await useTryAsync(() => {
 				return helper.cache.apiHelper.findGeniusLyrics(
+					//@ts-ignore
 					query || `${song.title} ${song.artiste}`
 				)
 			})
@@ -72,8 +82,11 @@ const file: iMessageFile<Entry, GuildCache> = {
 			helper.respond({
 				embeds: [
 					new MessageEmbed()
+						//@ts-ignore
 						.setTitle(query ? `Query: \`${query}\`` : `${song.title} - ${song.artiste}`)
+						//@ts-ignore
 						.setColor(await new DominantColorGetter(song.cover).getColor())
+						//@ts-ignore
 						.setThumbnail(song.cover)
 						.setDescription(lyrics)
 						.setFooter({

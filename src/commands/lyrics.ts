@@ -31,6 +31,10 @@ const file: iInteractionFile<Entry, GuildCache> = {
 		]
 	},
 	execute: async helper => {
+		return helper.respond(
+			new ResponseBuilder(Emoji.BAD, "Feature deprecated until another lyrics provider is found")
+		)
+
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
@@ -43,6 +47,7 @@ const file: iInteractionFile<Entry, GuildCache> = {
 
 		const service = helper.cache.service
 		if (service) {
+			//@ts-ignore
 			const queue = service.queue
 			if (queue.length === 0) {
 				return helper.respond(
