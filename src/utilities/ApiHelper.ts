@@ -1,5 +1,5 @@
 import config from "../config.json"
-import Song from "../models/Song"
+import Song from "../data/Song"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import YTMusic from "ytmusic-api"

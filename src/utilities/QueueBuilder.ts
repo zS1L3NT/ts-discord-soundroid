@@ -1,7 +1,7 @@
 import DominantColorGetter from "./DominantColorGetter"
 import DurationHelper from "./DurationHelper"
-import GuildCache from "../models/GuildCache"
-import Song from "../models/Song"
+import GuildCache from "../data/GuildCache"
+import Song from "../data/Song"
 import { Emoji } from "nova-bot"
 import {
 	GuildMember,
@@ -97,7 +97,7 @@ export default class QueueBuilder {
 				}
 			}
 		}
-		
+
 		return {
 			embeds: [
 				new MessageEmbed()
