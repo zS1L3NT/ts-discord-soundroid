@@ -1,4 +1,4 @@
-const ColorThief = require("colorthief")
+import ColorThief from "colorthief"
 
 export default class DominantColorGetter {
 	public url: string
@@ -9,7 +9,7 @@ export default class DominantColorGetter {
 
 	public async getColor(): Promise<`#${string}`> {
 		try {
-			const [r, g, b] = (await ColorThief.getColor(this.url)) as number[]
+			const [r, g, b] = await ColorThief.getColor(this.url)
 
 			let rs = r!.toString(16)
 			let gs = g!.toString(16)

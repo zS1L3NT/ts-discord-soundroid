@@ -4,7 +4,7 @@ import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
-import { useTry, useTryAsync } from "no-try"
+import { useTry } from "no-try"
 
 export default class ApiHelper {
 	private ytmusic: YTMusic

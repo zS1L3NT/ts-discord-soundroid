@@ -65,7 +65,7 @@ process.on("uncaughtException", err => {
 	}
 })
 
-const refresh_spotify = () => {
+const refreshSpotify = () => {
 	const PORT = 4296
 	const app = express()
 
@@ -74,7 +74,7 @@ const refresh_spotify = () => {
 		const code = req.query.code as string
 
 		// Get spotify access token from authorization code
-		const spotify_res = await axios.post(
+		const spotifyRes = await axios.post(
 			"https://accounts.spotify.com/api/token",
 			qs.stringify({
 				grant_type: "authorization_code",
@@ -95,13 +95,13 @@ const refresh_spotify = () => {
 
 		// Replace old access token with new access token
 		logger.info(`Got Spotify API Access token`)
-		const config_path = path.join(__dirname, "./config.json")
-		const config_data = await fs.readFile(config_path, "utf8")
+		const configPath = path.join(__dirname, "./config.json")
+		const configData = await fs.readFile(configPath, "utf8")
 		await fs.writeFile(
-			config_path,
-			config_data
-				.replace(config.spotify.accessToken, spotify_res.data.access_token)
-				.replace(config.spotify.refreshToken, spotify_res.data.refresh_token)
+			configPath,
+			configData
+				.replace(config.spotify.accessToken, spotifyRes.data.access_token)
+				.replace(config.spotify.refreshToken, spotifyRes.data.refresh_token)
 		)
 		logger.info(`Replaced Spotify API Access token`)
 
@@ -109,23 +109,23 @@ const refresh_spotify = () => {
 		server.close()
 
 		// Start the bot
-		start_bot()
+		startBot()
 	})
 
 	const server = app.listen(PORT, async () => {
 		logger.info(`Server running on port ${PORT}`)
 
 		// Get spotify authorization code
-		const spotify_url = new URL("https://accounts.spotify.com/authorize")
-		spotify_url.searchParams.append("response_type", "code")
-		spotify_url.searchParams.append("client_id", config.spotify.clientId)
-		spotify_url.searchParams.append("redirect_uri", "http://localhost:4296")
-		spotify_url.searchParams.append("scope", "user-read-private playlist-read-private")
-		await open(spotify_url.href, { wait: true })
+		const spotifyUrl = new URL("https://accounts.spotify.com/authorize")
+		spotifyUrl.searchParams.append("response_type", "code")
+		spotifyUrl.searchParams.append("client_id", config.spotify.clientId)
+		spotifyUrl.searchParams.append("redirect_uri", "http://localhost:4296")
+		spotifyUrl.searchParams.append("scope", "user-read-private playlist-read-private")
+		await open(spotifyUrl.href, { wait: true })
 	})
 }
 
-const start_bot = () => {
+const startBot = () => {
 	new NovaBot({
 		name: "SounDroid#5566",
 		intents: [
@@ -172,9 +172,9 @@ const start_bot = () => {
 }
 
 if (process.platform === "win32") {
-	refresh_spotify()
+	refreshSpotify()
 }
 
 if (process.platform === "linux") {
-	start_bot()
+	startBot()
 }
