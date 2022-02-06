@@ -59,6 +59,12 @@ global.logger = Tracer.colorConsole({
 	}
 })
 
+process.setUncaughtExceptionCaptureCallback(err => {
+	if (err.message !== "The user aborted a request.") {
+		logger.error("Uncaught Exception:", { err })
+	}
+})
+
 const refresh_spotify = () => {
 	const PORT = 4296
 	const app = express()

@@ -51,59 +51,63 @@ export default class QueueBuilder {
 				embed.addField(`Not playing anything at the moment`, `\u200B`)
 			}
 
-			if (queue.length > 0) {
-				embed.addField(`\u200B`, `__Queue:__`)
-				queue.forEach((song, i) => {
-					const song_index = `\`${page_offset + i + 1}.\` `
-					const field_format = this.songFormat(song)
-					embed.addField(song_index + field_format[0], field_format[1])
-				})
-				embed.addField(
-					`\u200B`,
-					`**${this.cache.service.queue.length - 1} songs in queue | ${new DurationHelper(
-						playing_duration
-					).format()} total length**`
-				)
-			}
+			if (this.cache.service) {
+				if (queue.length > 0) {
+					embed.addField(`\u200B`, `__Queue:__`)
+					queue.forEach((song, i) => {
+						const song_index = `\`${page_offset + i + 1}.\` `
+						const field_format = this.songFormat(song)
+						embed.addField(song_index + field_format[0], field_format[1])
+					})
+					embed.addField(
+						`\u200B`,
+						`**${
+							this.cache.service.queue.length - 1
+						} songs in queue | ${new DurationHelper(
+							playing_duration
+						).format()} total length**`
+					)
+				}
 
-			embed.addField(`Page`, `${page}/${max_pages}`, true)
-			embed.addField(`Loop`, this.cache.service.loop ? "✅" : "❌", true)
-			embed.addField(`Queue Loop`, this.cache.service.queue_loop ? "✅" : "❌", true)
-			if (this.member) {
-				embed.setFooter({
-					text: `Requested by @${this.member.displayName}`,
-					iconURL: this.member.user.displayAvatarURL()
-				})
-			}
+				embed.addField(`Page`, `${page}/${max_pages}`, true)
+				embed.addField(`Loop`, this.cache.service.loop ? "✅" : "❌", true)
+				embed.addField(`Queue Loop`, this.cache.service.queue_loop ? "✅" : "❌", true)
+				if (this.member) {
+					embed.setFooter({
+						text: `Requested by @${this.member.displayName}`,
+						iconURL: this.member.user.displayAvatarURL()
+					})
+				}
 
-			return {
-				embeds: [embed],
-				components: [
-					new MessageActionRow().addComponents([
-						new MessageButton()
-							.setCustomId("queue-page-select")
-							.setStyle("PRIMARY")
-							.setLabel("Choose page")
-							.setDisabled(max_pages === 1),
-						new MessageButton()
-							.setCustomId("refresh")
-							.setStyle("SUCCESS")
-							.setLabel("Refresh queue")
-					])
-				]
+				return {
+					embeds: [embed],
+					components: [
+						new MessageActionRow().addComponents([
+							new MessageButton()
+								.setCustomId("queue-page-select")
+								.setStyle("PRIMARY")
+								.setLabel("Choose page")
+								.setDisabled(max_pages === 1),
+							new MessageButton()
+								.setCustomId("refresh")
+								.setStyle("SUCCESS")
+								.setLabel("Refresh queue")
+						])
+					]
+				}
 			}
-		} else {
-			return {
-				embeds: [
-					new MessageEmbed()
-						.setAuthor({
-							name: "I am not currently in a voice channel",
-							iconURL: Emoji.BAD
-						})
-						.setColor("#DD2E44")
-				],
-				components: []
-			}
+		}
+		
+		return {
+			embeds: [
+				new MessageEmbed()
+					.setAuthor({
+						name: "I am not currently in a voice channel",
+						iconURL: Emoji.BAD
+					})
+					.setColor("#DD2E44")
+			],
+			components: []
 		}
 	}
 
