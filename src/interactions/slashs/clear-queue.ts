@@ -2,6 +2,7 @@ import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
 import { GuildMember } from "discord.js"
+import { StopStatus } from "../../data/MusicService"
 
 const file: iSlashFile<Entry, GuildCache> = {
 	defer: true,
@@ -27,6 +28,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			service.queue.length = 0
+			service.stop_status = StopStatus.INTENTIONAL
 			service.player.stop()
 			helper.cache.updateMusicChannel()
 			helper.respond(new ResponseBuilder(Emoji.GOOD, "Cleared queue"))

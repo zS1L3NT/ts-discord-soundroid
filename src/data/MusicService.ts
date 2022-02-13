@@ -14,7 +14,7 @@ const time = async (ms: number) => new Promise(res => setTimeout(res, ms))
 
 export enum StopStatus {
 	NORMAL,
-	SKIPPED,
+	INTENTIONAL,
 	KILLED
 }
 

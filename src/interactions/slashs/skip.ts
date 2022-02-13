@@ -62,7 +62,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 				service.queue.push(...queue.slice(0, count - 1))
 			}
 
-			service.stop_status = StopStatus.SKIPPED
+			service.stop_status = StopStatus.INTENTIONAL
 			service.player.stop()
 			helper.cache.updateMusicChannel()
 			helper.respond(
