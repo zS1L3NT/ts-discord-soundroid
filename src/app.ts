@@ -133,7 +133,7 @@ const startBot = () => {
 			Intents.FLAGS.GUILD_MESSAGES,
 			Intents.FLAGS.GUILDS
 		],
-		directory: path.join(__dirname, "interactivity"),
+		directory: path.join(__dirname, "interactions"),
 		config,
 		updatesMinutely: true,
 		//@ts-ignore
