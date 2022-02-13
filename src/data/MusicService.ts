@@ -104,11 +104,12 @@ export default class MusicService {
 			}
 		})
 
-		this.player.on("stateChange", (oldState, newState) => {
+		this.player.on("stateChange", async (oldState, newState) => {
 			if (
 				newState.status === AudioPlayerStatus.Idle &&
 				oldState.status !== AudioPlayerStatus.Idle
 			) {
+				await time(500)
 				if (this.stop_status !== StopStatus.KILLED) {
 					if (this.queue_loop) {
 						const current = this.queue.shift()
