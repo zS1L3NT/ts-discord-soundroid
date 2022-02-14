@@ -36,6 +36,16 @@ export default class ConversionHelper {
 					})
 					throw new Error("Error playing playlist from Spotify url")
 				}
+			case "album":
+				try {
+					return await this.apiHelper.findSpotifyAlbum(id, this.requester)
+				} catch (err) {
+					logger.alert!(`Error playing album from Spotify url`, {
+						url: this.url.pathname,
+						err
+					})
+					throw new Error("Error playing album from Spotify url")
+				}
 			case "track":
 				try {
 					return [await this.apiHelper.findSpotifySong(id, this.requester)]

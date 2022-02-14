@@ -24,6 +24,7 @@ Because I just finished building [SounDroid Android](https://github.com/zS1L3NT/
             -   A YouTube Playlist Link
             -   A Spotify Song Link
             -   A Spotify Playlist Link
+            -   A Spotify Album Link
             -   A YouTube Music Query
             -   A YouTube Video Query
         -   `/play-range` - Add playlist defining range of songs to add. Playlists links can be either
@@ -64,10 +65,9 @@ Because I just finished building [SounDroid Android](https://github.com/zS1L3NT/
         -   Loading
 -   SounDroid is built on top of [nova-bot](https://github.com/zS1L3NT/ts-npm-nova-bot), a Discord Bot framework meant for building bots more easily
 -   Song Selection Menu
-	-   When you try to play a song through a search query, SounDroid gives you a song selection menu to choose which song matched your query. With this unique search menu, you can make sure the song you are searching for is the correct song, and not just the "first result from youtube" as most bots do it
-	-   You can also toggle between searching YouTube Music and YouTube for search results
-	![image](https://user-images.githubusercontent.com/26828488/152838636-772b6a73-5d3d-4c72-891c-4b0880a4306f.png)
-
+    -   When you try to play a song through a search query, SounDroid gives you a song selection menu to choose which song matched your query. With this unique search menu, you can make sure the song you are searching for is the correct song, and not just the "first result from youtube" as most bots do it
+    -   You can also toggle between searching YouTube Music and YouTube for search results
+        ![image](https://user-images.githubusercontent.com/26828488/152838636-772b6a73-5d3d-4c72-891c-4b0880a4306f.png)
 
 ## Usage
 

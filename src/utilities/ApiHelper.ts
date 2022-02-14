@@ -176,6 +176,23 @@ export default class ApiHelper {
 		return tracks
 	}
 
+	public async findSpotifyAlbum(albumId: string, requester: string): Promise<Song[]> {
+		await this.refreshSpotifyToken()
+
+		const { body: album } = await this.spotify.getAlbum(albumId)
+		return album.tracks.items.map(
+			result =>
+				new Song(
+					result.name,
+					result.artists.map(a => a.name).join(", "),
+					album.images[0]?.url || "",
+					`https://open.spotify.com/track/${result.id}`,
+					Math.floor(result.duration_ms / 1000),
+					requester
+				)
+		)
+	}
+
 	public async findSpotifySong(trackId: string, requester: string): Promise<Song> {
 		await this.refreshSpotifyToken()
 

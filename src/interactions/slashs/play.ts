@@ -14,23 +14,24 @@ const file: iSlashFile<Entry, GuildCache> = {
 	data: {
 		name: "play",
 		description: {
-			slash: "Play Song/Playlist from YouTube/Spotify",
+			slash: "Play Song/Playlist/Album from YouTube/Spotify",
 			help: [
 				"Play a song with either",
 				"(1) YouTube Video Link",
 				"(2) YouTube Playlist Link",
 				"(3) Spotify Song Link",
 				"(4) Spotify Playlist Link",
-				"(5) YouTube Music Search Query",
-				"(6) YouTube Video Search Query"
+				"(5) Spotify Album Link",
+				"(6) YouTube Music Search Query",
+				"(7) YouTube Video Search Query"
 			].join("\n")
 		},
 		options: [
 			{
 				name: "query",
 				description: {
-					slash: "Can be a YouTube/Spotify Song/Playlist or Search Query",
-					help: "Can be a YouTube/Spotify Song/Playlist or Search Query"
+					slash: "Can be a YouTube/Spotify Song/Playlist/Album or Search Query",
+					help: "Can be a YouTube/Spotify Song/Playlist/Album or Search Query"
 				},
 				type: "string",
 				requirements: "Text or URL",
