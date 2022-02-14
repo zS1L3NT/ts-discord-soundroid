@@ -48,7 +48,7 @@ export default class Song {
 					format: "bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio",
 					output: "-"
 				},
-				{ stdio: ["ignore", "pipe", "ignore"] }
+				{ stdio: ["ignore", "pipe"] }
 			)
 			const { stdout } = childProcess
 			if (!stdout) {
