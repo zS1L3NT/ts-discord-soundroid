@@ -187,6 +187,8 @@ export default class MusicService {
 			this.player.state.status !== AudioPlayerStatus.Idle
 		) {
 			if (this.queue.length === 0) {
+				this.cache.updateMusicChannel()
+
 				if (this.disconnectTimeout) {
 					logger.log("Clearing previous disconnect timeout")
 					clearTimeout(this.disconnectTimeout)
