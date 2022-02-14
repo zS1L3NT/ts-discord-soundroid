@@ -10,15 +10,11 @@ import {
 export default class SearchSelectBuilder {
 	private static emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
-	private apiHelper: ApiHelper
-	private query: string
-	private requester: string
-
-	public constructor(apiHelper: ApiHelper, query: string, requester: string) {
-		this.apiHelper = apiHelper
-		this.query = query
-		this.requester = requester
-	}
+	public constructor(
+		private apiHelper: ApiHelper,
+		private query: string,
+		private requester: string
+	) {}
 
 	public async buildVideo(): Promise<MessageOptions> {
 		const results = await this.apiHelper.searchYoutubeVideos(this.query, this.requester)

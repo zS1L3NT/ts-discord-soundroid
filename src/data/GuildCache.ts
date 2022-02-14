@@ -32,7 +32,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 		const musicChannelId = this.getMusicChannelId()
 		if (!musicChannelId) return
 
-		const [message_err, message] = await useTryAsync(async () => {
+		const [messageErr, message] = await useTryAsync(async () => {
 			const musicMessageId = this.getMusicMessageId()
 			const cleaner = new ChannelCleaner<Entry, GuildCache>(this, musicChannelId, [
 				musicMessageId
@@ -48,23 +48,23 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 			return message
 		})
 
-		if (message_err) {
-			if (message_err.message === "no-channel") {
+		if (messageErr) {
+			if (messageErr.message === "no-channel") {
 				logger.alert!(`Guild(${this.guild.name}) has no Channel(${musicChannelId})`)
 				await this.setMusicChannelId("")
 				return
 			}
-			throw message_err
+			throw messageErr
 		}
 
-		const [page_err, page] = useTry(() => {
+		const [pageErr, page] = useTry(() => {
 			const embed = message.embeds[0]!
 			const pageInfo = embed.fields.find(field => field.name === `Page`)!.value
 			return +pageInfo.split("/")[0]!
 		})
 
 		if (this.service) {
-			message.edit(await new QueueBuilder(this).build(page_err ? 1 : page))
+			message.edit(await new QueueBuilder(this).build(pageErr ? 1 : page))
 		} else {
 			message.edit({
 				embeds: [
@@ -95,18 +95,18 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 		return this.entry.music_channel_id
 	}
 
-	public async setMusicChannelId(music_channel_id: string) {
-		this.entry.music_channel_id = music_channel_id
-		await this.ref.update({ music_channel_id })
+	public async setMusicChannelId(musicChannelId: string) {
+		this.entry.music_channel_id = musicChannelId
+		await this.ref.update({ music_channel_id: musicChannelId })
 	}
 
 	public getMusicMessageId() {
 		return this.entry.music_message_id
 	}
 
-	public async setMusicMessageId(music_message_id: string) {
-		this.entry.music_message_id = music_message_id
-		await this.ref.update({ music_message_id })
+	public async setMusicMessageId(musicMessageId: string) {
+		this.entry.music_message_id = musicMessageId
+		await this.ref.update({ music_message_id: musicMessageId })
 	}
 
 	public getPrefix() {

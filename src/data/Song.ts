@@ -4,33 +4,19 @@ import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice
 import { exec } from "youtube-dl-exec"
 
 export default class Song {
-	public title: string
-	public artiste: string
-	public cover: string
-	public url: string
-	public duration: number
-	public requester: string
-
 	public constructor(
-		title: string,
-		artiste: string,
-		cover: string,
-		url: string,
-		duration: number,
-		requester: string
-	) {
-		this.title = title
-		this.artiste = artiste
-		this.cover = cover
-		this.url = url
-		this.duration = duration
-		this.requester = requester
-	}
+		public title: string,
+		public artiste: string,
+		public cover: string,
+		public url: string,
+		public duration: number,
+		public requester: string
+	) {}
 
 	public static async from(apiHelper: ApiHelper, url: string, requester: string) {
-		const URL_ = new URL(url)
-		if (URL_.host === "open.spotify.com") {
-			return await apiHelper.findSpotifySong(URL_.pathname.slice(7), requester)
+		const _URL = new URL(url)
+		if (_URL.host === "open.spotify.com") {
+			return await apiHelper.findSpotifySong(_URL.pathname.slice(7), requester)
 		} else {
 			try {
 				return await apiHelper.findYoutubeSong(url, requester)
@@ -46,8 +32,8 @@ export default class Song {
 	): Promise<AudioResource<Song>> {
 		return new Promise(async (resolve, reject) => {
 			let source = this.url
-			const URL_ = new URL(source)
-			if (URL_.host === "open.spotify.com") {
+			const _URL = new URL(source)
+			if (_URL.host === "open.spotify.com") {
 				const youtubeResult = await apiHelper.findYoutubeSong(
 					`${this.title} ${this.artiste}`,
 					this.requester
@@ -89,7 +75,7 @@ export default class Song {
 							err.message = `[SOURCE>DEMUXPROBE]: ` + err.message
 							reject(err)
 
-							service.stop_status = StopStatus.KILLED
+							service.stopStatus = StopStatus.KILLED
 							logger.error("Source demuxprobe error", err)
 						})
 				})
@@ -103,8 +89,8 @@ export default class Song {
 
 					if (err.message.startsWith("Command failed with ERR_STREAM_PREMATURE_CLOSE")) {
 						logger.log("Abnormal stopping of track")
-						if (service.stop_status !== StopStatus.INTENTIONAL) {
-							service.stop_status = StopStatus.KILLED
+						if (service.stopStatus !== StopStatus.INTENTIONAL) {
+							service.stopStatus = StopStatus.KILLED
 							err.message = `[SOURCE>PROCESS]: ` + err.message
 							logger.warn("Track crashed, attempting to replay the track")
 							reject(err)

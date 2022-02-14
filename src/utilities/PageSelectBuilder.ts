@@ -6,49 +6,45 @@ import {
 } from "discord.js"
 
 export default class PageSelectBuilder {
-	private embed: MessageEmbed
-	private channel_id: string
-	private message_id: string
+	private currentPage = 0
+	private maxPages = 0
+	private startPage = 0
+	private endPage = 0
 
-	private current_page = 0
-	private max_pages = 0
-	private start_page = 0
-	private end_page = 0
+	public constructor(
+		private embed: MessageEmbed,
+		private channelId: string,
+		private messageId: string
+	) {}
 
-	public constructor(embed: MessageEmbed, channel_id: string, message_id: string) {
-		this.embed = embed
-		this.channel_id = channel_id
-		this.message_id = message_id
-	}
-
-	public build(start_page?: number): InteractionReplyOptions {
+	public build(startPage?: number): InteractionReplyOptions {
 		const pageInfo = this.embed.fields.find(field => field.name === `Page`)!.value
 		const [pageStr, maxPagesStr] = pageInfo.split("/")
-		this.current_page = start_page || +pageStr!
-		this.max_pages = +maxPagesStr!
+		this.currentPage = startPage || +pageStr!
+		this.maxPages = +maxPagesStr!
 
 		this.setStartPage()
 		this.setEndPage()
 
-		const pages = Array(this.end_page - this.start_page)
+		const pages = Array(this.endPage - this.startPage)
 			.fill(0)
-			.map((_, i) => i + this.start_page + 1)
+			.map((_, i) => i + this.startPage + 1)
 			.map(page => ({
 				label: `Page ${page}`,
-				value: `${this.channel_id}-${this.message_id}-${page}`
+				value: `${this.channelId}-${this.messageId}-${page}`
 			}))
 
 		if (this.allowPreviousPage()) {
 			pages.splice(0, 0, {
 				label: "Previous page",
-				value: `${this.channel_id}-${this.message_id}-more-${this.start_page - 20 + 1}`
+				value: `${this.channelId}-${this.messageId}-more-${this.startPage - 20 + 1}`
 			})
 		}
 
 		if (this.allowNextPage()) {
 			pages.push({
 				label: "Next page",
-				value: `${this.channel_id}-${this.message_id}-more-${this.end_page + 1}`
+				value: `${this.channelId}-${this.messageId}-more-${this.endPage + 1}`
 			})
 		}
 
@@ -63,28 +59,28 @@ export default class PageSelectBuilder {
 	}
 
 	private setStartPage() {
-		let start_page = Math.floor(this.current_page / 20) * 20
-		if (start_page === this.max_pages) {
-			start_page -= 20
+		let startPage = Math.floor(this.currentPage / 20) * 20
+		if (startPage === this.maxPages) {
+			startPage -= 20
 		}
 
-		this.start_page = start_page
+		this.startPage = startPage
 	}
 
 	private setEndPage() {
-		let end_page = this.start_page + 20
-		if (end_page > this.max_pages) {
-			end_page = this.max_pages
+		let endPage = this.startPage + 20
+		if (endPage > this.maxPages) {
+			endPage = this.maxPages
 		}
 
-		this.end_page = end_page
+		this.endPage = endPage
 	}
 
 	private allowNextPage(): boolean {
-		return this.end_page !== this.max_pages
+		return this.endPage !== this.maxPages
 	}
 
 	private allowPreviousPage(): boolean {
-		return this.start_page !== 0
+		return this.startPage !== 0
 	}
 }

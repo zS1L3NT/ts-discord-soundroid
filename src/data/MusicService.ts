@@ -19,23 +19,22 @@ export enum StopStatus {
 }
 
 export default class MusicService {
-	public readonly connection: VoiceConnection
 	public readonly player: AudioPlayer
-	public readonly cache: GuildCache
 	public disconnectTimeout: NodeJS.Timeout | null = null
 	public queue: Song[]
-	public queue_lock = false
-	public ready_lock = false
+	public queueLock = false
+	public readyLock = false
 
-	public stop_status: StopStatus = StopStatus.NORMAL
+	public stopStatus: StopStatus = StopStatus.NORMAL
 
 	public loop = false
-	public queue_loop = false
+	public queueLoop = false
 
-	public constructor(connection: VoiceConnection, cache: GuildCache) {
-		this.connection = connection
+	public constructor(
+		public readonly connection: VoiceConnection,
+		public readonly cache: GuildCache
+	) {
 		this.player = createAudioPlayer()
-		this.cache = cache
 		this.queue = []
 
 		this.connection.on("stateChange", async (_, newState) => {
@@ -81,7 +80,7 @@ export default class MusicService {
 				*/
 				this.destroy()
 			} else if (
-				!this.ready_lock &&
+				!this.readyLock &&
 				(newState.status === VoiceConnectionStatus.Connecting ||
 					newState.status === VoiceConnectionStatus.Signalling)
 			) {
@@ -90,7 +89,7 @@ export default class MusicService {
 					before destroying the voice connection. This stops the voice connection permanently existing in one of these
 					states.
 				*/
-				this.ready_lock = true
+				this.readyLock = true
 				try {
 					await entersState(this.connection, VoiceConnectionStatus.Ready, 20_000)
 				} catch {
@@ -99,7 +98,7 @@ export default class MusicService {
 						this.destroy()
 					}
 				} finally {
-					this.ready_lock = false
+					this.readyLock = false
 				}
 			}
 		})
@@ -110,8 +109,8 @@ export default class MusicService {
 				oldState.status !== AudioPlayerStatus.Idle
 			) {
 				await time(500)
-				if (this.stop_status !== StopStatus.KILLED) {
-					if (this.queue_loop) {
+				if (this.stopStatus !== StopStatus.KILLED) {
+					if (this.queueLoop) {
 						const current = this.queue.shift()
 						if (current) {
 							logger.log("On queue loop, queueing current song")
@@ -184,7 +183,7 @@ export default class MusicService {
 		// If the queue is empty, locked (already being processed), or the audio player is already playing something, return
 		if (
 			this.queue.length === 0 ||
-			this.queue_lock ||
+			this.queueLock ||
 			this.player.state.status !== AudioPlayerStatus.Idle
 		) {
 			if (this.queue.length === 0) {
@@ -209,18 +208,18 @@ export default class MusicService {
 		}
 
 		// Lock the queue to guarantee safe access
-		this.queue_lock = true
+		this.queueLock = true
 		const song = this.queue[0]!
 		try {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
 			const resource = await song.createAudioResource(this, this.cache.apiHelper)
-			this.stop_status = StopStatus.NORMAL
+			this.stopStatus = StopStatus.NORMAL
 			this.cache.updateMusicChannel()
 			this.player.play(resource)
-			this.queue_lock = false
+			this.queueLock = false
 		} catch (err) {
 			// If an error occurred, try the next item of the queue instead
-			this.queue_lock = false
+			this.queueLock = false
 			logger.error("Error playing track", err)
 			return this.processQueue()
 		}

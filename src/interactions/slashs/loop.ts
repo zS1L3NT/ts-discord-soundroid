@@ -29,7 +29,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 
 		const service = helper.cache.service
 		if (service) {
-			service.queue_loop = false
+			service.queueLoop = false
 			if (service.loop) {
 				service.loop = false
 				helper.respond(new ResponseBuilder(Emoji.GOOD, "Loop disabled"))

@@ -12,29 +12,23 @@ import {
 } from "discord.js"
 
 export default class QueueBuilder {
-	private cache: GuildCache
-	private member?: GuildMember
-
-	public constructor(cache: GuildCache, member?: GuildMember) {
-		this.cache = cache
-		this.member = member
-	}
+	public constructor(private cache: GuildCache, private member?: GuildMember) {}
 
 	public async build(page: number = 1): Promise<InteractionReplyOptions> {
 		if (this.cache.service) {
 			const embed = new MessageEmbed()
-			const playing_duration = this.cache.service.queue
+			const playingDuration = this.cache.service.queue
 				.slice(1)
 				.map(song => song.duration)
 				.reduce((t, d) => t + d, 0)
-			const max_pages = Math.ceil((this.cache.service.queue.length - 1) / 10) || 1
+			const maxPages = Math.ceil((this.cache.service.queue.length - 1) / 10) || 1
 
-			if (page > max_pages) {
-				page = max_pages
+			if (page > maxPages) {
+				page = maxPages
 			}
 
-			const page_offset = (page - 1) * 10
-			const queue = this.cache.service.queue.slice(1).slice(page_offset, page_offset + 10)
+			const pageOffset = (page - 1) * 10
+			const queue = this.cache.service.queue.slice(1).slice(pageOffset, pageOffset + 10)
 
 			embed.setTitle(`Queue for ${this.cache.guild.name}`)
 
@@ -55,23 +49,23 @@ export default class QueueBuilder {
 				if (queue.length > 0) {
 					embed.addField(`\u200B`, `__Queue:__`)
 					queue.forEach((song, i) => {
-						const song_index = `\`${page_offset + i + 1}.\` `
-						const field_format = this.songFormat(song)
-						embed.addField(song_index + field_format[0], field_format[1])
+						const songIndex = `\`${pageOffset + i + 1}.\` `
+						const fieldFormat = this.songFormat(song)
+						embed.addField(songIndex + fieldFormat[0], fieldFormat[1])
 					})
 					embed.addField(
 						`\u200B`,
 						`**${
 							this.cache.service.queue.length - 1
 						} songs in queue | ${new DurationHelper(
-							playing_duration
+							playingDuration
 						).format()} total length**`
 					)
 				}
 
-				embed.addField(`Page`, `${page}/${max_pages}`, true)
+				embed.addField(`Page`, `${page}/${maxPages}`, true)
 				embed.addField(`Loop`, this.cache.service.loop ? "✅" : "❌", true)
-				embed.addField(`Queue Loop`, this.cache.service.queue_loop ? "✅" : "❌", true)
+				embed.addField(`Queue Loop`, this.cache.service.queueLoop ? "✅" : "❌", true)
 				if (this.member) {
 					embed.setFooter({
 						text: `Requested by @${this.member.displayName}`,
@@ -87,7 +81,7 @@ export default class QueueBuilder {
 								.setCustomId("queue-page-select")
 								.setStyle("PRIMARY")
 								.setLabel("Choose page")
-								.setDisabled(max_pages === 1),
+								.setDisabled(maxPages === 1),
 							new MessageButton()
 								.setCustomId("refresh")
 								.setStyle("SUCCESS")

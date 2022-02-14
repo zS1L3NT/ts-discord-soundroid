@@ -28,7 +28,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			service.queue.length = 0
-			service.stop_status = StopStatus.INTENTIONAL
+			service.stopStatus = StopStatus.INTENTIONAL
 			service.player.stop()
 			helper.cache.updateMusicChannel()
 			helper.respond(new ResponseBuilder(Emoji.GOOD, "Cleared queue"))

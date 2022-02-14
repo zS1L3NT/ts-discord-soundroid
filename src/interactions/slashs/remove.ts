@@ -71,13 +71,13 @@ const file: iSlashFile<Entry, GuildCache> = {
 							)
 						)
 					} else {
-						const delete_count = to - from + 1
-						service.queue.splice(from, delete_count)
+						const deleteCount = to - from + 1
+						service.queue.splice(from, deleteCount)
 						helper.cache.updateMusicChannel()
 						helper.respond(
 							new ResponseBuilder(
 								Emoji.GOOD,
-								`Removed ${delete_count} songs from the queue`
+								`Removed ${deleteCount} songs from the queue`
 							)
 						)
 					}

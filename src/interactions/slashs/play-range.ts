@@ -98,7 +98,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 
 		if (err) {
 			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Link must me a Spotify playlist link")
+				new ResponseBuilder(Emoji.BAD, "Link must be a Spotify/Youtube playlist link!")
 			)
 		}
 
@@ -131,13 +131,13 @@ const file: iSlashFile<Entry, GuildCache> = {
 			}
 		}
 
-		const [, sp_length] = await useTryAsync(() =>
+		const [, spotifyPlaylistLength] = await useTryAsync(() =>
 			helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
 		)
-		const [, yt_length] = await useTryAsync(() =>
+		const [, youtubePlaylistLength] = await useTryAsync(() =>
 			helper.cache.apiHelper.findYoutubePlaylistLength(playlistId)
 		)
-		const length = sp_length || yt_length
+		const length = spotifyPlaylistLength || youtubePlaylistLength
 
 		if (to && to > length) {
 			return helper.respond(
@@ -154,13 +154,13 @@ const file: iSlashFile<Entry, GuildCache> = {
 
 		helper.respond(new ResponseBuilder(Emoji.GOOD, `Adding songs from #${from} to #${to}...`))
 
-		const [, sp_songs] = await useTryAsync(() =>
+		const [, spotifyPlaylistSongs] = await useTryAsync(() =>
 			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, member.id)
 		)
-		const [, yt_songs] = await useTryAsync(() =>
+		const [, youtubePlaylistSongs] = await useTryAsync(() =>
 			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, member.id)
 		)
-		const songs = sp_songs || yt_songs
+		const songs = spotifyPlaylistSongs || youtubePlaylistSongs
 
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)

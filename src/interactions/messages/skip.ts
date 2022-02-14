@@ -43,11 +43,11 @@ const file: iMessageFile<Entry, GuildCache> = {
 			}
 
 			service.queue = queue.slice(count - 1)
-			if (service.queue_loop) {
+			if (service.queueLoop) {
 				service.queue.push(...queue.slice(0, count - 1))
 			}
 
-			service.stop_status = StopStatus.INTENTIONAL
+			service.stopStatus = StopStatus.INTENTIONAL
 			service.player.stop()
 			helper.reactSuccess()
 			helper.cache.updateMusicChannel()

@@ -1,15 +1,7 @@
 import ApiHelper from "./ApiHelper"
 
 export default class ConversionHelper {
-	private apiHelper: ApiHelper
-	private url: URL
-	private requester: string
-
-	constructor(apiHelper: ApiHelper, url: URL, requester: string) {
-		this.apiHelper = apiHelper
-		this.url = url
-		this.requester = requester
-	}
+	constructor(private apiHelper: ApiHelper, private url: URL, private requester: string) {}
 
 	public async getSongs() {
 		switch (this.url.host) {

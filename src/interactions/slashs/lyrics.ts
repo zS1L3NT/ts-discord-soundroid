@@ -32,7 +32,10 @@ const file: iSlashFile<Entry, GuildCache> = {
 	},
 	execute: async helper => {
 		return helper.respond(
-			new ResponseBuilder(Emoji.BAD, "Feature deprecated until another lyrics provider is found")
+			new ResponseBuilder(
+				Emoji.BAD,
+				"Feature deprecated until another lyrics provider is found"
+			)
 		)
 
 		const member = helper.interaction.member as GuildMember

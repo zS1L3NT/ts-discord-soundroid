@@ -21,7 +21,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			service.queue.length = 0
-			service.stop_status = StopStatus.INTENTIONAL
+			service.stopStatus = StopStatus.INTENTIONAL
 			service.player.stop()
 			helper.reactSuccess()
 			helper.cache.updateMusicChannel()

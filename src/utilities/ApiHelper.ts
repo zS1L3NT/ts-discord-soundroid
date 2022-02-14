@@ -8,15 +8,15 @@ import { useTry } from "no-try"
 
 export default class ApiHelper {
 	private ytmusic: YTMusic
-	private spotifyApi: SpotifyWebApi
-	private geniusApi: any
+	private spotify: SpotifyWebApi
+	private genius: any
 
 	public constructor() {
 		this.ytmusic = new YTMusic()
 		this.ytmusic.initialize()
-		this.spotifyApi = new SpotifyWebApi(config.spotify)
-		this.spotifyApi.setAccessToken(config.spotify.accessToken)
-		this.geniusApi = new (require("node-genius-api"))(config.genius)
+		this.spotify = new SpotifyWebApi(config.spotify)
+		this.spotify.setAccessToken(config.spotify.accessToken)
+		this.genius = new (require("node-genius-api"))(config.genius)
 	}
 
 	public async searchYoutubeSongs(query: string, requester: string): Promise<Song[]> {
@@ -49,9 +49,9 @@ export default class ApiHelper {
 
 		// Check if query is a URL
 		if (!useTry(() => new URL(query))[0]) {
-			const query_info = await ytdl.getBasicInfo(query)
-			const result_info = await ytdl.getBasicInfo(song.videoId)
-			if (result_info.videoDetails.videoId !== query_info.videoDetails.videoId) {
+			const queryInfo = await ytdl.getBasicInfo(query)
+			const resultInfo = await ytdl.getBasicInfo(song.videoId)
+			if (resultInfo.videoDetails.videoId !== queryInfo.videoDetails.videoId) {
 				throw new Error()
 			}
 		}
@@ -121,17 +121,15 @@ export default class ApiHelper {
 			)
 	}
 
-	public async refreshSpotify() {
-		const refresh_response = (await this.spotifyApi.refreshAccessToken()).body
-		this.spotifyApi.setAccessToken(refresh_response.access_token)
-		this.spotifyApi.setRefreshToken(
-			refresh_response.refresh_token || config.spotify.refreshToken
-		)
+	public async refreshSpotifyToken() {
+		const refreshResponse = (await this.spotify.refreshAccessToken()).body
+		this.spotify.setAccessToken(refreshResponse.access_token)
+		this.spotify.setRefreshToken(refreshResponse.refresh_token || config.spotify.refreshToken)
 	}
 
 	public async findSpotifyPlaylistLength(playlistId: string): Promise<number> {
-		await this.refreshSpotify()
-		return (await this.spotifyApi.getPlaylist(playlistId)).body.tracks.total
+		await this.refreshSpotifyToken()
+		return (await this.spotify.getPlaylist(playlistId)).body.tracks.total
 	}
 
 	public async findSpotifyPlaylist(
@@ -140,7 +138,7 @@ export default class ApiHelper {
 		end: number,
 		requester: string
 	): Promise<Song[]> {
-		await this.refreshSpotify()
+		await this.refreshSpotifyToken()
 
 		const tracks: Song[] = []
 		let left = end - start + 1
@@ -149,7 +147,7 @@ export default class ApiHelper {
 		while (left > 0) {
 			const limit = left > 100 ? 100 : left
 
-			const results = await this.spotifyApi.getPlaylistTracks(playlistId, { limit, offset })
+			const results = await this.spotify.getPlaylistTracks(playlistId, { limit, offset })
 			tracks.push(
 				...results.body.items
 					.map(i => i.track)
@@ -179,9 +177,9 @@ export default class ApiHelper {
 	}
 
 	public async findSpotifySong(trackId: string, requester: string): Promise<Song> {
-		await this.refreshSpotify()
+		await this.refreshSpotifyToken()
 
-		const result = (await this.spotifyApi.getTrack(trackId)).body
+		const result = (await this.spotify.getTrack(trackId)).body
 		return new Song(
 			result.name,
 			result.artists.map(a => a.name).join(", "),
@@ -193,10 +191,10 @@ export default class ApiHelper {
 	}
 
 	public async findGeniusLyrics(query: string): Promise<string> {
-		const song = (await this.geniusApi.search(query))[0]?.result
+		const song = (await this.genius.search(query))[0]?.result
 		if (!song) throw new Error("")
 
-		const lyrics = (await this.geniusApi.lyrics(song.id)).slice(1) as {
+		const lyrics = (await this.genius.lyrics(song.id)).slice(1) as {
 			part: string
 			content: string[]
 		}[]
@@ -207,7 +205,7 @@ export default class ApiHelper {
 			lines.push(...lyric.content)
 		}
 
-		const lyrics_str = lines.slice(1).join("\n")
-		return lyrics_str.slice(0, 6000)
+		const lyricsStr = lines.slice(1).join("\n")
+		return lyricsStr.slice(0, 6000)
 	}
 }
