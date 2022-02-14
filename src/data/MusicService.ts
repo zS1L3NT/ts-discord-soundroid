@@ -157,12 +157,12 @@ export default class MusicService {
 
 	public destroy() {
 		if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
+			logger.log("Destroyed music service")
 			this.connection.destroy()
 		}
 		this.cache.setNickname()
 		this.cache.updateMusicChannel()
 		delete this.cache.service
-		logger.log("Destroyed music service")
 	}
 
 	/**
