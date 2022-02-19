@@ -66,6 +66,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 		if (this.service) {
 			message.edit(await new QueueBuilder(this).build(pageErr ? 1 : page))
 		} else {
+			this.setNickname()
 			message.edit({
 				embeds: [
 					new MessageEmbed()
