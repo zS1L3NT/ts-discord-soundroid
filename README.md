@@ -38,6 +38,7 @@ Because I just finished building [SounDroid Android](https://github.com/zS1L3NT/
         -   `/skip`
         -   `/loop` - Loop the current song
         -   `/queue-loop` - Loop the entire queue
+        -   `/restart` - Restart the current song
     -   Queue Management
         -   `/clear-queue`
         -   `/leave-cleanup` - Removes songs added by users who aren't in the VC

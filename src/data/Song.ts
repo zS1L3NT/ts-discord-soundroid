@@ -89,13 +89,15 @@ export default class Song {
 
 					if (err.message.startsWith("Command failed with ERR_STREAM_PREMATURE_CLOSE")) {
 						logger.log("Abnormal stopping of track")
-						if (service.stopStatus !== StopStatus.INTENTIONAL) {
+						if (service.stopStatus === StopStatus.INTENTIONAL) {
+							logger.log("Track crash was intentional, nothing abnormal")
+						} else if (service.stopStatus === StopStatus.RESTART) {
+							logger.log("Player restarted, nothing abnormal")
+						} else {
 							service.stopStatus = StopStatus.KILLED
 							err.message = `[SOURCE>PROCESS]: ` + err.message
 							logger.warn("Track crashed, attempting to replay the track")
 							reject(err)
-						} else {
-							logger.log("Track crash was intentional, nothing abnormal")
 						}
 					}
 				})

@@ -15,6 +15,7 @@ const time = async (ms: number) => new Promise(res => setTimeout(res, ms))
 export enum StopStatus {
 	NORMAL,
 	INTENTIONAL,
+	RESTART,
 	KILLED
 }
 
@@ -110,7 +111,9 @@ export default class MusicService {
 			) {
 				await time(500)
 				if (this.stopStatus !== StopStatus.KILLED) {
-					if (this.queueLoop) {
+					if (this.stopStatus === StopStatus.RESTART) {
+						logger.log("Player restarted, replaying current song")
+					} else if (this.queueLoop) {
 						const current = this.queue.shift()
 						if (current) {
 							logger.log("On queue loop, queueing current song")
@@ -153,6 +156,14 @@ export default class MusicService {
 		})
 
 		this.connection.subscribe(this.player)
+	}
+
+	public restart() {
+		this.stopStatus = StopStatus.RESTART
+		this.player.stop()
+		this.processQueue()
+		this.cache.setNickname()
+		this.cache.updateMusicChannel()
 	}
 
 	public destroy() {
