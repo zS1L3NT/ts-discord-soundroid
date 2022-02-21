@@ -5,6 +5,7 @@ import ytdl from "ytdl-core"
 import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
 import { useTry } from "no-try"
+import axios from "axios"
 
 export default class ApiHelper {
 	private ytmusic: YTMusic
@@ -207,22 +208,50 @@ export default class ApiHelper {
 		)
 	}
 
-	public async findGeniusLyrics(query: string): Promise<string> {
-		const song = (await this.genius.search(query))[0]?.result
-		if (!song) throw new Error("")
-
-		const lyrics = (await this.genius.lyrics(song.id)).slice(1) as {
-			part: string
-			content: string[]
+	public async searchGeniusLyrics(query: string): Promise<
+		{
+			id: string
+			title: string
+			artiste: string
 		}[]
-		const lines: string[] = []
+	> {
+		const results = await this.genius.search(query)
+		return results
+			.map((r: any) => r.result)
+			.map((result: any) => ({
+				id: `${result.id}`,
+				title: result.title,
+				artiste: result.artist_names
+			}))
+	}
 
-		for (const lyric of lyrics) {
-			lines.push(`\u200B`)
-			lines.push(...lyric.content)
+	public async findGeniusLyrics(
+		id: string
+	): Promise<{ title: string; artiste: string; cover: string; lyrics: string }> {
+		const song = await this.genius.song(id)
+		const html = (await axios.get<string>(`https://genius.com/songs/${id}`)).data
+
+		const lyrics = html
+			.match(/JSON\.parse\('(.*)'\)/)!
+			.map(j => j.slice(12, -2))
+			.map(j => j.replaceAll("\\\\", "\\"))
+			.map(j => j.replaceAll('\\"', '"'))
+			.map(j => j.replaceAll("\\'", "'"))
+			.map(j => {
+				try {
+					return JSON.parse(j)
+				} catch {}
+			})
+			.filter(j => !!j)[0]
+			.songPage.lyricsData.body.children[0].children.filter((e: any) => typeof e === "string")
+			.map((lyric: string) => (lyric.match(/^\[.*\]$/) ? `\`${lyric}\`` : lyric))
+			.join("\n")
+
+		return {
+			title: song.title,
+			artiste: song.artist_names,
+			cover: song.song_art_image_url,
+			lyrics
 		}
-
-		const lyricsStr = lines.slice(1).join("\n")
-		return lyricsStr.slice(0, 6000)
 	}
 }
