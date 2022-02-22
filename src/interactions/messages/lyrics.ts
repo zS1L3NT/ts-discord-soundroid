@@ -9,8 +9,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const query = helper.input()!.join(" ")
 		const service = helper.cache.service
 		if (service) {
-			if (service.queue.length === 0) {
-				helper.reactFailure()
+			if (service.queue.length === 0 && !query) {
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now"),
 					5000
