@@ -33,7 +33,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 					60_000
 				)
 			} else {
-				helper.reactFailure()
 				helper.respond(
 					new ResponseBuilder(
 						Emoji.BAD,

@@ -14,7 +14,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(
 					Emoji.BAD,
@@ -27,7 +26,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			if (service.queue.length === 0) {
-				helper.reactFailure()
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now"),
 					5000
@@ -38,7 +36,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
 			if (!song) {
-				helper.reactFailure()
 				return helper.respond(new ResponseBuilder(Emoji.BAD, `No song currently playing!`))
 			}
 
@@ -73,7 +70,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 				10000
 			)
 		} else {
-			helper.reactFailure()
 			helper.respond(
 				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000

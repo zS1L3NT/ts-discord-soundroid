@@ -7,7 +7,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(
 					Emoji.BAD,
@@ -21,7 +20,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		const from = helper.getNumber(fromStr, 0, 0)
 		if (from < 1) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`),
 				5000
@@ -30,7 +28,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		const to = helper.getNumber(toStr, null, 0)
 		if (to && to < 1) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`),
 				5000
@@ -40,7 +37,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			if (from >= service.queue.length) {
-				helper.reactFailure()
 				helper.respond(
 					new ResponseBuilder(Emoji.BAD, "No such starting position in the queue"),
 					5000
@@ -48,7 +44,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 			} else {
 				if (to) {
 					if (to <= from || to >= service.queue.length) {
-						helper.reactFailure()
 						helper.respond(
 							new ResponseBuilder(
 								Emoji.BAD,
@@ -60,7 +55,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 						const deleteCount = to - from + 1
 						service.queue.splice(from, deleteCount)
 						helper.cache.updateMusicChannel()
-						helper.reactSuccess()
 						helper.respond(
 							new ResponseBuilder(
 								Emoji.GOOD,
@@ -78,7 +72,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 					}
 
 					helper.cache.updateMusicChannel()
-					helper.reactSuccess()
 					helper.respond(
 						new ResponseBuilder(
 							Emoji.GOOD,
@@ -89,7 +82,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 				}
 			}
 		} else {
-			helper.reactFailure()
 			helper.respond(
 				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000

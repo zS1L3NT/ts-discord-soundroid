@@ -7,7 +7,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(
 					Emoji.BAD,
@@ -21,7 +20,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 		if (service) {
 			const queue = service.queue
 			if (queue.length === 0) {
-				helper.reactFailure()
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, `Cannot shuffle an empty queue`)
 				)
@@ -35,10 +33,8 @@ const file: iMessageFile<Entry, GuildCache> = {
 					.sort((a, b) => a.sort - b.sort)
 					.map(({ value }) => value)
 			]
-			helper.reactSuccess()
 			helper.cache.updateMusicChannel()
 		} else {
-			helper.reactFailure()
 			helper.respond(
 				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000

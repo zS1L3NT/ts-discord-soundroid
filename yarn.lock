@@ -2063,10 +2063,10 @@ nopt@^5.0.0:
   dependencies:
     abbrev "1"
 
-nova-bot@^1.0.12:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/nova-bot/-/nova-bot-1.0.12.tgz#0cda8ae427acca43592bc50715387b7a70f7c213"
-  integrity sha512-mOAgLwgpXZlrM0ESiX20gDUH1KgDE94B8Jb8bIpCoPvHhDolxX6phA0P6AmffI8vRqtgP8PpUipSk1WHXY6MyQ==
+nova-bot@^1.0.14:
+  version "1.0.14"
+  resolved "https://registry.yarnpkg.com/nova-bot/-/nova-bot-1.0.14.tgz#58b025b03aabc4fe04b28668c3f5b9d7815c1be9"
+  integrity sha512-Fd5/kxbB2RKMwKZLtAS93sQMTB22WEYYMoBj4qSOOh+KdW6kkgt8vmfPC5HDP9LTzu96LZI+nV3siMJ6rVGjRA==
   dependencies:
     "@discordjs/builders" "^0.12.0"
     "@discordjs/rest" "0.3.0"

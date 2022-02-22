@@ -8,7 +8,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(
 					Emoji.BAD,
@@ -18,7 +17,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 			)
 		}
 
-		helper.reactSuccess()
 		helper.respond(await new QueueBuilder(helper.cache, member).build())
 	}
 }

@@ -7,7 +7,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(
 					Emoji.BAD,
@@ -21,7 +20,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		const from = helper.getNumber(fromStr, 0, 0)
 		if (from < 1) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`),
 				5000
@@ -30,7 +28,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		const to = helper.getNumber(toStr, null, 0)
 		if (to && to < 1) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`),
 				5000
@@ -43,7 +40,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const song = queue[from]
 
 			if (from >= queue.length) {
-				helper.reactFailure()
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`),
 					5000
@@ -51,7 +47,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 			}
 
 			if (to && to > queue.length) {
-				helper.reactFailure()
 				return helper.respond(
 					new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`),
 					5000
@@ -59,13 +54,11 @@ const file: iMessageFile<Entry, GuildCache> = {
 			}
 
 			if (!song) {
-				helper.reactFailure()
 				return helper.respond(new ResponseBuilder(Emoji.BAD, `No song at position ${from}`))
 			}
 
 			queue.splice(to || 1, 0, ...queue.splice(from, 1))
 			helper.cache.updateMusicChannel()
-			helper.reactSuccess()
 			helper.respond(
 				new ResponseBuilder(
 					Emoji.GOOD,
@@ -76,7 +69,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 				5000
 			)
 		} else {
-			helper.reactFailure()
 			helper.respond(
 				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
 				5000

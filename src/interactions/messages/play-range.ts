@@ -12,7 +12,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const member = helper.message.member as GuildMember
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(
 					Emoji.BAD,
@@ -37,7 +36,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		const input = helper.input()!
 		if (!input.length) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(
 					Emoji.BAD,
@@ -56,7 +54,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		const from = helper.getNumber(fromStr, 1, 0)
 		if (from < 1) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${fromStr}`),
 				5000
@@ -65,7 +62,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		let to = helper.getNumber(toStr, null, 0)
 		if (to && to < 1) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${toStr}`),
 				5000
@@ -85,7 +81,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 		})
 
 		if (err) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(Emoji.BAD, "Link must be a Spotify/Youtube playlist link!"),
 				5000
@@ -94,7 +89,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		if (to) {
 			if (from > to) {
-				helper.reactFailure()
 				return helper.respond(
 					new ResponseBuilder(
 						Emoji.BAD,
@@ -105,7 +99,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 			}
 
 			if (to - from > 1000) {
-				helper.reactFailure()
 				return helper.respond(
 					new ResponseBuilder(
 						Emoji.BAD,
@@ -125,7 +118,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const length = spotifyPlaylistLength || youtubePlaylistLength
 
 		if (to && to > length) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(
 					Emoji.BAD,
@@ -155,8 +147,12 @@ const file: iMessageFile<Entry, GuildCache> = {
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)
 		helper.cache.updateMusicChannel()
-		helper.reactSuccess()
-		helper.respond(new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`), 5000)
+		setTimeout(() => {
+			helper.update(
+				new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`),
+				5000
+			)
+		}, 1000)
 	}
 }
 

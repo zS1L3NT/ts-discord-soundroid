@@ -14,7 +14,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const member = helper.message.member!
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
-			helper.reactFailure()
 			return helper.respond(
 				new ResponseBuilder(
 					Emoji.BAD,
@@ -37,7 +36,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 				const [first] = songs
 
 				if (!first) {
-					helper.reactFailure()
 					return helper.respond(new ResponseBuilder(Emoji.BAD, "Playlist is empty"), 5000)
 				}
 
@@ -59,7 +57,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 				service.queue.push(...songs.slice(1))
 				helper.cache.updateMusicChannel()
 
-				helper.reactSuccess()
 				if (songs.length === 1) {
 					helper.respond(
 						new ResponseBuilder(
@@ -75,7 +72,6 @@ const file: iMessageFile<Entry, GuildCache> = {
 			})
 
 			if (err) {
-				helper.reactFailure()
 				helper.respond(new ResponseBuilder(Emoji.BAD, err.message))
 			}
 		} else {
