@@ -237,21 +237,28 @@ export default class ApiHelper {
 			.map(j => j.replaceAll("\\\\", "\\"))
 			.map(j => j.replaceAll('\\"', '"'))
 			.map(j => j.replaceAll("\\'", "'"))
-			.map(j => {
-				try {
-					return JSON.parse(j)
-				} catch {}
-			})
-			.filter(j => !!j)[0]
-			.songPage.lyricsData.body.children[0].children.filter((e: any) => typeof e === "string")
-			.map((lyric: string) => (lyric.match(/^\[.*\]$/) ? `\`${lyric}\`` : lyric))
-			.join("\n")
+			.map(j => useTry(() => JSON.parse(j))[1])
+			.filter(j => !!j)
+			.at(0)
+			.songPage.lyricsData.body
+
+		const getLyrics = (lyrics: any): string | string[] | undefined => {
+			if (typeof lyrics === "string") {
+				return lyrics
+			}
+
+			if ("children" in lyrics) {
+				return lyrics.children.map(getLyrics).flat().filter((e: any) => !!e)
+			}
+
+			return
+		}
 
 		return {
 			title: song.title,
 			artiste: song.artist_names,
 			cover: song.song_art_image_url,
-			lyrics
+			lyrics: (getLyrics(lyrics) as string[]).join("\n").replaceAll(/(\[.*\])/g, "\n`$1`")
 		}
 	}
 }
