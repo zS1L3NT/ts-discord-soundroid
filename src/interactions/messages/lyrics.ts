@@ -24,8 +24,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 				await new LyricsSelectBuilder(
 					helper.cache.apiHelper,
 					query || `${song.title} - ${song.artiste}`
-				).build(),
-				60_000
+				).build()
 			)
 		} else {
 			if (query) {
