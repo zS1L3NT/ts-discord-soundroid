@@ -20,6 +20,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		if (service) {
 			service.player.unpause()
 			helper.reactSuccess()
+			helper.clearAfter(5000)
 			helper.cache.updateMusicChannel()
 		} else {
 			helper.respond(

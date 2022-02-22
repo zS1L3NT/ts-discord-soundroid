@@ -48,6 +48,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			service.stopStatus = StopStatus.INTENTIONAL
 			service.player.stop()
 			helper.reactSuccess()
+			helper.clearAfter(5000)
 			helper.cache.updateMusicChannel()
 		} else {
 			helper.respond(

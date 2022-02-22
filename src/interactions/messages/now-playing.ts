@@ -47,6 +47,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const seekbar = track.repeat(index) + thumb + track.repeat(24 - index)
 
 			helper.reactSuccess()
+			helper.clearAfter(5000)
 			helper.respond(
 				{
 					embeds: [
