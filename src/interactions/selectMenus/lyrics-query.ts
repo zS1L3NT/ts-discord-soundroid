@@ -26,15 +26,16 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 
 		const [, messageOptions] = await useTryAsync(async () => {
 			try {
+				const id = helper.value()!
 				const { title, artiste, cover, lyrics } =
-					await helper.cache.apiHelper.findGeniusLyrics(helper.value()!)
+					await helper.cache.apiHelper.findGeniusLyrics(id)
 				return {
 					embeds: [
 						new MessageEmbed()
 							.setTitle(`Genius Lyrics for: ${title} - ${artiste}`)
 							.setColor(await new DominantColorGetter(cover).getColor())
 							.setThumbnail(cover)
-							.setDescription(lyrics)
+							.setDescription(`${lyrics}\n\n> Lyrics from https://genius.com/songs/${id}`)
 							.setFooter({
 								text: `Requested by @${member.displayName}`,
 								iconURL: member.user.displayAvatarURL()
