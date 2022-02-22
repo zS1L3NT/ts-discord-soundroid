@@ -35,7 +35,8 @@ const file: iMessageFile<Entry, GuildCache> = {
 					new ResponseBuilder(
 						Emoji.BAD,
 						`The queue only has ${queue.length} songs, cannot skip ${count} songs`
-					)
+					),
+					5000
 				)
 			}
 

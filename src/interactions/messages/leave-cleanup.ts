@@ -30,7 +30,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 					Emoji.GOOD,
 					`Cleared ${oldLength - newLength} songs from the queue`
 				),
-				3000
+				5000
 			)
 		} else {
 			helper.respond(

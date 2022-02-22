@@ -1,7 +1,7 @@
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 import LyricsSelectBuilder from "../../utilities/LyricsSelectBuilder"
+import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 
 const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}lyrics`),
@@ -29,8 +29,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			if (query) {
 				helper.reactSuccess()
 				helper.respond(
-					await new LyricsSelectBuilder(helper.cache.apiHelper, `${query}`).build(),
-					60_000
+					await new LyricsSelectBuilder(helper.cache.apiHelper, `${query}`).build()
 				)
 			} else {
 				helper.respond(

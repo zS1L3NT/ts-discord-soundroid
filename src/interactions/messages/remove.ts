@@ -67,7 +67,8 @@ const file: iMessageFile<Entry, GuildCache> = {
 					const song = service.queue.splice(from, 1)[0]
 					if (!song) {
 						return helper.respond(
-							new ResponseBuilder(Emoji.BAD, `No song at position ${from}`)
+							new ResponseBuilder(Emoji.BAD, `No song at position ${from}`),
+							5000
 						)
 					}
 

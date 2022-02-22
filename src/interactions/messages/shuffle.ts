@@ -21,7 +21,8 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const queue = service.queue
 			if (queue.length === 0) {
 				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `Cannot shuffle an empty queue`)
+					new ResponseBuilder(Emoji.BAD, `Cannot shuffle an empty queue`),
+					5000
 				)
 			}
 

@@ -62,17 +62,19 @@ const file: iMessageFile<Entry, GuildCache> = {
 						new ResponseBuilder(
 							Emoji.GOOD,
 							`Enqueued: "${first.title} - ${first.artiste}"`
-						)
+						),
+						5000
 					)
 				} else {
 					helper.respond(
-						new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`)
+						new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`),
+						5000
 					)
 				}
 			})
 
 			if (err) {
-				helper.respond(new ResponseBuilder(Emoji.BAD, err.message))
+				helper.respond(new ResponseBuilder(Emoji.BAD, err.message), 5000)
 			}
 		} else {
 			helper.reactSuccess()

@@ -46,7 +46,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 						"3) An end position (optional, last song of the playlist by default)"
 					].join("\n")
 				),
-				10_000
+				15_000
 			)
 		}
 

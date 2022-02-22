@@ -17,7 +17,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			)
 		}
 
-		helper.respond(await new QueueBuilder(helper.cache, member).build())
+		helper.respond(await new QueueBuilder(helper.cache, member).build(), 15_000)
 	}
 }
 

@@ -21,10 +21,10 @@ const file: iMessageFile<Entry, GuildCache> = {
 			service.loop = false
 			if (service.queueLoop) {
 				service.queueLoop = false
-				helper.respond(new ResponseBuilder(Emoji.GOOD, "Queue Loop disabled"), 3000)
+				helper.respond(new ResponseBuilder(Emoji.GOOD, "Queue Loop disabled"), 5000)
 			} else {
 				service.queueLoop = true
-				helper.respond(new ResponseBuilder(Emoji.GOOD, "Queue Loop enabled"), 3000)
+				helper.respond(new ResponseBuilder(Emoji.GOOD, "Queue Loop enabled"), 5000)
 			}
 			helper.cache.updateMusicChannel()
 		} else {

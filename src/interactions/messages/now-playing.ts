@@ -36,7 +36,10 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
 			if (!song) {
-				return helper.respond(new ResponseBuilder(Emoji.BAD, `No song currently playing!`))
+				return helper.respond(
+					new ResponseBuilder(Emoji.BAD, `No song currently playing!`),
+					5000
+				)
 			}
 
 			const percent = (state.playbackDuration / 1000 / song.duration) * 100
@@ -67,7 +70,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 							})
 					]
 				},
-				10000
+				15_000
 			)
 		} else {
 			helper.respond(

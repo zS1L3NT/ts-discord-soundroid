@@ -12,16 +12,20 @@ const file: iMessageFile<Entry, GuildCache> = {
 				new ResponseBuilder(
 					Emoji.BAD,
 					"You have to be in the same voice channel as me to use this command"
-				)
+				),
+				5000
 			)
 		}
 
 		const service = helper.cache.service
 		if (service) {
 			service.restart()
-			helper.respond(new ResponseBuilder(Emoji.GOOD, "Restarted the current song"))
+			helper.respond(new ResponseBuilder(Emoji.GOOD, "Restarted the current song"), 5000)
 		} else {
-			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(
+				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
+				5000
+			)
 		}
 	}
 }
