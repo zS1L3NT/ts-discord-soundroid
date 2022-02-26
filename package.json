@@ -3,6 +3,7 @@
 	"description": "SounDroid",
 	"main": "dist/app.js",
 	"author": "zS1L3NT",
+	"license": "GPL-3.0",
 	"scripts": {
 		"start": "node dist/app.js",
 		"dev": "ts-node --files src/app.ts"
