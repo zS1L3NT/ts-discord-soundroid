@@ -1,3 +1,4 @@
+import axios from "axios"
 import config from "../config.json"
 import Song from "../data/Song"
 import SpotifyWebApi from "spotify-web-api-node"
@@ -5,7 +6,6 @@ import ytdl from "ytdl-core"
 import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
 import { useTry } from "no-try"
-import axios from "axios"
 
 export default class ApiHelper {
 	private ytmusic: YTMusic
@@ -242,23 +242,27 @@ export default class ApiHelper {
 			.at(0)
 			.songPage.lyricsData.body
 
-		const getLyrics = (lyrics: any): string | string[] | undefined => {
+		const getLyrics = (lyrics: any): string => {
 			if (typeof lyrics === "string") {
 				return lyrics
 			}
 
 			if ("children" in lyrics) {
-				return lyrics.children.map(getLyrics).flat().filter((e: any) => !!e)
+				return lyrics.children.map(getLyrics).join("")
 			}
 
-			return
+			if ("tag" in lyrics && lyrics.tag === "br") {
+				return "\n"
+			}
+
+			return ""
 		}
 
 		return {
 			title: song.title,
 			artiste: song.artist_names,
 			cover: song.song_art_image_url,
-			lyrics: (getLyrics(lyrics) as string[]).join("\n").replaceAll(/(\[.*\])/g, "\n`$1`")
+			lyrics: getLyrics(lyrics).replaceAll("\n\n", "\n").replaceAll(/(\[.*\])/g, "\n`$1`")
 		}
 	}
 }
