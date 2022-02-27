@@ -18,7 +18,8 @@
 		"refreshToken": "",
 		"clientId": "",
 		"clientSecret": "",
-		"redirectUri": ""
+		"redirectUri": "",
+        "lastRefreshed": 0
 	},
 	"google": "",
 	"genius": ""

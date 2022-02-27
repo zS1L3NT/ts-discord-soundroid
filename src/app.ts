@@ -66,6 +66,10 @@ process.on("uncaughtException", err => {
 })
 
 const refreshSpotify = () => {
+	if (Date.now() - new Date(config.spotify.lastRefreshed).getTime() < 3600000) {
+		return startBot()
+	}
+
 	const PORT = 4296
 	const app = express()
 
@@ -96,13 +100,10 @@ const refreshSpotify = () => {
 		// Replace old access token with new access token
 		logger.info(`Got Spotify API Access token`)
 		const configPath = path.join(__dirname, "./config.json")
-		const configData = await fs.readFile(configPath, "utf8")
-		await fs.writeFile(
-			configPath,
-			configData
-				.replace(config.spotify.accessToken, spotifyRes.data.access_token)
-				.replace(config.spotify.refreshToken, spotifyRes.data.refresh_token)
-		)
+		config.spotify.accessToken = spotifyRes.data.access_token
+		config.spotify.refreshToken = spotifyRes.data.refresh_token
+		config.spotify.lastRefreshed = Date.now()
+		await fs.writeFile(configPath, JSON.stringify(config, null, 4))
 		logger.info(`Replaced Spotify API Access token`)
 
 		res.send("<script>window.close();</script>")
