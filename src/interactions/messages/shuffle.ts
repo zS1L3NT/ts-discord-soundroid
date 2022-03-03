@@ -34,6 +34,8 @@ const file: iMessageFile<Entry, GuildCache> = {
 					.sort((a, b) => a.sort - b.sort)
 					.map(({ value }) => value)
 			]
+			helper.reactSuccess()
+			helper.clearAfter(5000)
 			helper.cache.updateMusicChannel()
 		} else {
 			helper.respond(
