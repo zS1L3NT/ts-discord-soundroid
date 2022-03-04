@@ -1,0 +1,55 @@
+name: Deploy
+on:
+    push:
+        branches: [main]
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        environment: production
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v2
+
+            - name: Yarn install (GitHub)
+              uses: borales/actions-yarn@v2.3.0
+              with:
+                  cmd: install
+
+            - name: Insert config.json
+              run: echo '${{ secrets.CONFIG }}' > src/config.json
+
+            - name: Transpile TypeScript
+              run: npx tsc
+
+            - name: Deleting old files on Server
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  password: ${{ secrets.SSH_PASSWORD }}
+                  script: "rm -rf /home/ubuntu/projects/ts-discord-soundroid/dist"
+
+            - name: Uploading new files to Server
+              uses: appleboy/scp-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  password: ${{ secrets.SSH_PASSWORD }}
+                  target: "/home/ubuntu/projects/ts-discord-soundroid"
+                  source: "dist/*,package.json,yarn.lock"
+
+            - name: Yarn install (Server)
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  password: ${{ secrets.SSH_PASSWORD }}
+                  script: "cd /home/ubuntu/projects/ts-discord-soundroid && yarn"
+
+            - name: Restart PM2
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  password: ${{ secrets.SSH_PASSWORD }}
+                  script: "pm2 flush ts-discord-soundroid && pm2 restart ts-discord-soundroid"
