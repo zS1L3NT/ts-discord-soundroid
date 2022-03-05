@@ -7,18 +7,15 @@ jobs:
         runs-on: ubuntu-latest
         environment: production
         steps:
-            - name: Checkout Repository
+            - name: Performing Repository Checkout
               uses: actions/checkout@v2
 
-            - name: Yarn install (GitHub)
+            - name: Performing Yarn Install on Workspace
               uses: borales/actions-yarn@v2.3.0
               with:
                   cmd: install
 
-            - name: Insert config.json
-              run: echo '${{ secrets.CONFIG }}' > src/config.json
-
-            - name: Transpile TypeScript
+            - name: Transpiling TypeScript
               run: npx tsc
 
             - name: Deleting old files on Server
@@ -38,7 +35,7 @@ jobs:
                   target: "/home/ubuntu/projects/ts-discord-soundroid"
                   source: "dist/*,package.json,yarn.lock"
 
-            - name: Yarn install (Server)
+            - name: Performing Yarn Install on Server
               uses: appleboy/ssh-action@master
               with:
                   host: ${{ secrets.SSH_HOST }}
@@ -46,10 +43,50 @@ jobs:
                   password: ${{ secrets.SSH_PASSWORD }}
                   script: "cd /home/ubuntu/projects/ts-discord-soundroid && yarn"
 
-            - name: Restart PM2
+            - name: Creating environment variables
               uses: appleboy/ssh-action@master
               with:
                   host: ${{ secrets.SSH_HOST }}
                   username: ${{ secrets.SSH_USERNAME }}
                   password: ${{ secrets.SSH_PASSWORD }}
-                  script: "pm2 flush ts-discord-soundroid && pm2 restart ts-discord-soundroid"
+                  script: |
+                      export FIREBASE__SERVICE_ACCOUNT__PROJECT_ID=${{ secrets.FIREBASE__SERVICE_ACCOUNT__PROJECT_ID }}
+                      export FIREBASE__SERVICE_ACCOUNT__PRIVATE_KEY=${{ secrets.FIREBASE__SERVICE_ACCOUNT__PRIVATE_KEY }}
+                      export FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL=${{ secrets.FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL }}
+                      export FIREBASE__COLLECTION=${{ secrets.FIREBASE__COLLECTION }}
+                      export FIREBASE__DATABASE_URL=${{ secrets.FIREBASE__DATABASE_URL }}
+                      export DISCORD__TOKEN=${{ secrets.DISCORD__TOKEN }}
+                      export DISCORD__BOT_ID=${{ secrets.DISCORD__BOT_ID }}
+                      export DISCORD__DEV_ID=${{ secrets.DISCORD__DEV_ID }}
+                      export SPOTIFY__CLIENT_ID=${{ secrets.SPOTIFY__CLIENT_ID }}
+                      export SPOTIFY__CLIENT_SECRET=${{ secrets.SPOTIFY__CLIENT_SECRET }}
+                      export SPOTIFY__REFRESH_TOKEN=${{ secrets.SPOTIFY__REFRESH_TOKEN }}
+                      export GENIUS__ACCESS_TOKEN=${{ secrets.GENIUS__ACCESS_TOKEN }}
+
+            - name: Restarting PM2 Process
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  password: ${{ secrets.SSH_PASSWORD }}
+                  script: "pm2 flush ts-discord-soundroid && pm2 restart ts-discord-soundroid --update-env"
+
+            - name: Deleting environment variables
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  password: ${{ secrets.SSH_PASSWORD }}
+                  script: |
+                      unset FIREBASE__SERVICE_ACCOUNT__PROJECT_ID
+                      unset FIREBASE__SERVICE_ACCOUNT__PRIVATE_KEY
+                      unset FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL
+                      unset FIREBASE__COLLECTION
+                      unset FIREBASE__DATABASE_URL
+                      unset DISCORD__TOKEN
+                      unset DISCORD__BOT_ID
+                      unset DISCORD__DEV_ID
+                      unset SPOTIFY__CLIENT_ID
+                      unset SPOTIFY__CLIENT_SECRET
+                      unset SPOTIFY__REFRESH_TOKEN
+                      unset GENIUS__ACCESS_TOKEN

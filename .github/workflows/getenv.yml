@@ -1,0 +1,28 @@
+name: Get .env
+on: []
+jobs:
+    getenv:
+        runs-on: ubuntu-latest
+        environment: production
+        steps:
+            - name: Writing to new .env file
+              uses: appleboy/ssh-action@master
+              with:
+                  host: ${{ secrets.SSH_HOST }}
+                  username: ${{ secrets.SSH_USERNAME }}
+                  password: ${{ secrets.SSH_PASSWORD }}
+                  script: |
+                      cd /home/ubuntu/projects/ts-discord-soundroid
+                      touch .env
+                      echo 'FIREBASE__SERVICE_ACCOUNT__PROJECT_ID=${{ secrets.FIREBASE__SERVICE_ACCOUNT__PROJECT_ID }}' >> .env
+                      echo 'FIREBASE__SERVICE_ACCOUNT__PRIVATE_KEY=${{ secrets.FIREBASE__SERVICE_ACCOUNT__PRIVATE_KEY }}' >> .env
+                      echo 'FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL=${{ secrets.FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL }}' >> .env
+                      echo 'FIREBASE__COLLECTION=${{ secrets.FIREBASE__COLLECTION }}' >> .env
+                      echo 'FIREBASE__DATABASE_URL=${{ secrets.FIREBASE__DATABASE_URL }}' >> .env
+                      echo 'DISCORD__TOKEN=${{ secrets.DISCORD__TOKEN }}' >> .env
+                      echo 'DISCORD__BOT_ID=${{ secrets.DISCORD__BOT_ID }}' >> .env
+                      echo 'DISCORD__DEV_ID=${{ secrets.DISCORD__DEV_ID }}' >> .env
+                      echo 'SPOTIFY__CLIENT_ID=${{ secrets.SPOTIFY__CLIENT_ID }}' >> .env
+                      echo 'SPOTIFY__CLIENT_SECRET=${{ secrets.SPOTIFY__CLIENT_SECRET }}' >> .env
+                      echo 'SPOTIFY__REFRESH_TOKEN=${{ secrets.SPOTIFY__REFRESH_TOKEN }}' >> .env
+                      echo 'GENIUS__ACCESS_TOKEN=${{ secrets.GENIUS__ACCESS_TOKEN }}' >> .env
