@@ -16,7 +16,6 @@
 		"colorthief": "^2.3.2",
 		"discord.js": "^13.6.0",
 		"dotenv": "^16.0.0",
-		"express": "^4.17.2",
 		"ffmpeg-static": "^4.4.1",
 		"libsodium-wrappers": "^0.7.9",
 		"no-try": "^3.1.0",
@@ -30,8 +29,7 @@
 		"ytpl": "^2.2.3"
 	},
 	"devDependencies": {
-		"@types/node": "^17.0.15",
-		"@types/open": "^6.2.1",
+		"@types/dotenv": "^8.2.0",
 		"@types/spotify-web-api-node": "^5.0.7",
 		"typescript": "^4.5.5"
 	}

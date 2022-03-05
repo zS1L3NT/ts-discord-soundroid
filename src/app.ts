@@ -65,111 +65,49 @@ process.on("uncaughtException", err => {
 	}
 })
 
-const refreshSpotify = () => {
-	if (Date.now() - new Date(config.spotify.lastRefreshed).getTime() < 3600000) {
-		return startBot()
-	}
+new NovaBot({
+	name: "SounDroid#5566",
+	intents: [
+		Intents.FLAGS.GUILD_VOICE_STATES,
+		Intents.FLAGS.GUILD_MESSAGES,
+		Intents.FLAGS.GUILDS
+	],
+	directory: path.join(__dirname, "interactions"),
+	config,
+	updatesMinutely: true,
+	//@ts-ignore
+	logger: global.logger,
 
-	const PORT = 4296
-	const app = express()
+	help: {
+		message: cache =>
+			[
+				"Welcome to SounDroid!",
+				"SounDroid is a Music bot which plays songs from Spotify and YouTube",
+				cache.getPrefix()
+					? `My prefix for message commands is \`${cache.getPrefix()}\``
+					: `No message command prefix for this server`
+			].join("\n"),
+		icon: "https://cdn.discordapp.com/avatars/899858077027811379/56e8665909db40439b09e13627970b62.png?size=128"
+	},
 
-	app.get("/", async (req, res) => {
-		logger.info(`Got Spotify API Authorization token`)
-		const code = req.query.code as string
+	GuildCache,
+	BotCache,
 
-		// Get spotify access token from authorization code
-		const spotifyRes = await axios.post(
-			"https://accounts.spotify.com/api/token",
-			qs.stringify({
-				grant_type: "authorization_code",
-				code,
-				redirect_uri: "http://localhost:4296"
-			}),
-			{
-				headers: {
-					Authorization:
-						"Basic " +
-						Buffer.from(
-							config.spotify.clientId + ":" + config.spotify.clientSecret
-						).toString("base64"),
-					"Content-Type": "application/x-www-form-urlencoded"
+	onSetup: botCache => {
+		botCache.bot.user!.setPresence({
+			activities: [
+				{
+					name: "/help",
+					type: "LISTENING"
 				}
-			}
-		)
+			]
+		})
 
-		// Replace old access token with new access token
-		logger.info(`Got Spotify API Access token`)
-		const configPath = path.join(__dirname, "./config.json")
-		config.spotify.accessToken = spotifyRes.data.access_token
-		config.spotify.refreshToken = spotifyRes.data.refresh_token
-		config.spotify.lastRefreshed = Date.now()
-		await fs.writeFile(configPath, JSON.stringify(config, null, 4))
-		logger.info(`Replaced Spotify API Access token`)
-
-		res.send("<script>window.close();</script>")
-		server.close()
-
-		// Start the bot
-		startBot()
-	})
-
-	const server = app.listen(PORT, async () => {
-		logger.info(`Server running on port ${PORT}`)
-
-		// Get spotify authorization code
-		const spotifyUrl = new URL("https://accounts.spotify.com/authorize")
-		spotifyUrl.searchParams.append("response_type", "code")
-		spotifyUrl.searchParams.append("client_id", config.spotify.clientId)
-		spotifyUrl.searchParams.append("redirect_uri", "http://localhost:4296")
-		spotifyUrl.searchParams.append("scope", "user-read-private playlist-read-private")
-		await open(spotifyUrl.href, { wait: true })
-	})
-}
-
-const startBot = () => {
-	new NovaBot({
-		name: "SounDroid#5566",
-		intents: [
-			Intents.FLAGS.GUILD_VOICE_STATES,
-			Intents.FLAGS.GUILD_MESSAGES,
-			Intents.FLAGS.GUILDS
-		],
-		directory: path.join(__dirname, "interactions"),
-		config,
-		updatesMinutely: true,
-		//@ts-ignore
-		logger: global.logger,
-
-		help: {
-			message: cache =>
-				[
-					"Welcome to SounDroid!",
-					"SounDroid is a Music bot which plays songs from Spotify and YouTube",
-					cache.getPrefix()
-						? `My prefix for message commands is \`${cache.getPrefix()}\``
-						: `No message command prefix for this server`
-				].join("\n"),
-			icon: "https://cdn.discordapp.com/avatars/899858077027811379/56e8665909db40439b09e13627970b62.png?size=128"
-		},
-
-		GuildCache,
-		BotCache,
-
-		onSetup: botCache => {
-			botCache.bot.user!.setPresence({
-				activities: [
-					{
-						name: "/help",
-						type: "LISTENING"
-					}
-				]
-			})
-
-			for (const guild of botCache.bot.guilds.cache.toJSON()) {
-				guild.me?.setNickname("SounDroid")
-			}
+		for (const guild of botCache.bot.guilds.cache.toJSON()) {
+			guild.me?.setNickname("SounDroid")
 		}
-	})
+	}
+})
 }
 
 if (process.platform === "win32") {
