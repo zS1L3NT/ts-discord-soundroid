@@ -16,9 +16,6 @@ declare module NodeJS {
 			readonly SPOTIFY__CLIENT_ID: string,
 			readonly SPOTIFY__CLIENT_SECRET: string,
 			readonly SPOTIFY__REDIRECT_URI: string,
-			readonly SPOTIFY__LAST_REFRESHED: number,
-
-			readonly GOOGLE__CLIENT_ID: string,
 
 			readonly GENIUS__ACCESS_TOKEN: string
 
