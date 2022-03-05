@@ -11,7 +11,6 @@ declare module NodeJS {
 			readonly DISCORD__BOT_ID: string,
 			readonly DISCORD__DEV_ID: string,
 
-			readonly SPOTIFY__ACCESS_TOKEN: string,
 			readonly SPOTIFY__REFRESH_TOKEN: string,
 			readonly SPOTIFY__CLIENT_ID: string,
 			readonly SPOTIFY__CLIENT_SECRET: string,

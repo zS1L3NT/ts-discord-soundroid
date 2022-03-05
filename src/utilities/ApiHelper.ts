@@ -15,13 +15,11 @@ export default class ApiHelper {
 		this.ytmusic = new YTMusic()
 		this.ytmusic.initialize()
 		this.spotify = new SpotifyWebApi({
-			accessToken: process.env.SPOTIFY__ACCESS_TOKEN,
 			clientId: process.env.SPOTIFY__CLIENT_ID,
 			clientSecret: process.env.SPOTIFY__CLIENT_SECRET,
 			redirectUri: process.env.SPOTIFY__REDIRECT_URI,
 			refreshToken: process.env.SPOTIFY__REFRESH_TOKEN,
 		})
-		this.spotify.setAccessToken(process.env.SPOTIFY__ACCESS_TOKEN)
 		this.genius = new (require("node-genius-api"))(process.env.GENIUS__ACCESS_TOKEN)
 	}
 
