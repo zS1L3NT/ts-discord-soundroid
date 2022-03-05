@@ -1,5 +1,4 @@
 import axios from "axios"
-import config from "../config.json"
 import Song from "../data/Song"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
@@ -15,9 +14,12 @@ export default class ApiHelper {
 	public constructor() {
 		this.ytmusic = new YTMusic()
 		this.ytmusic.initialize()
-		this.spotify = new SpotifyWebApi(config.spotify)
-		this.spotify.setAccessToken(config.spotify.accessToken)
-		this.genius = new (require("node-genius-api"))(config.genius)
+		this.spotify = new SpotifyWebApi({
+			clientId: process.env.SPOTIFY__CLIENT_ID,
+			clientSecret: process.env.SPOTIFY__CLIENT_SECRET,
+			refreshToken: process.env.SPOTIFY__REFRESH_TOKEN,
+		})
+		this.genius = new (require("node-genius-api"))(process.env.GENIUS__ACCESS_TOKEN)
 	}
 
 	public async searchYoutubeSongs(query: string, requester: string): Promise<Song[]> {
@@ -125,7 +127,7 @@ export default class ApiHelper {
 	public async refreshSpotifyToken() {
 		const refreshResponse = (await this.spotify.refreshAccessToken()).body
 		this.spotify.setAccessToken(refreshResponse.access_token)
-		this.spotify.setRefreshToken(refreshResponse.refresh_token || config.spotify.refreshToken)
+		this.spotify.setRefreshToken(refreshResponse.refresh_token || process.env.SPOTIFY__REFRESH_TOKEN)
 	}
 
 	public async findSpotifyPlaylistLength(playlistId: string): Promise<number> {

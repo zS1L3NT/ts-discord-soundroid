@@ -1,5 +1,4 @@
 import BotCache from "../../data/BotCache"
-import config from "../../config.json"
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import { iEventFile } from "nova-bot"
@@ -13,7 +12,7 @@ const file: iEventFile<Entry, GuildCache, BotCache, "voiceStateUpdate"> = {
 
 			if (
 				newState.channel.members.size >= 2 &&
-				newState.channel.members.find(m => m.id === config.discord.bot_id) &&
+				newState.channel.members.find(m => m.id === process.env.DISCORD__BOT_ID) &&
 				cache.service.disconnectTimeout
 			) {
 				logger.log("Clearing previous disconnect timeout")
@@ -28,7 +27,7 @@ const file: iEventFile<Entry, GuildCache, BotCache, "voiceStateUpdate"> = {
 
 			if (
 				oldState.channel.members.size === 1 &&
-				oldState.channel.members.at(0)!.id === config.discord.bot_id
+				oldState.channel.members.at(0)!.id === process.env.DISCORD__BOT_ID
 			) {
 				logger.log("No one in VC, setting one minute disconnect timeout")
 				cache.service.disconnectTimeout = setTimeout(() => {
