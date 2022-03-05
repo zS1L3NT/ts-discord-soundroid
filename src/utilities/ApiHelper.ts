@@ -17,7 +17,6 @@ export default class ApiHelper {
 		this.spotify = new SpotifyWebApi({
 			clientId: process.env.SPOTIFY__CLIENT_ID,
 			clientSecret: process.env.SPOTIFY__CLIENT_SECRET,
-			redirectUri: process.env.SPOTIFY__REDIRECT_URI,
 			refreshToken: process.env.SPOTIFY__REFRESH_TOKEN,
 		})
 		this.genius = new (require("node-genius-api"))(process.env.GENIUS__ACCESS_TOKEN)
