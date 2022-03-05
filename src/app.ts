@@ -1,17 +1,13 @@
-import axios from "axios"
 import BotCache from "./data/BotCache"
 import colors from "colors"
-import config from "./config.json"
-import express from "express"
-import fs from "fs/promises"
+import dotenv from "dotenv"
 import GuildCache from "./data/GuildCache"
 import NovaBot from "nova-bot"
-import open from "open"
 import path from "path"
-import qs from "qs"
 import Tracer from "tracer"
 import { Intents } from "discord.js"
-require("dotenv").config()
+
+dotenv.config()
 
 /**
  * log: Used for basic primitive information
@@ -73,7 +69,22 @@ new NovaBot({
 		Intents.FLAGS.GUILDS
 	],
 	directory: path.join(__dirname, "interactions"),
-	config,
+	config: {
+		firebase: {
+			service_account: {
+				projectId: process.env.FIREBASE__SERVICE_ACCOUNT__PROJECT_ID,
+				privateKey: process.env.FIREBASE__SERVICE_ACCOUNT__PRIVATE_KEY,
+				clientEmail: process.env.FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL,
+			},
+			collection: process.env.FIREBASE__COLLECTION,
+			database_url: process.env.FIREBASE__DATABASE_URL
+		},
+		discord: {
+			token: process.env.DISCORD__TOKEN,
+			dev_id: process.env.DISCORD__DEV_ID,
+			bot_id: process.env.DISCORD__BOT_ID,
+		}
+	},
 	updatesMinutely: true,
 	//@ts-ignore
 	logger: global.logger,
@@ -108,12 +119,3 @@ new NovaBot({
 		}
 	}
 })
-}
-
-if (process.platform === "win32") {
-	refreshSpotify()
-}
-
-if (process.platform === "linux") {
-	startBot()
-}
