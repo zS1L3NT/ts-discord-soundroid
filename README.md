@@ -72,13 +72,13 @@ Because I just finished building [SounDroid Android](https://github.com/zS1L3NT/
 
 ## Usage
 
-Copy the `config.example.json` file to `config.json` then fill in the json file with the correct project credentials.
+Copy the `.env.example` file to `.env` then fill in the json file with the correct project credentials.
 
 With `yarn`
 
 ```
 $ yarn
-$ yarn run dev
+$ yarn dev
 ```
 
 With `npm`
