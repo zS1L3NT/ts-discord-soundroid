@@ -10,7 +10,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	public apiHelper!: ApiHelper
 	public service?: MusicService
 
-	public onConstruct(): void {}
+	public onConstruct(): void { }
 
 	public resolve(resolve: (cache: GuildCache) => void): void {
 		this.ref.onSnapshot(snap => {
@@ -110,7 +110,16 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 		await this.ref.update({ music_message_id: musicMessageId })
 	}
 
+	public getMessageCommandRegex(command: string) {
+		const alias = this.getAliases()[command]
+		return `\\${this.getPrefix()}${alias ? `(${command}|${alias})` : command}`
+	}
+
 	public getPrefix() {
 		return this.entry.prefix
+	}
+
+	public getAliases() {
+		return this.entry.aliases
 	}
 }

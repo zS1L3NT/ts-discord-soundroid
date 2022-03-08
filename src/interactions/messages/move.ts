@@ -3,7 +3,7 @@ import GuildCache from "../../data/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 
 const file: iMessageFile<Entry, GuildCache> = {
-	condition: helper => helper.matchMore(`\\${helper.cache.getPrefix()}move`),
+	condition: helper => helper.matchMore(helper.cache.getMessageCommandRegex("move")),
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
@@ -65,8 +65,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			helper.respond(
 				new ResponseBuilder(
 					Emoji.GOOD,
-					`Moved "${song.title} - ${song.artiste}" from ${from} to ${
-						to ?? `top of the queue`
+					`Moved "${song.title} - ${song.artiste}" from ${from} to ${to ?? `top of the queue`
 					}`
 				),
 				5000

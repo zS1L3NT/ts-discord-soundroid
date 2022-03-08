@@ -30,7 +30,8 @@ export default class BotCache extends BaseBotCache<Entry, GuildCache> {
 		return {
 			prefix: "",
 			music_channel_id: "",
-			music_message_id: ""
+			music_message_id: "",
+			aliases: {}
 		}
 	}
 }

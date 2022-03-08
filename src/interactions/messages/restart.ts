@@ -4,7 +4,7 @@ import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 import { GuildMember } from "discord.js"
 
 const file: iMessageFile<Entry, GuildCache> = {
-	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}restart`),
+	condition: helper => helper.matchOnly(helper.cache.getMessageCommandRegex("restart")),
 	execute: async helper => {
 		const member = helper.message.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

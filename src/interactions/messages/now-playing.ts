@@ -10,7 +10,7 @@ const thumb = "🔘"
 const track = "▬"
 
 const file: iMessageFile<Entry, GuildCache> = {
-	condition: helper => helper.matchOnly(`\\${helper.cache.getPrefix()}now-playing`),
+	condition: helper => helper.matchOnly(helper.cache.getMessageCommandRegex("now-playing")),
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
