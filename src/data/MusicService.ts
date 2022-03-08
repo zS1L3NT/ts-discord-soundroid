@@ -38,7 +38,7 @@ export default class MusicService {
 		this.player = createAudioPlayer()
 		this.queue = []
 
-		this.connection.on("stateChange", async (_, newState) => {
+		this.connection.on<"stateChange">("stateChange", async (_, newState) => {
 			if (newState.status === VoiceConnectionStatus.Disconnected) {
 				if (
 					newState.reason === VoiceConnectionDisconnectReason.WebSocketClose &&
@@ -104,7 +104,7 @@ export default class MusicService {
 			}
 		})
 
-		this.player.on("stateChange", async (oldState, newState) => {
+		this.player.on<"stateChange">("stateChange", async (oldState, newState) => {
 			if (
 				newState.status === AudioPlayerStatus.Idle &&
 				oldState.status !== AudioPlayerStatus.Idle
