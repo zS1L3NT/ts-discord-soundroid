@@ -3,7 +3,7 @@ import GuildCache from "../../data/GuildCache"
 import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 
 const file: iMessageFile<Entry, GuildCache> = {
-	condition: helper => helper.matchOnly(helper.cache.getMessageCommandRegex("loop")),
+	condition: helper => helper.isMessageCommand(helper.cache.getPrefix(), "loop", "only"),
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

@@ -77,7 +77,6 @@ new NovaBot({
 				clientEmail: process.env.FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL,
 			},
 			collection: process.env.FIREBASE__COLLECTION,
-			database_url: process.env.FIREBASE__DATABASE_URL
 		},
 		discord: {
 			token: process.env.DISCORD__TOKEN,

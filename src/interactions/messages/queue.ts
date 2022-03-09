@@ -4,7 +4,7 @@ import QueueBuilder from "../../utilities/QueueBuilder"
 import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 
 const file: iMessageFile<Entry, GuildCache> = {
-	condition: helper => helper.matchOnly(helper.cache.getMessageCommandRegex("queue")),
+	condition: helper => helper.isMessageCommand(helper.cache.getPrefix(), "queue", "only"),
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

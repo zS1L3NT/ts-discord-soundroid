@@ -9,7 +9,7 @@ import { useTry, useTryAsync } from "no-try"
 import { VoiceChannel } from "discord.js"
 
 const file: iMessageFile<Entry, GuildCache> = {
-	condition: helper => helper.matchMore(helper.cache.getMessageCommandRegex("play")),
+	condition: helper => helper.isMessageCommand(helper.cache.getPrefix(), "play", "more"),
 	execute: async helper => {
 		const member = helper.message.member!
 		const channel = member.voice.channel

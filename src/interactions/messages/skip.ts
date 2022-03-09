@@ -4,7 +4,7 @@ import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 import { StopStatus } from "../../data/MusicService"
 
 const file: iMessageFile<Entry, GuildCache> = {
-	condition: helper => helper.matchMore(helper.cache.getMessageCommandRegex("skip")),
+	condition: helper => helper.isMessageCommand(helper.cache.getPrefix(), "skip", "more"),
 	execute: async helper => {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {

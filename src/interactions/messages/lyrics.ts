@@ -4,7 +4,7 @@ import LyricsSelectBuilder from "../../utilities/LyricsSelectBuilder"
 import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 
 const file: iMessageFile<Entry, GuildCache> = {
-	condition: helper => helper.matchMore(helper.cache.getMessageCommandRegex("lyrics")),
+	condition: helper => helper.isMessageCommand(helper.cache.getPrefix(), "lyrics", "more"),
 	execute: async helper => {
 		const query = helper.input()!.join(" ")
 		const service = helper.cache.service

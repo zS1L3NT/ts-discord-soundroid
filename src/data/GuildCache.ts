@@ -118,8 +118,4 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	public getPrefix() {
 		return this.entry.prefix
 	}
-
-	public getAliases() {
-		return this.entry.aliases
-	}
 }
