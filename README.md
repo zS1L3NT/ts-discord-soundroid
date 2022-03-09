@@ -53,6 +53,7 @@ Because I just finished building [SounDroid Android](https://github.com/zS1L3NT/
     -   Other than Using slash commands, all commands above can also be triggered by messages, where `/` is replaced by the defined prefix in the server.
     -   This defined prefix can only be changed with the `/set prefix` command
     -   e.g. If the prefix is defined as `.`, `.play IU Lilac` will do the same thing as `/play IU Lilac`
+    -   Aliases can be set for all message commands to make using message commands easier. `.play` can have the alias `.p`
 -   Music Channel
     -   Instead of always having to request to see the queue, SounDroid can take over a text channel and always display the most up-to-date queue there. Text channel must be empty and any new messages will be cleared
 -   SounDroid will disconnect from a Voice Channel if
@@ -95,8 +96,6 @@ DiscordJS provided a template for a music playing bot [here](https://github.com/
 ## Built with
 
 -   TypeScript
-    -   [![@types/node](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dev/@types/node?style=flat-square)](https://npmjs.com/package/@types/node)
-    -   [![@types/open](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dev/@types/open?style=flat-square)](https://npmjs.com/package/@types/open)
     -   [![@types/spotify-web-api-node](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dev/@types/spotify-web-api-node?style=flat-square)](https://npmjs.com/package/@types/spotify-web-api-node)
     -   [![typescript](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dev/typescript?style=flat-square)](https://npmjs.com/package/typescript)
 -   DiscordJS
@@ -118,7 +117,6 @@ DiscordJS provided a template for a music playing bot [here](https://github.com/
     -   [![colors](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/colors?style=flat-square)](https://npmjs.com/package/colors)
     -   [![colorthief](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/colorthief?style=flat-square)](https://npmjs.com/package/colorthief)
     -   [![dotenv](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/dotenv?style=flat-square)](https://npmjs.com/package/dotenv)
-    -   [![express](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/express?style=flat-square)](https://npmjs.com/package/express)
     -   [![no-try](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/no-try?style=flat-square)](https://npmjs.com/package/no-try)
     -   [![nova-bot](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/nova-bot?style=flat-square)](https://npmjs.com/package/nova-bot)
     -   [![tracer](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/tracer?style=flat-square)](https://npmjs.com/package/tracer)
