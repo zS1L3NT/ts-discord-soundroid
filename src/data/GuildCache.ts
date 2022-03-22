@@ -54,6 +54,10 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 				await this.setMusicChannelId("")
 				return
 			}
+			if (messageErr.name === "HTTPError") {
+				logger.warn(`Failed to clean channel:`, messageErr)
+				return
+			}
 			throw messageErr
 		}
 
