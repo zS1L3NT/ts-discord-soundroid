@@ -36,7 +36,7 @@ jobs:
                   target: "/home/ubuntu/projects/ts-discord-soundroid"
                   source: "dist/*,package.json,pnpm-lock.yaml"
 
-            - name: Performing Yarn Install on Server
+            - name: Performing Pnpm Install on Server
               uses: appleboy/ssh-action@master
               with:
                   host: ${{ secrets.SSH_HOST }}
