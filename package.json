@@ -18,20 +18,19 @@
 		"discord.js": "^13.6.0",
 		"dotenv": "^16.0.0",
 		"ffmpeg-static": "^5.0.0",
-		"libsodium-wrappers": "^0.7.9",
+		"libsodium-wrappers": "^0.7.10",
 		"no-try": "^3.1.0",
 		"node-genius-api": "^1.2.0",
-		"nova-bot": "^1.0.15",
+		"nova-bot": "^1.0.17",
 		"spotify-web-api-node": "^5.0.2",
 		"tracer": "^1.1.5",
-		"youtube-dl-exec": "2.0.7",
+		"youtube-dl-exec": "2.0.9",
 		"ytdl-core": "^4.11.0",
-		"ytmusic-api": "^1.0.4",
+		"ytmusic-api": "^1.1.3",
 		"ytpl": "^2.3.0"
 	},
 	"devDependencies": {
-		"@types/dotenv": "^8.2.0",
 		"@types/spotify-web-api-node": "^5.0.7",
-		"typescript": "^4.6.2"
+		"typescript": "^4.6.3"
 	}
 }
