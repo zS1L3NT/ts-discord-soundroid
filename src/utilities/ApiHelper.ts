@@ -23,7 +23,7 @@ export default class ApiHelper {
 	}
 
 	public async searchYoutubeSongs(query: string, requester: string): Promise<Song[]> {
-		const songs = await this.ytmusic.search(query, "SONG")
+		const songs = await this.ytmusic.searchSongs(query)
 		if (songs.length > 10) songs.length = 10
 
 		return await Promise.all(
@@ -42,7 +42,7 @@ export default class ApiHelper {
 	}
 
 	public async findYoutubeSong(query: string, requester: string): Promise<Song> {
-		const song = (await this.ytmusic.search(query, "SONG")).at(0)
+		const song = (await this.ytmusic.searchSongs(query)).at(0)
 
 		if (!song || !song.videoId) {
 			if (!song) logger.alert!("No song found for query", { query })
@@ -70,7 +70,7 @@ export default class ApiHelper {
 	}
 
 	public async searchYoutubeVideos(query: string, requester: string): Promise<Song[]> {
-		const videos = await this.ytmusic.search(query, "VIDEO")
+		const videos = await this.ytmusic.searchVideos(query)
 		return videos
 			.map(
 				video =>
