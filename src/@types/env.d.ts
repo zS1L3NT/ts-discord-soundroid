@@ -15,5 +15,7 @@ declare module NodeJS {
 		readonly SPOTIFY__CLIENT_SECRET: string
 
 		readonly GENIUS__ACCESS_TOKEN: string
+
+		readonly PORT: string
 	}
 }
