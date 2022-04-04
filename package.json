@@ -21,7 +21,7 @@
 		"libsodium-wrappers": "^0.7.10",
 		"no-try": "^3.1.0",
 		"node-genius-api": "^1.2.0",
-		"nova-bot": "^1.0.17",
+		"nova-bot": "^1.0.18",
 		"spotify-web-api-node": "^5.0.2",
 		"tracer": "^1.1.5",
 		"youtube-dl-exec": "2.0.9",
