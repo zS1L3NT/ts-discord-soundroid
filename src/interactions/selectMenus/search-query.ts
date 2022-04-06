@@ -50,7 +50,8 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 					],
 					components: []
 				})
-			} catch {
+			} catch (err) {
+				logger.error("Error playing song from url", err)
 				helper.interaction.update({
 					embeds: [new ResponseBuilder(Emoji.BAD, "Error playing song from url").build()],
 					components: []
