@@ -1,8 +1,9 @@
+import { GuildMember } from "discord.js"
+import { iButtonFile } from "nova-bot"
+
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import QueueBuilder from "../../utilities/QueueBuilder"
-import { GuildMember } from "discord.js"
-import { iButtonFile } from "nova-bot"
 
 const file: iButtonFile<Entry, GuildCache> = {
 	defer: false,

@@ -1,14 +1,10 @@
+import {
+	AudioPlayer, AudioPlayerStatus, createAudioPlayer, entersState, VoiceConnection,
+	VoiceConnectionDisconnectReason, VoiceConnectionStatus
+} from "@discordjs/voice"
+
 import GuildCache from "./GuildCache"
 import Song from "./Song"
-import {
-	AudioPlayer,
-	AudioPlayerStatus,
-	createAudioPlayer,
-	entersState,
-	VoiceConnection,
-	VoiceConnectionDisconnectReason,
-	VoiceConnectionStatus
-} from "@discordjs/voice"
 
 const time = async (ms: number) => new Promise(res => setTimeout(res, ms))
 

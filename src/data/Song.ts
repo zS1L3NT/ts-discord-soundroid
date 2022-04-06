@@ -1,7 +1,9 @@
+import { exec } from "youtube-dl-exec"
+
+import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice"
+
 import ApiHelper from "../utilities/ApiHelper"
 import MusicService, { StopStatus } from "./MusicService"
-import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice"
-import { exec } from "youtube-dl-exec"
 
 export default class Song {
 	public constructor(

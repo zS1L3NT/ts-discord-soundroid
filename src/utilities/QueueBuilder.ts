@@ -1,15 +1,12 @@
-import DominantColorGetter from "./DominantColorGetter"
-import DurationHelper from "./DurationHelper"
+import {
+	GuildMember, InteractionReplyOptions, MessageActionRow, MessageButton, MessageEmbed
+} from "discord.js"
+import { Emoji } from "nova-bot"
+
 import GuildCache from "../data/GuildCache"
 import Song from "../data/Song"
-import { Emoji } from "nova-bot"
-import {
-	GuildMember,
-	InteractionReplyOptions,
-	MessageActionRow,
-	MessageButton,
-	MessageEmbed
-} from "discord.js"
+import DominantColorGetter from "./DominantColorGetter"
+import DurationHelper from "./DurationHelper"
 
 export default class QueueBuilder {
 	public constructor(private cache: GuildCache, private member?: GuildMember) {}

@@ -1,7 +1,8 @@
+import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import QueueBuilder from "../../utilities/QueueBuilder"
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 
 const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.isMessageCommand(helper.cache.getPrefix(), "queue", "only"),

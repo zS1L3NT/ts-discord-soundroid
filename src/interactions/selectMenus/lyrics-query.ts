@@ -1,9 +1,10 @@
-import DominantColorGetter from "../../utilities/DominantColorGetter"
-import Entry from "../../data/Entry"
-import GuildCache from "../../data/GuildCache"
-import { Emoji, iSelectMenuFile, ResponseBuilder } from "nova-bot"
 import { GuildMember, Message, MessageEmbed } from "discord.js"
 import { useTryAsync } from "no-try"
+import { Emoji, iSelectMenuFile, ResponseBuilder } from "nova-bot"
+
+import Entry from "../../data/Entry"
+import GuildCache from "../../data/GuildCache"
+import DominantColorGetter from "../../utilities/DominantColorGetter"
 
 const file: iSelectMenuFile<Entry, GuildCache> = {
 	defer: false,
@@ -35,7 +36,9 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 							.setTitle(`Genius Lyrics for: ${title} - ${artiste}`)
 							.setColor(await new DominantColorGetter(cover).getColor())
 							.setThumbnail(cover)
-							.setDescription(`${lyrics}\n\n> Lyrics from https://genius.com/songs/${id}`)
+							.setDescription(
+								`${lyrics}\n\n> Lyrics from https://genius.com/songs/${id}`
+							)
 							.setFooter({
 								text: `Requested by @${member.displayName}`,
 								iconURL: member.user.displayAvatarURL()

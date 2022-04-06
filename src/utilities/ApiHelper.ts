@@ -1,10 +1,11 @@
 import axios from "axios"
-import Song from "../data/Song"
+import { useTry } from "no-try"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
-import { useTry } from "no-try"
+
+import Song from "../data/Song"
 
 export default class ApiHelper {
 	private ytmusic: YTMusic
@@ -17,7 +18,7 @@ export default class ApiHelper {
 		this.spotify = new SpotifyWebApi({
 			clientId: process.env.SPOTIFY__CLIENT_ID,
 			clientSecret: process.env.SPOTIFY__CLIENT_SECRET,
-			refreshToken: process.env.SPOTIFY__REFRESH_TOKEN,
+			refreshToken: process.env.SPOTIFY__REFRESH_TOKEN
 		})
 		this.genius = new (require("node-genius-api"))(process.env.GENIUS__ACCESS_TOKEN)
 	}
@@ -127,7 +128,9 @@ export default class ApiHelper {
 	public async refreshSpotifyToken() {
 		const refreshResponse = (await this.spotify.refreshAccessToken()).body
 		this.spotify.setAccessToken(refreshResponse.access_token)
-		this.spotify.setRefreshToken(refreshResponse.refresh_token || process.env.SPOTIFY__REFRESH_TOKEN)
+		this.spotify.setRefreshToken(
+			refreshResponse.refresh_token || process.env.SPOTIFY__REFRESH_TOKEN
+		)
 	}
 
 	public async findSpotifyPlaylistLength(playlistId: string): Promise<number> {
@@ -241,8 +244,7 @@ export default class ApiHelper {
 			.map(j => j.replaceAll("\\'", "'"))
 			.map(j => useTry(() => JSON.parse(j))[1])
 			.filter(j => !!j)
-			.at(0)
-			.songPage.lyricsData.body
+			.at(0).songPage.lyricsData.body
 
 		const getLyrics = (lyrics: any): string => {
 			if (typeof lyrics === "string") {
@@ -264,7 +266,9 @@ export default class ApiHelper {
 			title: song.title,
 			artiste: song.artist_names,
 			cover: song.song_art_image_url,
-			lyrics: getLyrics(lyrics).replaceAll("\n\n", "\n").replaceAll(/(\[.*\])/g, "\n`$1`")
+			lyrics: getLyrics(lyrics)
+				.replaceAll("\n\n", "\n")
+				.replaceAll(/(\[.*\])/g, "\n`$1`")
 		}
 	}
 }

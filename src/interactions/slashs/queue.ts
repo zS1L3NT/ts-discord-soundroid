@@ -1,8 +1,9 @@
+import { GuildMember } from "discord.js"
+import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import QueueBuilder from "../../utilities/QueueBuilder"
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
-import { GuildMember } from "discord.js"
 
 const file: iSlashFile<Entry, GuildCache> = {
 	defer: true,

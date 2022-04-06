@@ -1,16 +1,17 @@
-import ApiHelper from "../utilities/ApiHelper"
-import Entry from "./Entry"
-import MusicService from "./MusicService"
-import QueueBuilder from "../utilities/QueueBuilder"
-import { BaseGuildCache, ChannelCleaner } from "nova-bot"
 import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
+import { BaseGuildCache, ChannelCleaner } from "nova-bot"
+
+import ApiHelper from "../utilities/ApiHelper"
+import QueueBuilder from "../utilities/QueueBuilder"
+import Entry from "./Entry"
+import MusicService from "./MusicService"
 
 export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	public apiHelper!: ApiHelper
 	public service?: MusicService
 
-	public onConstruct(): void { }
+	public onConstruct(): void {}
 
 	public resolve(resolve: (cache: GuildCache) => void): void {
 		this.ref.onSnapshot(snap => {

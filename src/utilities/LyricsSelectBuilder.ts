@@ -1,6 +1,7 @@
-import ApiHelper from "./ApiHelper"
-import { Emoji, ResponseBuilder } from "nova-bot"
 import { MessageActionRow, MessageEmbed, MessageOptions, MessageSelectMenu } from "discord.js"
+import { Emoji, ResponseBuilder } from "nova-bot"
+
+import ApiHelper from "./ApiHelper"
 
 export default class LyricsSelectBuilder {
 	private static emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]

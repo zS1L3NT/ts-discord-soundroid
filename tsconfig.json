@@ -27,7 +27,7 @@
 		"noImplicitOverride": true,
 		"allowUnusedLabels": true,
 		"resolveJsonModule": true,
-		"forceConsistentCasingInFileNames": true,
+		"forceConsistentCasingInFileNames": true
 
 		/** Other */
 		// "noEmit": true,

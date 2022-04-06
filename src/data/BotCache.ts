@@ -1,7 +1,8 @@
+import { BaseBotCache } from "nova-bot"
+
 import ApiHelper from "../utilities/ApiHelper"
 import Entry from "./Entry"
 import GuildCache from "./GuildCache"
-import { BaseBotCache } from "nova-bot"
 
 export default class BotCache extends BaseBotCache<Entry, GuildCache> {
 	private apiHelper: ApiHelper = new ApiHelper()

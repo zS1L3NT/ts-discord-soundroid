@@ -1,12 +1,14 @@
-import ConversionHelper from "../../utilities/ConversionHelper"
+import { VoiceChannel } from "discord.js"
+import { useTry, useTryAsync } from "no-try"
+import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+
+import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
+import ConversionHelper from "../../utilities/ConversionHelper"
 import SearchSelectBuilder from "../../utilities/SearchSelectBuilder"
-import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
-import { useTry, useTryAsync } from "no-try"
-import { VoiceChannel } from "discord.js"
 
 const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.isMessageCommand(helper.cache.getPrefix(), "play", "more"),

@@ -1,6 +1,7 @@
+import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
 
 const file: iMessageFile<Entry, GuildCache> = {
 	condition: helper => helper.isMessageCommand(helper.cache.getPrefix(), "move", "more"),
@@ -65,7 +66,8 @@ const file: iMessageFile<Entry, GuildCache> = {
 			helper.respond(
 				new ResponseBuilder(
 					Emoji.GOOD,
-					`Moved "${song.title} - ${song.artiste}" from ${from} to ${to ?? `top of the queue`
+					`Moved "${song.title} - ${song.artiste}" from ${from} to ${
+						to ?? `top of the queue`
 					}`
 				),
 				5000

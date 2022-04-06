@@ -1,8 +1,5 @@
 import {
-	InteractionReplyOptions,
-	MessageActionRow,
-	MessageEmbed,
-	MessageSelectMenu
+	InteractionReplyOptions, MessageActionRow, MessageEmbed, MessageSelectMenu
 } from "discord.js"
 
 export default class PageSelectBuilder {

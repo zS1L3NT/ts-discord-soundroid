@@ -1,10 +1,12 @@
-import DominantColorGetter from "../../utilities/DominantColorGetter"
-import DurationHelper from "../../utilities/DurationHelper"
+import { MessageEmbed } from "discord.js"
+import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+
+import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
+
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
-import { MessageEmbed } from "discord.js"
+import DominantColorGetter from "../../utilities/DominantColorGetter"
+import DurationHelper from "../../utilities/DurationHelper"
 
 const thumb = "🔘"
 const track = "▬"

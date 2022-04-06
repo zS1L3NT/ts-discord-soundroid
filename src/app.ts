@@ -1,14 +1,14 @@
-import BotCache from "./data/BotCache"
+import "dotenv/config"
+
 import colors from "colors"
-import dotenv from "dotenv"
-import GuildCache from "./data/GuildCache"
+import { Intents } from "discord.js"
 import http from "http"
 import NovaBot from "nova-bot"
 import path from "path"
 import Tracer from "tracer"
-import { Intents } from "discord.js"
 
-dotenv.config()
+import BotCache from "./data/BotCache"
+import GuildCache from "./data/GuildCache"
 
 /**
  * log: Used for basic primitive information
@@ -64,25 +64,21 @@ process.on("uncaughtException", err => {
 
 new NovaBot({
 	name: "SounDroid#5566",
-	intents: [
-		Intents.FLAGS.GUILD_VOICE_STATES,
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.GUILDS
-	],
+	intents: [Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS],
 	directory: path.join(__dirname, "interactions"),
 	config: {
 		firebase: {
 			service_account: {
 				projectId: process.env.FIREBASE__SERVICE_ACCOUNT__PROJECT_ID,
 				privateKey: process.env.FIREBASE__SERVICE_ACCOUNT__PRIVATE_KEY,
-				clientEmail: process.env.FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL,
+				clientEmail: process.env.FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL
 			},
-			collection: process.env.FIREBASE__COLLECTION,
+			collection: process.env.FIREBASE__COLLECTION
 		},
 		discord: {
 			token: process.env.DISCORD__TOKEN,
 			dev_id: process.env.DISCORD__DEV_ID,
-			bot_id: process.env.DISCORD__BOT_ID,
+			bot_id: process.env.DISCORD__BOT_ID
 		}
 	},
 	updatesMinutely: true,

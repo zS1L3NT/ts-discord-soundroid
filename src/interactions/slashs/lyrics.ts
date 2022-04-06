@@ -1,7 +1,8 @@
+import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import LyricsSelectBuilder from "../../utilities/LyricsSelectBuilder"
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
 
 const file: iSlashFile<Entry, GuildCache> = {
 	defer: true,
