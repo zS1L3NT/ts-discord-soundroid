@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js"
-import { Emoji, iSlashSubFile, ResponseBuilder } from "nova-bot"
+import { iSlashSubFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../../data/Entry"
 import GuildCache from "../../../data/GuildCache"
@@ -30,19 +30,15 @@ const file: iSlashSubFile<Entry, GuildCache> = {
 		const member = helper.interaction.member as GuildMember
 		const prefix = helper.string("prefix")!
 		if (!member.permissions.has("ADMINISTRATOR") && member.id !== process.env.DISCORD__DEV_ID) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Only administrators can set the prefix")
-			)
+			return helper.respond(ResponseBuilder.bad("Only administrators can set the prefix"))
 		}
 
 		if (prefix.length !== 1) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Prefix must be only one character long")
-			)
+			return helper.respond(ResponseBuilder.bad("Prefix must be only one character long"))
 		}
 
 		await helper.cache.ref.set({ prefix }, { merge: true })
-		helper.respond(new ResponseBuilder(Emoji.GOOD, `Prefix changed to \`${prefix}\``))
+		helper.respond(ResponseBuilder.good(`Prefix changed to \`${prefix}\``))
 	}
 }
 

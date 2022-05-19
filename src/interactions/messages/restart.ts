@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js"
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+import { iMessageFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -10,8 +10,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const member = helper.message.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					"You have to be in the same voice channel as me to use this command"
 				),
 				5000
@@ -21,12 +20,9 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			service.restart()
-			helper.respond(new ResponseBuilder(Emoji.GOOD, "Restarted the current song"), 5000)
+			helper.respond(ResponseBuilder.good("Restarted the current song"), 5000)
 		} else {
-			helper.respond(
-				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
-				5000
-			)
+			helper.respond(ResponseBuilder.bad("I am not currently in a voice channel"), 5000)
 		}
 	}
 }

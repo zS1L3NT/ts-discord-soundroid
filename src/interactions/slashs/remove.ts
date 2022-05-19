@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js"
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+import { iSlashFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -46,8 +46,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					"You have to be in the same voice channel as me to use this command"
 				)
 			)
@@ -59,15 +58,12 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			if (from < 1 || from >= service.queue.length) {
-				helper.respond(
-					new ResponseBuilder(Emoji.BAD, "No such starting position in the queue")
-				)
+				helper.respond(ResponseBuilder.bad("No such starting position in the queue"))
 			} else {
 				if (to) {
 					if (to <= from || to >= service.queue.length) {
 						helper.respond(
-							new ResponseBuilder(
-								Emoji.BAD,
+							ResponseBuilder.bad(
 								"Invalid ending position in queue, ensure the end position is greater than the start position"
 							)
 						)
@@ -76,31 +72,25 @@ const file: iSlashFile<Entry, GuildCache> = {
 						service.queue.splice(from, deleteCount)
 						helper.cache.updateMusicChannel()
 						helper.respond(
-							new ResponseBuilder(
-								Emoji.GOOD,
-								`Removed ${deleteCount} songs from the queue`
-							)
+							ResponseBuilder.good(`Removed ${deleteCount} songs from the queue`)
 						)
 					}
 				} else {
 					const song = service.queue.splice(from, 1)[0]
 					if (!song) {
-						return helper.respond(
-							new ResponseBuilder(Emoji.BAD, `No song at position ${from}`)
-						)
+						return helper.respond(ResponseBuilder.bad(`No song at position ${from}`))
 					}
 
 					helper.cache.updateMusicChannel()
 					helper.respond(
-						new ResponseBuilder(
-							Emoji.GOOD,
+						ResponseBuilder.good(
 							`Removed 1 song from queue: "${song.title} - ${song.artiste}"`
 						)
 					)
 				}
 			}
 		} else {
-			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(ResponseBuilder.bad("I am not currently in a voice channel"))
 		}
 	}
 }

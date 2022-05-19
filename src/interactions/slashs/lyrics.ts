@@ -1,4 +1,4 @@
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+import { iSlashFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -34,9 +34,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			if (service.queue.length === 0) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now")
-				)
+				return helper.respond(ResponseBuilder.bad("I am not playing anything right now"))
 			}
 
 			const song = service.queue[0]!
@@ -54,8 +52,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 				)
 			} else {
 				helper.respond(
-					new ResponseBuilder(
-						Emoji.BAD,
+					ResponseBuilder.bad(
 						"No song playing right now, please pass in a query to find lyrics"
 					)
 				)

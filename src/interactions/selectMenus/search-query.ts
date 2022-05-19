@@ -1,5 +1,5 @@
 import { GuildMember, Message, VoiceChannel } from "discord.js"
-import { Emoji, iSelectMenuFile, ResponseBuilder } from "nova-bot"
+import { iSelectMenuFile, ResponseBuilder } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 
@@ -18,8 +18,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 		if (!(channel instanceof VoiceChannel)) {
 			helper.interaction.update({
 				embeds: [
-					new ResponseBuilder(
-						Emoji.BAD,
+					ResponseBuilder.bad(
 						"You have to be in a voice channel to use this command"
 					).build()
 				],
@@ -46,8 +45,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 				helper.cache.updateMusicChannel()
 				helper.interaction.update({
 					embeds: [
-						new ResponseBuilder(
-							Emoji.GOOD,
+						ResponseBuilder.good(
 							`Enqueued song: "${song.title} - ${song.artiste}"`
 						).build()
 					],
@@ -56,7 +54,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 			} catch (err) {
 				logger.error("Error playing song from url", err)
 				helper.interaction.update({
-					embeds: [new ResponseBuilder(Emoji.BAD, "Error playing song from url").build()],
+					embeds: [ResponseBuilder.bad("Error playing song from url").build()],
 					components: []
 				})
 			}

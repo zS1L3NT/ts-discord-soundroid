@@ -1,4 +1,4 @@
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+import { iMessageFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -12,7 +12,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		if (service) {
 			if (service.queue.length === 0 && !query) {
 				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now"),
+					ResponseBuilder.bad("I am not playing anything right now"),
 					5000
 				)
 			}
@@ -34,8 +34,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 				)
 			} else {
 				helper.respond(
-					new ResponseBuilder(
-						Emoji.BAD,
+					ResponseBuilder.bad(
 						"No song playing right now, please pass in a query to find lyrics"
 					),
 					5000

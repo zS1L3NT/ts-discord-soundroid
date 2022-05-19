@@ -1,5 +1,5 @@
 import { GuildMember, TextChannel } from "discord.js"
-import { Emoji, iSlashSubFile, ResponseBuilder } from "nova-bot"
+import { iSlashSubFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../../data/Entry"
 import GuildCache from "../../../data/GuildCache"
@@ -36,32 +36,25 @@ const file: iSlashSubFile<Entry, GuildCache> = {
 	execute: async helper => {
 		const member = helper.interaction.member as GuildMember
 		if (!member.permissions.has("ADMINISTRATOR") && member.id !== process.env.DISCORD__DEV_ID) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Only administrators can set bot channels")
-			)
+			return helper.respond(ResponseBuilder.bad("Only administrators can set bot channels"))
 		}
 
 		const channel = helper.channel("channel")
 		if (channel instanceof TextChannel) {
 			if (channel.id === helper.cache.getMusicChannelId()) {
-				helper.respond(
-					new ResponseBuilder(Emoji.BAD, "This channel is already the Music channel!")
-				)
+				helper.respond(ResponseBuilder.bad("This channel is already the Music channel!"))
 			} else {
 				await helper.cache.setMusicChannelId(channel.id)
 				helper.cache.updateMusicChannel()
 				helper.respond(
-					new ResponseBuilder(
-						Emoji.GOOD,
-						`Music channel reassigned to \`#${channel.name}\``
-					)
+					ResponseBuilder.good(`Music channel reassigned to \`#${channel.name}\``)
 				)
 			}
 		} else if (channel === null) {
 			await helper.cache.setMusicChannelId("")
-			helper.respond(new ResponseBuilder(Emoji.GOOD, `Music channel unassigned`))
+			helper.respond(ResponseBuilder.good(`Music channel unassigned`))
 		} else {
-			helper.respond(new ResponseBuilder(Emoji.BAD, `Please select a text channel`))
+			helper.respond(ResponseBuilder.bad(`Please select a text channel`))
 		}
 	}
 }

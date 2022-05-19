@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js"
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+import { iSlashFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -45,8 +45,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					"You have to be in the same voice channel as me to use this command"
 				)
 			)
@@ -61,35 +60,28 @@ const file: iSlashFile<Entry, GuildCache> = {
 			const song = queue[from]
 
 			if (from < 1 || from >= queue.length) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`)
-				)
+				return helper.respond(ResponseBuilder.bad(`Invalid "from" position: ${from}`))
 			}
 
 			if (to && (to < 1 || to > queue.length)) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`)
-				)
+				return helper.respond(ResponseBuilder.bad(`Invalid "to" position: ${to}`))
 			}
 
 			if (!song) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `No song at position: ${from}`)
-				)
+				return helper.respond(ResponseBuilder.bad(`No song at position: ${from}`))
 			}
 
 			queue.splice(to || 1, 0, ...queue.splice(from, 1))
 			helper.cache.updateMusicChannel()
 			helper.respond(
-				new ResponseBuilder(
-					Emoji.GOOD,
+				ResponseBuilder.good(
 					`Moved "${song.title} - ${song.artiste}" from ${from} to ${
 						to ?? `top of the queue`
 					}`
 				)
 			)
 		} else {
-			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(ResponseBuilder.bad("I am not currently in a voice channel"))
 		}
 	}
 }

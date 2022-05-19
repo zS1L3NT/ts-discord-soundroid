@@ -1,6 +1,6 @@
 import { GuildMember, Message, MessageEmbed } from "discord.js"
 import { useTryAsync } from "no-try"
-import { Emoji, iSelectMenuFile, ResponseBuilder } from "nova-bot"
+import { iSelectMenuFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -51,10 +51,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 				logger.error(err)
 				return {
 					embeds: [
-						new ResponseBuilder(
-							Emoji.BAD,
-							"Failed to retrieve lyrics from Genius API"
-						).build()
+						ResponseBuilder.bad("Failed to retrieve lyrics from Genius API").build()
 					],
 					components: []
 				}

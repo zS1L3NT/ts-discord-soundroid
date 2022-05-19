@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js"
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+import { iSlashFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -23,8 +23,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					"You have to be in the same voice channel as me to use this command"
 				)
 			)
@@ -33,7 +32,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		helper.interaction.channel!.send(
 			await new QueueBuilder(helper.cache, helper.interaction.member as GuildMember).build()
 		)
-		helper.respond(new ResponseBuilder(Emoji.GOOD, "Showing queue"))
+		helper.respond(ResponseBuilder.good("Showing queue"))
 	}
 }
 

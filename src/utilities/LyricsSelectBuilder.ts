@@ -14,8 +14,7 @@ export default class LyricsSelectBuilder {
 		if (results.length === 0) {
 			return {
 				embeds: [
-					new ResponseBuilder(
-						Emoji.BAD,
+					ResponseBuilder.bad(
 						`Could not find any lyrics results for: "${this.query}"`
 					).build()
 				]

@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js"
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+import { iSlashFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -31,8 +31,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					"You have to be in the same voice channel as me to use this command"
 				)
 			)
@@ -42,33 +41,28 @@ const file: iSlashFile<Entry, GuildCache> = {
 		if (service) {
 			const song = service.queue.at(0)
 			if (!song) {
-				return helper.respond(new ResponseBuilder(Emoji.BAD, "No song playing right now"))
+				return helper.respond(ResponseBuilder.bad("No song playing right now"))
 			}
 
 			const count = helper.integer("count") || 1
 
 			if (count < 1) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `Invalid play count: ${count}`)
-				)
+				return helper.respond(ResponseBuilder.bad(`Invalid play count: ${count}`))
 			}
 
 			if (count > 1000) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `Play again count cannot exceed 1000`)
-				)
+				return helper.respond(ResponseBuilder.bad(`Play again count cannot exceed 1000`))
 			}
 
 			service.queue.splice(1, 0, ...Array(count).fill(song))
 			helper.cache.updateMusicChannel()
 			helper.respond(
-				new ResponseBuilder(
-					Emoji.GOOD,
+				ResponseBuilder.good(
 					`Playing "${song.title} - ${song.artiste}" again ${count} times`
 				)
 			)
 		} else {
-			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(ResponseBuilder.bad("I am not currently in a voice channel"))
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+import { iMessageFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -9,8 +9,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					"You have to be in the same voice channel as me to use this command"
 				),
 				5000
@@ -21,18 +20,12 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		const from = helper.getNumber(fromStr, 0, 0)
 		if (from < 1) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`),
-				5000
-			)
+			return helper.respond(ResponseBuilder.bad(`Invalid "from" position: ${from}`), 5000)
 		}
 
 		const to = helper.getNumber(toStr, null, 0)
 		if (to && to < 1) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`),
-				5000
-			)
+			return helper.respond(ResponseBuilder.bad(`Invalid "to" position: ${to}`), 5000)
 		}
 
 		const service = helper.cache.service
@@ -41,31 +34,21 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const song = queue[from]
 
 			if (from >= queue.length) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`),
-					5000
-				)
+				return helper.respond(ResponseBuilder.bad(`Invalid "from" position: ${from}`), 5000)
 			}
 
 			if (to && to > queue.length) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${to}`),
-					5000
-				)
+				return helper.respond(ResponseBuilder.bad(`Invalid "to" position: ${to}`), 5000)
 			}
 
 			if (!song) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `No song at position ${from}`),
-					5000
-				)
+				return helper.respond(ResponseBuilder.bad(`No song at position ${from}`), 5000)
 			}
 
 			queue.splice(to || 1, 0, ...queue.splice(from, 1))
 			helper.cache.updateMusicChannel()
 			helper.respond(
-				new ResponseBuilder(
-					Emoji.GOOD,
+				ResponseBuilder.good(
 					`Moved "${song.title} - ${song.artiste}" from ${from} to ${
 						to ?? `top of the queue`
 					}`
@@ -73,10 +56,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 				5000
 			)
 		} else {
-			helper.respond(
-				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
-				5000
-			)
+			helper.respond(ResponseBuilder.bad("I am not currently in a voice channel"), 5000)
 		}
 	}
 }

@@ -1,5 +1,5 @@
 import { GuildMember } from "discord.js"
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+import { iSlashFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -18,8 +18,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					"You have to be in the same voice channel as me to use this command"
 				)
 			)
@@ -29,9 +28,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		if (service) {
 			const queue = service.queue
 			if (queue.length === 0) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, "Cannot shuffle an empty queue")
-				)
+				return helper.respond(ResponseBuilder.bad("Cannot shuffle an empty queue"))
 			}
 
 			service.queue = [
@@ -42,10 +39,10 @@ const file: iSlashFile<Entry, GuildCache> = {
 					.sort((a, b) => a.sort - b.sort)
 					.map(({ value }) => value)
 			]
-			helper.respond(new ResponseBuilder(Emoji.GOOD, "Shuffled Queue"))
+			helper.respond(ResponseBuilder.good("Shuffled Queue"))
 			helper.cache.updateMusicChannel()
 		} else {
-			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(ResponseBuilder.bad("I am not currently in a voice channel"))
 		}
 	}
 }

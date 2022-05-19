@@ -1,5 +1,5 @@
 import { Message } from "discord.js"
-import { Emoji, iButtonFile, ResponseBuilder } from "nova-bot"
+import { iButtonFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -14,7 +14,7 @@ const file: iButtonFile<Entry, GuildCache> = {
 
 		if (!embed) {
 			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Failed to get information about queue page number")
+				ResponseBuilder.bad("Failed to get information about queue page number")
 			)
 		}
 

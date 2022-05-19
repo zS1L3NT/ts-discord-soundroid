@@ -1,6 +1,6 @@
 import { VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+import { iMessageFile, ResponseBuilder } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 
@@ -17,10 +17,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
-					"You have to be in a voice channel to use this command"
-				),
+				ResponseBuilder.bad("You have to be in a voice channel to use this command"),
 				5000
 			)
 		}
@@ -38,7 +35,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 				const [first] = songs
 
 				if (!first) {
-					return helper.respond(new ResponseBuilder(Emoji.BAD, "Playlist is empty"), 5000)
+					return helper.respond(ResponseBuilder.bad("Playlist is empty"), 5000)
 				}
 
 				if (!helper.cache.service) {
@@ -61,22 +58,16 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 				if (songs.length === 1) {
 					helper.respond(
-						new ResponseBuilder(
-							Emoji.GOOD,
-							`Enqueued: "${first.title} - ${first.artiste}"`
-						),
+						ResponseBuilder.good(`Enqueued: "${first.title} - ${first.artiste}"`),
 						5000
 					)
 				} else {
-					helper.respond(
-						new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`),
-						5000
-					)
+					helper.respond(ResponseBuilder.good(`Enqueued ${songs.length + 1} songs`), 5000)
 				}
 			})
 
 			if (err) {
-				helper.respond(new ResponseBuilder(Emoji.BAD, err.message), 5000)
+				helper.respond(ResponseBuilder.bad(err.message), 5000)
 			}
 		} else {
 			helper.reactSuccess()

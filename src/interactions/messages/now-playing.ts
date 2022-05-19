@@ -1,5 +1,5 @@
 import { MessageEmbed } from "discord.js"
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+import { iMessageFile, ResponseBuilder } from "nova-bot"
 
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
 
@@ -17,8 +17,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const member = helper.message.member!
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					"You have to be in the same voice channel as me to use this command"
 				),
 				5000
@@ -29,7 +28,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		if (service) {
 			if (service.queue.length === 0) {
 				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now"),
+					ResponseBuilder.bad("I am not playing anything right now"),
 					5000
 				)
 			}
@@ -38,10 +37,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
 			if (!song) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, `No song currently playing!`),
-					5000
-				)
+				return helper.respond(ResponseBuilder.bad(`No song currently playing!`), 5000)
 			}
 
 			const percent = (state.playbackDuration / 1000 / song.duration) * 100
@@ -76,10 +72,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 				15_000
 			)
 		} else {
-			helper.respond(
-				new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"),
-				5000
-			)
+			helper.respond(ResponseBuilder.bad("I am not currently in a voice channel"), 5000)
 		}
 	}
 }

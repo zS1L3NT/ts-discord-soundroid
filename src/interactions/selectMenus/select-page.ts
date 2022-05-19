@@ -1,6 +1,6 @@
 import { GuildMember, Message, TextChannel } from "discord.js"
 import { useTryAsync } from "no-try"
-import { Emoji, iSelectMenuFile, ResponseBuilder } from "nova-bot"
+import { iSelectMenuFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -21,9 +21,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 		)
 
 		if (channelErr) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Channel with the message not found")
-			)
+			return helper.respond(ResponseBuilder.bad("Channel with the message not found"))
 		}
 
 		const [messageErr, message] = await useTryAsync<Message>(
@@ -31,7 +29,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 		)
 
 		if (messageErr || message.embeds.length === 0) {
-			return helper.respond(new ResponseBuilder(Emoji.BAD, "Queue message not found"))
+			return helper.respond(ResponseBuilder.bad("Queue message not found"))
 		}
 
 		if (pageStr === "more") {
@@ -45,7 +43,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 				page
 			)
 		)
-		helper.update(new ResponseBuilder(Emoji.GOOD, `Changed to page ${page}`))
+		helper.update(ResponseBuilder.good(`Changed to page ${page}`))
 	}
 }
 

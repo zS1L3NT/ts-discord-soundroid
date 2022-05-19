@@ -1,5 +1,5 @@
 import { GuildMember, MessageEmbed } from "discord.js"
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+import { iSlashFile, ResponseBuilder } from "nova-bot"
 
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
 
@@ -25,8 +25,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const member = helper.interaction.member as GuildMember
 		if (!helper.cache.isMemberInMyVoiceChannel(member)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					"You have to be in the same voice channel as me to use this command"
 				)
 			)
@@ -35,9 +34,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const service = helper.cache.service
 		if (service) {
 			if (service.queue.length === 0) {
-				return helper.respond(
-					new ResponseBuilder(Emoji.BAD, "I am not playing anything right now")
-				)
+				return helper.respond(ResponseBuilder.bad("I am not playing anything right now"))
 			}
 
 			const song = service.queue[0]!
@@ -70,7 +67,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 				]
 			})
 		} else {
-			helper.respond(new ResponseBuilder(Emoji.BAD, "I am not currently in a voice channel"))
+			helper.respond(ResponseBuilder.bad("I am not currently in a voice channel"))
 		}
 	}
 }

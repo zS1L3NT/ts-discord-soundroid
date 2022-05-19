@@ -1,6 +1,6 @@
 import { GuildMember, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
-import { Emoji, iSlashFile, ResponseBuilder } from "nova-bot"
+import { iSlashFile, ResponseBuilder } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 
@@ -65,10 +65,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
-					"You have to be in a voice channel to use this command"
-				)
+				ResponseBuilder.bad("You have to be in a voice channel to use this command")
 			)
 		}
 
@@ -100,7 +97,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 
 		if (err) {
 			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Link must be a Spotify/Youtube playlist link!")
+				ResponseBuilder.bad("Link must be a Spotify/Youtube playlist link!")
 			)
 		}
 
@@ -108,25 +105,19 @@ const file: iSlashFile<Entry, GuildCache> = {
 		let to = helper.integer("to")
 
 		if (from < 1) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${from}`)
-			)
+			return helper.respond(ResponseBuilder.bad(`Invalid "from" position: ${from}`))
 		}
 
 		if (to) {
 			if (from > to) {
 				return helper.respond(
-					new ResponseBuilder(
-						Emoji.BAD,
-						`Invalid "from" and "to" positions: ${from} and ${to}`
-					)
+					ResponseBuilder.bad(`Invalid "from" and "to" positions: ${from} and ${to}`)
 				)
 			}
 
 			if (to - from > 1000) {
 				return helper.respond(
-					new ResponseBuilder(
-						Emoji.BAD,
+					ResponseBuilder.bad(
 						`Cannot add more than 1000 songs, bot will take too long to respond`
 					)
 				)
@@ -143,10 +134,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 
 		if (to && to > length) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
-					`Invalid "to" position: Playlist only has ${length} songs`
-				)
+				ResponseBuilder.bad(`Invalid "to" position: Playlist only has ${length} songs`)
 			)
 		}
 
@@ -154,7 +142,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 			to = length
 		}
 
-		helper.respond(new ResponseBuilder(Emoji.GOOD, `Adding songs from #${from} to #${to}...`))
+		helper.respond(ResponseBuilder.good(`Adding songs from #${from} to #${to}...`))
 
 		const [, spotifyPlaylistSongs] = await useTryAsync(() =>
 			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, member.id)
@@ -167,7 +155,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)
 		helper.cache.updateMusicChannel()
-		helper.respond(new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`))
+		helper.respond(ResponseBuilder.good(`Enqueued ${songs.length + 1} songs`))
 	}
 }
 

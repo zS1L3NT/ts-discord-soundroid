@@ -1,6 +1,6 @@
 import { GuildMember, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
-import { Emoji, iMessageFile, ResponseBuilder } from "nova-bot"
+import { iMessageFile, ResponseBuilder } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 
@@ -15,10 +15,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
-					"You have to be in a voice channel to use this command"
-				),
+				ResponseBuilder.bad("You have to be in a voice channel to use this command"),
 				5000
 			)
 		}
@@ -39,8 +36,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		const input = helper.input()!
 		if (!input.length) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
+				ResponseBuilder.bad(
 					[
 						"The command .play-range takes 3 parameters",
 						"1) A Spotify playlist link (required)",
@@ -56,18 +52,12 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		const from = helper.getNumber(fromStr, 1, 0)
 		if (from < 1) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, `Invalid "from" position: ${fromStr}`),
-				5000
-			)
+			return helper.respond(ResponseBuilder.bad(`Invalid "from" position: ${fromStr}`), 5000)
 		}
 
 		let to = helper.getNumber(toStr, null, 0)
 		if (to && to < 1) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, `Invalid "to" position: ${toStr}`),
-				5000
-			)
+			return helper.respond(ResponseBuilder.bad(`Invalid "to" position: ${toStr}`), 5000)
 		}
 
 		const [err, playlistId] = useTry(() => {
@@ -84,7 +74,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		if (err) {
 			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Link must be a Spotify/Youtube playlist link!"),
+				ResponseBuilder.bad("Link must be a Spotify/Youtube playlist link!"),
 				5000
 			)
 		}
@@ -92,18 +82,14 @@ const file: iMessageFile<Entry, GuildCache> = {
 		if (to) {
 			if (from > to) {
 				return helper.respond(
-					new ResponseBuilder(
-						Emoji.BAD,
-						`Invalid "from" and "to" positions: ${from} and ${to}`
-					),
+					ResponseBuilder.bad(`Invalid "from" and "to" positions: ${from} and ${to}`),
 					5000
 				)
 			}
 
 			if (to - from > 1000) {
 				return helper.respond(
-					new ResponseBuilder(
-						Emoji.BAD,
+					ResponseBuilder.bad(
 						`Cannot add more than 1000 songs, bot will take too long to respond`
 					),
 					5000
@@ -121,10 +107,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 
 		if (to && to > length) {
 			return helper.respond(
-				new ResponseBuilder(
-					Emoji.BAD,
-					`Invalid "to" position: Playlist only has ${length} songs`
-				),
+				ResponseBuilder.bad(`Invalid "to" position: Playlist only has ${length} songs`),
 				5000
 			)
 		}
@@ -133,10 +116,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 			to = length
 		}
 
-		helper.respond(
-			new ResponseBuilder(Emoji.GOOD, `Adding songs from #${from} to #${to}...`),
-			5000
-		)
+		helper.respond(ResponseBuilder.good(`Adding songs from #${from} to #${to}...`), 5000)
 
 		const [, spotifyPlaylistSongs] = await useTryAsync(() =>
 			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, member.id)
@@ -150,10 +130,7 @@ const file: iMessageFile<Entry, GuildCache> = {
 		helper.cache.service!.queue.push(...songs)
 		helper.cache.updateMusicChannel()
 		setTimeout(() => {
-			helper.update(
-				new ResponseBuilder(Emoji.GOOD, `Enqueued ${songs.length + 1} songs`),
-				5000
-			)
+			helper.update(ResponseBuilder.good(`Enqueued ${songs.length + 1} songs`), 5000)
 		}, 1000)
 	}
 }

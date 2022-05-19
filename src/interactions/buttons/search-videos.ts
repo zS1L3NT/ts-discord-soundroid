@@ -1,6 +1,6 @@
 import { GuildMember } from "discord.js"
 import { useTry } from "no-try"
-import { Emoji, iButtonFile, ResponseBuilder } from "nova-bot"
+import { iButtonFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -21,7 +21,7 @@ const file: iButtonFile<Entry, GuildCache> = {
 
 		if (err) {
 			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Failed to get information about previous search")
+				ResponseBuilder.bad("Failed to get information about previous search")
 			)
 		}
 
