@@ -1,15 +1,16 @@
 import { GuildMember } from "discord.js"
 import { useTry } from "no-try"
-import { iButtonFile, ResponseBuilder } from "nova-bot"
+import { BaseButton, ButtonHelper, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import SearchSelectBuilder from "../../utils/SearchSelectBuilder"
 
-const file: iButtonFile<Entry, GuildCache> = {
-	defer: false,
-	ephemeral: true,
-	execute: async helper => {
+export default class extends BaseButton<Entry, GuildCache> {
+	override defer = false
+	override ephemeral = true
+
+	override async execute(helper: ButtonHelper<Entry, GuildCache>) {
 		const member = helper.interaction.member as GuildMember
 
 		const [err, query] = useTry(() => {
@@ -30,5 +31,3 @@ const file: iButtonFile<Entry, GuildCache> = {
 		)
 	}
 }
-
-export default file
