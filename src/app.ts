@@ -7,6 +7,7 @@ import path from "path"
 
 import BotCache from "./data/BotCache"
 import GuildCache from "./data/GuildCache"
+import logger from "./logger"
 
 process.on("uncaughtException", err => {
 	if (err.message !== "The user aborted a request.") {
@@ -18,24 +19,8 @@ new NovaBot({
 	name: "SounDroid#5566",
 	intents: [Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILDS],
 	directory: path.join(__dirname, "interactions"),
-	config: {
-		firebase: {
-			service_account: {
-				projectId: process.env.FIREBASE__SERVICE_ACCOUNT__PROJECT_ID,
-				privateKey: process.env.FIREBASE__SERVICE_ACCOUNT__PRIVATE_KEY,
-				clientEmail: process.env.FIREBASE__SERVICE_ACCOUNT__CLIENT_EMAIL
-			},
-			collection: process.env.FIREBASE__COLLECTION
-		},
-		discord: {
-			token: process.env.DISCORD__TOKEN,
-			dev_id: process.env.DISCORD__DEV_ID,
-			bot_id: process.env.DISCORD__BOT_ID
-		}
-	},
-	updatesMinutely: true,
 	//@ts-ignore
-	logger: global.logger,
+	logger,
 
 	help: {
 		message: cache =>

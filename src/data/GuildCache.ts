@@ -2,6 +2,7 @@ import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 import { BaseGuildCache, ChannelCleaner } from "nova-bot"
 
+import logger from "../logger"
 import ApiHelper from "../utilities/ApiHelper"
 import QueueBuilder from "../utilities/QueueBuilder"
 import Entry from "./Entry"
@@ -25,16 +26,16 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	/**
 	 * Method run every minute
 	 */
-	public async updateMinutely(_: number) {
+	public async updateMinutely() {
 		await this.updateMusicChannel()
 	}
 
 	public async updateMusicChannel() {
-		const musicChannelId = this.getMusicChannelId()
+		const musicChannelId = this.entry.music_channel_id
 		if (!musicChannelId) return
 
 		const [messageErr, message] = await useTryAsync(async () => {
-			const musicMessageId = this.getMusicMessageId()
+			const musicMessageId = this.entry.music_message_id
 			const cleaner = new ChannelCleaner<Entry, GuildCache>(this, musicChannelId, [
 				musicMessageId
 			])
@@ -97,17 +98,9 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 		this.guild.me?.setNickname(nickname || "SounDroid")
 	}
 
-	public getMusicChannelId() {
-		return this.entry.music_channel_id
-	}
-
 	public async setMusicChannelId(musicChannelId: string) {
 		this.entry.music_channel_id = musicChannelId
 		await this.ref.update({ music_channel_id: musicChannelId })
-	}
-
-	public getMusicMessageId() {
-		return this.entry.music_message_id
 	}
 
 	public async setMusicMessageId(musicMessageId: string) {

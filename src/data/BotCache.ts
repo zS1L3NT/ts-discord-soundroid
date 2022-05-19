@@ -30,6 +30,7 @@ export default class BotCache extends BaseBotCache<Entry, GuildCache> {
 	public getEmptyEntry(): Entry {
 		return {
 			prefix: "",
+			log_channel_id: "",
 			music_channel_id: "",
 			music_message_id: "",
 			aliases: {}
