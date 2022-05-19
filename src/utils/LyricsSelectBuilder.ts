@@ -1,5 +1,5 @@
-import { MessageActionRow, MessageEmbed, MessageOptions, MessageSelectMenu } from "discord.js"
-import { ResponseBuilder } from "nova-bot"
+import { MessageActionRow, MessageEmbed, MessageSelectMenu } from "discord.js"
+import { CommandPayload, ResponseBuilder } from "nova-bot"
 
 import ApiHelper from "./ApiHelper"
 
@@ -8,7 +8,7 @@ export default class LyricsSelectBuilder {
 
 	public constructor(private apiHelper: ApiHelper, private query: string) {}
 
-	public async build(): Promise<MessageOptions> {
+	public async build(): Promise<CommandPayload> {
 		const results = await this.apiHelper.searchGeniusLyrics(this.query)
 
 		if (results.length === 0) {
@@ -17,7 +17,8 @@ export default class LyricsSelectBuilder {
 					ResponseBuilder.bad(
 						`Could not find any lyrics results for: "${this.query}"`
 					).build()
-				]
+				],
+				components: []
 			}
 		}
 

@@ -1,6 +1,5 @@
-import {
-	InteractionReplyOptions, MessageActionRow, MessageEmbed, MessageSelectMenu
-} from "discord.js"
+import { MessageActionRow, MessageEmbed, MessageSelectMenu } from "discord.js"
+import { CommandPayload } from "nova-bot"
 
 export default class PageSelectBuilder {
 	private currentPage = 0
@@ -14,7 +13,7 @@ export default class PageSelectBuilder {
 		private messageId: string
 	) {}
 
-	public build(startPage?: number): InteractionReplyOptions {
+	public build(startPage?: number): CommandPayload {
 		const pageInfo = this.embed.fields.find(field => field.name === `Page`)!.value
 		const [pageStr, maxPagesStr] = pageInfo.split("/")
 		this.currentPage = startPage || +pageStr!

@@ -1,6 +1,5 @@
-import {
-	MessageActionRow, MessageButton, MessageEmbed, MessageOptions, MessageSelectMenu
-} from "discord.js"
+import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from "discord.js"
+import { CommandPayload } from "nova-bot"
 
 import ApiHelper from "./ApiHelper"
 
@@ -13,7 +12,7 @@ export default class SearchSelectBuilder {
 		private requester: string
 	) {}
 
-	public async buildVideo(): Promise<MessageOptions> {
+	public async buildVideo(): Promise<CommandPayload> {
 		const results = await this.apiHelper.searchYoutubeVideos(this.query, this.requester)
 
 		return {
@@ -47,7 +46,7 @@ export default class SearchSelectBuilder {
 		}
 	}
 
-	public async buildMusic(): Promise<MessageOptions> {
+	public async buildMusic(): Promise<CommandPayload> {
 		const results = await this.apiHelper.searchYoutubeSongs(this.query, this.requester)
 
 		return {

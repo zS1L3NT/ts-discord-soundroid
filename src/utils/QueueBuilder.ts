@@ -1,6 +1,5 @@
-import {
-	GuildMember, InteractionReplyOptions, MessageActionRow, MessageButton, MessageEmbed
-} from "discord.js"
+import { GuildMember, MessageActionRow, MessageButton, MessageEmbed } from "discord.js"
+import { CommandPayload } from "nova-bot"
 
 import GuildCache from "../data/GuildCache"
 import Song from "../data/Song"
@@ -10,7 +9,7 @@ import DurationHelper from "./DurationHelper"
 export default class QueueBuilder {
 	public constructor(private cache: GuildCache, private member?: GuildMember) {}
 
-	public async build(page: number = 1): Promise<InteractionReplyOptions> {
+	public async build(page: number = 1): Promise<CommandPayload> {
 		if (this.cache.service) {
 			const embed = new MessageEmbed()
 			const playingDuration = this.cache.service.queue
