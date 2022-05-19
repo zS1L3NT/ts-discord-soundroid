@@ -3,6 +3,7 @@ import { iEventFile } from "nova-bot"
 import BotCache from "../../data/BotCache"
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
+import logger from "../../logger"
 
 const file: iEventFile<Entry, GuildCache, BotCache, "voiceStateUpdate"> = {
 	name: "voiceStateUpdate",

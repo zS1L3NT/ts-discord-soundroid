@@ -1,3 +1,4 @@
+import logger from "../logger"
 import ApiHelper from "./ApiHelper"
 
 export default class ConversionHelper {

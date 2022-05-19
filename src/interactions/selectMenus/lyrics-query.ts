@@ -4,6 +4,7 @@ import { Emoji, iSelectMenuFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
+import logger from "../../logger"
 import DominantColorGetter from "../../utilities/DominantColorGetter"
 
 const file: iSelectMenuFile<Entry, GuildCache> = {

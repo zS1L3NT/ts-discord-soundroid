@@ -6,6 +6,7 @@ import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
 
 import Song from "../data/Song"
+import logger from "../logger"
 
 export default class ApiHelper {
 	private ytmusic: YTMusic

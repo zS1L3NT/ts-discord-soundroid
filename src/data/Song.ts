@@ -2,6 +2,7 @@ import { exec } from "youtube-dl-exec"
 
 import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice"
 
+import logger from "../logger"
 import ApiHelper from "../utilities/ApiHelper"
 import MusicService, { StopStatus } from "./MusicService"
 

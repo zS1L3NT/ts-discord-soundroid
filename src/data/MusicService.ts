@@ -3,6 +3,7 @@ import {
 	VoiceConnectionDisconnectReason, VoiceConnectionStatus
 } from "@discordjs/voice"
 
+import logger from "../logger"
 import GuildCache from "./GuildCache"
 import Song from "./Song"
 

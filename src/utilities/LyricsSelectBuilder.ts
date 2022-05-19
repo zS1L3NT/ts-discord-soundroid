@@ -1,5 +1,5 @@
 import { MessageActionRow, MessageEmbed, MessageOptions, MessageSelectMenu } from "discord.js"
-import { Emoji, ResponseBuilder } from "nova-bot"
+import { ResponseBuilder } from "nova-bot"
 
 import ApiHelper from "./ApiHelper"
 

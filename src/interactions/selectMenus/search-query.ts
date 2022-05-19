@@ -7,6 +7,7 @@ import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
 import Song from "../../data/Song"
+import logger from "../../logger"
 
 const file: iSelectMenuFile<Entry, GuildCache> = {
 	defer: false,
