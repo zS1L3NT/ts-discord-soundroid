@@ -1,5 +1,5 @@
 import { GuildMember, Message, VoiceChannel } from "discord.js"
-import { iSelectMenuFile, ResponseBuilder } from "nova-bot"
+import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 
@@ -9,10 +9,11 @@ import MusicService from "../../data/MusicService"
 import Song from "../../data/Song"
 import logger from "../../logger"
 
-const file: iSelectMenuFile<Entry, GuildCache> = {
-	defer: false,
-	ephemeral: true,
-	execute: async helper => {
+export default class extends BaseSelectMenu<Entry, GuildCache> {
+	override defer = false
+	override ephemeral = true
+
+	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
@@ -68,5 +69,3 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 		}
 	}
 }
-
-export default file

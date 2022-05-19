@@ -1,16 +1,17 @@
 import { GuildMember, Message, TextChannel } from "discord.js"
 import { useTryAsync } from "no-try"
-import { iSelectMenuFile, ResponseBuilder } from "nova-bot"
+import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import PageSelectBuilder from "../../utils/PageSelectBuilder"
 import QueueBuilder from "../../utils/QueueBuilder"
 
-const file: iSelectMenuFile<Entry, GuildCache> = {
-	defer: false,
-	ephemeral: true,
-	execute: async helper => {
+export default class extends BaseSelectMenu<Entry, GuildCache> {
+	override defer = false
+	override ephemeral = true
+
+	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
 		const [channelId, messageId, pageStr, moreStr] = helper.value()!.split("-")
 		const guild = helper.cache.guild
 		const more = +moreStr!
@@ -46,5 +47,3 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 		helper.update(ResponseBuilder.good(`Changed to page ${page}`))
 	}
 }
-
-export default file
