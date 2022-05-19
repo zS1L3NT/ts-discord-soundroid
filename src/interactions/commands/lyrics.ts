@@ -1,39 +1,45 @@
-import { iSlashFile, ResponseBuilder } from "nova-bot"
+import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import LyricsSelectBuilder from "../../utils/LyricsSelectBuilder"
 
-const file: iSlashFile<Entry, GuildCache> = {
-	defer: true,
-	ephemeral: true,
-	data: {
+export default class extends BaseCommand<Entry, GuildCache> {
+	override defer = true
+	override ephemeral = true
+	override data = {
 		name: "lyrics",
-		description: {
-			slash: "Shows the lyrics for a song",
-			help: [
-				"Shows the lyrics for the current song",
-				"If `query` given, searches the lyrics of the query instead"
-			].join("\n")
-		},
+		description: [
+			"Shows the lyrics for the current song",
+			"If `query` given, searches the lyrics of the query instead"
+		].join("\n"),
 		options: [
 			{
 				name: "query",
-				description: {
-					slash: "Query for the lyrics",
-					help: "The query for the lyrics"
-				},
-				type: "string",
+				description: "The query for the lyrics",
+				type: "string" as const,
 				requirements: "Text",
 				required: false
 			}
 		]
-	},
-	execute: async helper => {
+	}
+
+	override condition(helper: CommandHelper<Entry, GuildCache>) {
+		return helper.isMessageCommand(helper.cache.getPrefix(), "lyrics", "more")
+	}
+
+	override converter(helper: CommandHelper<Entry, GuildCache>) {
+		return {
+			query: helper.input()!.join(" ")
+		}
+	}
+
+	override async execute(helper: CommandHelper<Entry, GuildCache>) {
 		const query = helper.string("query")
 		const service = helper.cache.service
+
 		if (service) {
-			if (service.queue.length === 0) {
+			if (service.queue.length === 0 && !query) {
 				return helper.respond(ResponseBuilder.bad("I am not playing anything right now"))
 			}
 
@@ -60,5 +66,3 @@ const file: iSlashFile<Entry, GuildCache> = {
 		}
 	}
 }
-
-export default file
