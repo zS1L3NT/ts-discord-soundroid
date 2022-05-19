@@ -3,7 +3,7 @@ import { iButtonFile } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import QueueBuilder from "../../utilities/QueueBuilder"
+import QueueBuilder from "../../utils/QueueBuilder"
 
 const file: iButtonFile<Entry, GuildCache> = {
 	defer: false,

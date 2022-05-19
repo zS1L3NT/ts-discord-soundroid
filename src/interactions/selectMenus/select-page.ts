@@ -4,8 +4,8 @@ import { iSelectMenuFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import PageSelectBuilder from "../../utilities/PageSelectBuilder"
-import QueueBuilder from "../../utilities/QueueBuilder"
+import PageSelectBuilder from "../../utils/PageSelectBuilder"
+import QueueBuilder from "../../utils/QueueBuilder"
 
 const file: iSelectMenuFile<Entry, GuildCache> = {
 	defer: false,

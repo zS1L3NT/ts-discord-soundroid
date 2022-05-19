@@ -5,8 +5,8 @@ import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voic
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import DominantColorGetter from "../../utilities/DominantColorGetter"
-import DurationHelper from "../../utilities/DurationHelper"
+import DominantColorGetter from "../../utils/DominantColorGetter"
+import DurationHelper from "../../utils/DurationHelper"
 
 const thumb = "🔘"
 const track = "▬"

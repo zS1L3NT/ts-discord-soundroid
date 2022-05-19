@@ -3,7 +3,7 @@ import { iButtonFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import PageSelectBuilder from "../../utilities/PageSelectBuilder"
+import PageSelectBuilder from "../../utils/PageSelectBuilder"
 
 const file: iButtonFile<Entry, GuildCache> = {
 	defer: true,

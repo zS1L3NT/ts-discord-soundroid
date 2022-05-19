@@ -3,8 +3,8 @@ import { useTry, useTryAsync } from "no-try"
 import { BaseGuildCache, ChannelCleaner } from "nova-bot"
 
 import logger from "../logger"
-import ApiHelper from "../utilities/ApiHelper"
-import QueueBuilder from "../utilities/QueueBuilder"
+import ApiHelper from "../utils/ApiHelper"
+import QueueBuilder from "../utils/QueueBuilder"
 import Entry from "./Entry"
 import MusicService from "./MusicService"
 

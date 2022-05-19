@@ -2,7 +2,7 @@ import { iSlashFile, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import LyricsSelectBuilder from "../../utilities/LyricsSelectBuilder"
+import LyricsSelectBuilder from "../../utils/LyricsSelectBuilder"
 
 const file: iSlashFile<Entry, GuildCache> = {
 	defer: true,

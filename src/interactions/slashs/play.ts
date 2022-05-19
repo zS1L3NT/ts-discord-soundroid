@@ -7,8 +7,8 @@ import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
-import ConversionHelper from "../../utilities/ConversionHelper"
-import SearchSelectBuilder from "../../utilities/SearchSelectBuilder"
+import ConversionHelper from "../../utils/ConversionHelper"
+import SearchSelectBuilder from "../../utils/SearchSelectBuilder"
 
 const file: iSlashFile<Entry, GuildCache> = {
 	defer: true,

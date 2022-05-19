@@ -1,6 +1,6 @@
 import { BaseBotCache } from "nova-bot"
 
-import ApiHelper from "../utilities/ApiHelper"
+import ApiHelper from "../utils/ApiHelper"
 import Entry from "./Entry"
 import GuildCache from "./GuildCache"
 
