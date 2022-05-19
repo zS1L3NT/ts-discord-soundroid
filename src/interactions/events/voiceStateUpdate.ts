@@ -1,13 +1,15 @@
-import { iEventFile } from "nova-bot"
+import { VoiceState } from "discord.js"
+import { BaseEvent } from "nova-bot"
 
 import BotCache from "../../data/BotCache"
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import logger from "../../logger"
 
-const file: iEventFile<Entry, GuildCache, BotCache, "voiceStateUpdate"> = {
-	name: "voiceStateUpdate",
-	execute: async (botCache, oldState, newState) => {
+export default class extends BaseEvent<Entry, GuildCache, BotCache, "voiceStateUpdate"> {
+	override name = "voiceStateUpdate" as const
+
+	override async execute(botCache: BotCache, oldState: VoiceState, newState: VoiceState) {
 		if (newState.channel) {
 			const cache = await botCache.getGuildCache(newState.guild)
 			if (!cache.service) return
@@ -40,5 +42,3 @@ const file: iEventFile<Entry, GuildCache, BotCache, "voiceStateUpdate"> = {
 		}
 	}
 }
-
-export default file
