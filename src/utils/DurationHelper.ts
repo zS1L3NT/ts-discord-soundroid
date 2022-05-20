@@ -1,11 +1,11 @@
 export default class DurationHelper {
 	private readonly duration: number
 
-	public constructor(duration: number) {
+	constructor(duration: number) {
 		this.duration = Math.round(duration)
 	}
 
-	public format() {
+	format() {
 		const seconds = `${this.duration % 60}`
 
 		if (this.duration >= 3600) {

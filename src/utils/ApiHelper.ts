@@ -13,7 +13,7 @@ export default class ApiHelper {
 	private spotify: SpotifyWebApi
 	private genius: any
 
-	public constructor() {
+	constructor() {
 		this.ytmusic = new YTMusic()
 		this.ytmusic.initialize()
 		this.spotify = new SpotifyWebApi({
@@ -24,7 +24,7 @@ export default class ApiHelper {
 		this.genius = new (require("node-genius-api"))(process.env.GENIUS__ACCESS_TOKEN)
 	}
 
-	public async searchYoutubeSongs(query: string, requester: string): Promise<Song[]> {
+	async searchYoutubeSongs(query: string, requester: string) {
 		const songs = await this.ytmusic.searchSongs(query)
 		if (songs.length > 10) songs.length = 10
 
@@ -43,7 +43,7 @@ export default class ApiHelper {
 		)
 	}
 
-	public async findYoutubeSong(query: string, requester: string): Promise<Song> {
+	async findYoutubeSong(query: string, requester: string) {
 		const song = (await this.ytmusic.searchSongs(query)).at(0)
 
 		if (!song || !song.videoId) {
@@ -71,7 +71,7 @@ export default class ApiHelper {
 		)
 	}
 
-	public async searchYoutubeVideos(query: string, requester: string): Promise<Song[]> {
+	async searchYoutubeVideos(query: string, requester: string) {
 		const videos = await this.ytmusic.searchVideos(query)
 		return videos
 			.map(
@@ -88,7 +88,7 @@ export default class ApiHelper {
 			.slice(0, 10)
 	}
 
-	public async findYoutubeVideo(url: string, requester: string): Promise<Song> {
+	async findYoutubeVideo(url: string, requester: string) {
 		const info = (await ytdl.getBasicInfo(url)).videoDetails
 		return new Song(
 			info.title,
@@ -100,16 +100,16 @@ export default class ApiHelper {
 		)
 	}
 
-	public async findYoutubePlaylistLength(playlistId: string): Promise<number> {
+	async findYoutubePlaylistLength(playlistId: string) {
 		return (await this.ytmusic.getPlaylist(playlistId)).videoCount
 	}
 
-	public async findYoutubePlaylist(
+	async findYoutubePlaylist(
 		playlistId: string,
 		start: number,
 		end: number,
 		requester: string
-	): Promise<Song[]> {
+	) {
 		const { items: videos } = await ytpl(playlistId, { limit: end })
 		return videos
 			.slice(start - 1)
@@ -126,7 +126,7 @@ export default class ApiHelper {
 			)
 	}
 
-	public async refreshSpotifyToken() {
+	async refreshSpotifyToken() {
 		const refreshResponse = (await this.spotify.refreshAccessToken()).body
 		this.spotify.setAccessToken(refreshResponse.access_token)
 		this.spotify.setRefreshToken(
@@ -134,17 +134,17 @@ export default class ApiHelper {
 		)
 	}
 
-	public async findSpotifyPlaylistLength(playlistId: string): Promise<number> {
+	async findSpotifyPlaylistLength(playlistId: string) {
 		await this.refreshSpotifyToken()
 		return (await this.spotify.getPlaylist(playlistId)).body.tracks.total
 	}
 
-	public async findSpotifyPlaylist(
+	async findSpotifyPlaylist(
 		playlistId: string,
 		start: number,
 		end: number,
 		requester: string
-	): Promise<Song[]> {
+	) {
 		await this.refreshSpotifyToken()
 
 		const tracks: Song[] = []
@@ -183,7 +183,7 @@ export default class ApiHelper {
 		return tracks
 	}
 
-	public async findSpotifyAlbum(albumId: string, requester: string): Promise<Song[]> {
+	async findSpotifyAlbum(albumId: string, requester: string) {
 		await this.refreshSpotifyToken()
 
 		const { body: album } = await this.spotify.getAlbum(albumId)
@@ -200,7 +200,7 @@ export default class ApiHelper {
 		)
 	}
 
-	public async findSpotifySong(trackId: string, requester: string): Promise<Song> {
+	async findSpotifySong(trackId: string, requester: string) {
 		await this.refreshSpotifyToken()
 
 		const result = (await this.spotify.getTrack(trackId)).body
@@ -214,7 +214,7 @@ export default class ApiHelper {
 		)
 	}
 
-	public async searchGeniusLyrics(query: string): Promise<
+	async searchGeniusLyrics(query: string): Promise<
 		{
 			id: string
 			title: string
@@ -231,7 +231,7 @@ export default class ApiHelper {
 			}))
 	}
 
-	public async findGeniusLyrics(
+	async findGeniusLyrics(
 		id: string
 	): Promise<{ title: string; artiste: string; cover: string; lyrics: string }> {
 		const song = await this.genius.song(id)

@@ -1,9 +1,9 @@
 import ColorThief from "colorthief"
 
 export default class DominantColorGetter {
-	public constructor(public url: string) {}
+	constructor(public url: string) {}
 
-	public async getColor(): Promise<`#${string}`> {
+	async getColor(): Promise<`#${string}`> {
 		try {
 			const [r, g, b] = await ColorThief.getColor(this.url)
 

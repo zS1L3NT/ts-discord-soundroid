@@ -7,13 +7,13 @@ export default class PageSelectBuilder {
 	private startPage = 0
 	private endPage = 0
 
-	public constructor(
+	constructor(
 		private embed: MessageEmbed,
 		private channelId: string,
 		private messageId: string
 	) {}
 
-	public build(startPage?: number): CommandPayload {
+	build(startPage?: number): CommandPayload {
 		const pageInfo = this.embed.fields.find(field => field.name === `Page`)!.value
 		const [pageStr, maxPagesStr] = pageInfo.split("/")
 		this.currentPage = startPage || +pageStr!
@@ -72,11 +72,11 @@ export default class PageSelectBuilder {
 		this.endPage = endPage
 	}
 
-	private allowNextPage(): boolean {
+	private allowNextPage() {
 		return this.endPage !== this.maxPages
 	}
 
-	private allowPreviousPage(): boolean {
+	private allowPreviousPage() {
 		return this.startPage !== 0
 	}
 }

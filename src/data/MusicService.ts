@@ -17,18 +17,18 @@ export enum StopStatus {
 }
 
 export default class MusicService {
-	public readonly player: AudioPlayer
-	public disconnectTimeout: NodeJS.Timeout | null = null
-	public queue: Song[]
-	public queueLock = false
-	public readyLock = false
+	readonly player: AudioPlayer
+	disconnectTimeout: NodeJS.Timeout | null = null
+	queue: Song[]
+	queueLock = false
+	readyLock = false
 
-	public stopStatus: StopStatus = StopStatus.NORMAL
+	stopStatus: StopStatus = StopStatus.NORMAL
 
-	public loop = false
-	public queueLoop = false
+	loop = false
+	queueLoop = false
 
-	public constructor(
+	constructor(
 		public readonly connection: VoiceConnection,
 		public readonly cache: GuildCache
 	) {
@@ -155,7 +155,7 @@ export default class MusicService {
 		this.connection.subscribe(this.player)
 	}
 
-	public restart() {
+	restart() {
 		this.stopStatus = StopStatus.RESTART
 		this.player.stop()
 		this.processQueue()
@@ -163,7 +163,7 @@ export default class MusicService {
 		this.cache.updateMinutely()
 	}
 
-	public destroy() {
+	destroy() {
 		if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
 			logger.log("Destroyed music service")
 			this.connection.destroy()
@@ -178,7 +178,7 @@ export default class MusicService {
 	 *
 	 * @param song The song to add to the queue
 	 */
-	public enqueue(song: Song) {
+	enqueue(song: Song) {
 		this.queue.push(song)
 		this.processQueue()
 		this.cache.updateMinutely()

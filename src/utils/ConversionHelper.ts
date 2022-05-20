@@ -4,7 +4,7 @@ import ApiHelper from "./ApiHelper"
 export default class ConversionHelper {
 	constructor(private apiHelper: ApiHelper, private url: URL, private requester: string) {}
 
-	public async getSongs() {
+	async getSongs() {
 		switch (this.url.host) {
 			case "open.spotify.com":
 				return await this.handleSpotify()

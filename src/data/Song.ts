@@ -7,7 +7,7 @@ import ApiHelper from "../utils/ApiHelper"
 import MusicService, { StopStatus } from "./MusicService"
 
 export default class Song {
-	public constructor(
+	constructor(
 		public title: string,
 		public artiste: string,
 		public cover: string,
@@ -16,7 +16,7 @@ export default class Song {
 		public requester: string
 	) {}
 
-	public static async from(apiHelper: ApiHelper, url: string, requester: string) {
+	static async from(apiHelper: ApiHelper, url: string, requester: string) {
 		const _URL = new URL(url)
 		if (_URL.host === "open.spotify.com") {
 			return await apiHelper.findSpotifySong(_URL.pathname.slice(7), requester)
@@ -29,7 +29,7 @@ export default class Song {
 		}
 	}
 
-	public createAudioResource(
+	createAudioResource(
 		service: MusicService,
 		apiHelper: ApiHelper
 	): Promise<AudioResource<Song>> {

@@ -6,13 +6,9 @@ import ApiHelper from "./ApiHelper"
 export default class SearchSelectBuilder {
 	private static emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
-	public constructor(
-		private apiHelper: ApiHelper,
-		private query: string,
-		private requester: string
-	) {}
+	constructor(private apiHelper: ApiHelper, private query: string, private requester: string) {}
 
-	public async buildVideo(): Promise<CommandPayload> {
+	async buildVideo(): Promise<CommandPayload> {
 		const results = await this.apiHelper.searchYoutubeVideos(this.query, this.requester)
 
 		return {
@@ -46,7 +42,7 @@ export default class SearchSelectBuilder {
 		}
 	}
 
-	public async buildMusic(): Promise<CommandPayload> {
+	async buildMusic(): Promise<CommandPayload> {
 		const results = await this.apiHelper.searchYoutubeSongs(this.query, this.requester)
 
 		return {

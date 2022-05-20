@@ -9,12 +9,12 @@ import Entry from "./Entry"
 import MusicService from "./MusicService"
 
 export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
-	public apiHelper!: ApiHelper
-	public service?: MusicService
+	apiHelper!: ApiHelper
+	service?: MusicService
 
-	public onConstruct(): void {}
+	onConstruct() {}
 
-	public resolve(resolve: (cache: GuildCache) => void): void {
+	resolve(resolve: (cache: GuildCache) => void) {
 		this.ref.onSnapshot(snap => {
 			if (snap.exists) {
 				this.entry = snap.data() as Entry
@@ -26,7 +26,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	/**
 	 * Method run every minute
 	 */
-	public async updateMinutely() {
+	async updateMinutely() {
 		const musicChannelId = this.entry.music_channel_id
 		if (!musicChannelId) return
 
@@ -83,16 +83,16 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 		}
 	}
 
-	public setNickname(nickname?: string) {
+	setNickname(nickname?: string) {
 		this.guild.me?.setNickname(nickname || "SounDroid")
 	}
 
-	public async setMusicChannelId(musicChannelId: string) {
+	async setMusicChannelId(musicChannelId: string) {
 		this.entry.music_channel_id = musicChannelId
 		await this.ref.update({ music_channel_id: musicChannelId })
 	}
 
-	public async setMusicMessageId(musicMessageId: string) {
+	async setMusicMessageId(musicMessageId: string) {
 		this.entry.music_message_id = musicMessageId
 		await this.ref.update({ music_message_id: musicMessageId })
 	}

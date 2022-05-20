@@ -7,9 +7,9 @@ import DominantColorGetter from "./DominantColorGetter"
 import DurationHelper from "./DurationHelper"
 
 export default class QueueBuilder {
-	public constructor(private cache: GuildCache, private member?: GuildMember) {}
+	constructor(private cache: GuildCache, private member?: GuildMember) {}
 
-	public async build(page: number = 1): Promise<CommandPayload> {
+	async build(page: number = 1): Promise<CommandPayload> {
 		if (this.cache.service) {
 			const embed = new MessageEmbed()
 			const playingDuration = this.cache.service.queue
@@ -101,7 +101,7 @@ export default class QueueBuilder {
 		}
 	}
 
-	public songFormat(song: Song): [string, string] {
+	songFormat(song: Song): [string, string] {
 		return [
 			`${song.title} - ${song.artiste} | ${new DurationHelper(song.duration).format()}`,
 			`Requested by <@!${song.requester}> | [Open song](${song.url})`
