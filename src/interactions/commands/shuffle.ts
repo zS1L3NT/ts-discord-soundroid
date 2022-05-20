@@ -1,4 +1,4 @@
-import { BaseCommand, CommandHelper, CommandType, ResponseBuilder } from "nova-bot"
+import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -38,8 +38,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		]
 
 		helper.cache.updateMinutely()
-		helper.respond(
-			helper.type === CommandType.Slash ? ResponseBuilder.good("Shuffled Queue") : null
-		)
+		helper.respond(ResponseBuilder.good("Shuffled Queue"))
 	}
 }

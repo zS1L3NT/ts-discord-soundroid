@@ -50,12 +50,14 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				await new LyricsSelectBuilder(
 					helper.cache.apiHelper,
 					query || `${song.title} - ${song.artiste}`
-				).build()
+				).build(),
+				null
 			)
 		} else {
 			if (query) {
 				helper.respond(
-					await new LyricsSelectBuilder(helper.cache.apiHelper, `${query}`).build()
+					await new LyricsSelectBuilder(helper.cache.apiHelper, `${query}`).build(),
+					null
 				)
 			} else {
 				helper.respond(

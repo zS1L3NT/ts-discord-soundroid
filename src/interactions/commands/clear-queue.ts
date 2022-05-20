@@ -1,4 +1,4 @@
-import { BaseCommand, CommandHelper, CommandType, ResponseBuilder } from "nova-bot"
+import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
@@ -29,8 +29,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		service.player.stop()
 
 		helper.cache.updateMinutely()
-		helper.respond(
-			helper.type === CommandType.Slash ? ResponseBuilder.good("Cleared queue") : null
-		)
+		helper.respond(ResponseBuilder.good("Cleared queue"))
 	}
 }

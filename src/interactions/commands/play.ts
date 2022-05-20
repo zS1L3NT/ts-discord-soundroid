@@ -92,7 +92,8 @@ export default class extends BaseCommand<Entry, GuildCache> {
 					helper.cache.apiHelper,
 					query,
 					helper.member.id
-				).buildMusic()
+				).buildMusic(),
+				null
 			)
 		}
 	}
