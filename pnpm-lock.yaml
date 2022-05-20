@@ -14,7 +14,7 @@ specifiers:
   libsodium-wrappers: ^0.7.10
   no-try: ^3.1.0
   node-genius-api: ^1.2.0
-  nova-bot: 2.0.0-alpha.9
+  nova-bot: 2.0.0-alpha.10
   spotify-web-api-node: ^5.0.2
   tracer: ^1.1.5
   typescript: ^4.6.3
@@ -35,7 +35,7 @@ dependencies:
   libsodium-wrappers: 0.7.10
   no-try: 3.1.0
   node-genius-api: 1.2.0
-  nova-bot: 2.0.0-alpha.9
+  nova-bot: 2.0.0-alpha.10
   spotify-web-api-node: 5.0.2
   tracer: 1.1.5
   youtube-dl-exec: 2.0.12
@@ -1958,8 +1958,8 @@ packages:
       abbrev: 1.1.1
     dev: false
 
-  /nova-bot/2.0.0-alpha.9:
-    resolution: {integrity: sha512-q/p4iolLiZ/DI1/G+wOXQ9eSEAKTGbcL/kcBeZROk/qEiqlzKAN9tXnQzah9DM4H7EAE7zNOrIdyPEKA9bBfGg==}
+  /nova-bot/2.0.0-alpha.10:
+    resolution: {integrity: sha512-gPrnw+00dKV5MAcj1fbJWgT1TUbLyWpeb4l7w+P1N2iimDj5hL0iB4/VxzKVetEzn4btOjChgPXvEyjTEubPdw==}
     dependencies:
       '@discordjs/builders': 0.13.0
       '@discordjs/rest': 0.4.1
