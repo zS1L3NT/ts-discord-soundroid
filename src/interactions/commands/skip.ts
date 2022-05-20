@@ -3,6 +3,9 @@ import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import { StopStatus } from "../../data/MusicService"
+import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
+import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
+import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
 
 export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
@@ -20,6 +23,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			}
 		]
 	}
+
+	override middleware = [
+		new IsInMyVoiceChannelMiddleware(),
+		new HasMusicServiceMiddleware(),
+		new IsPlayingMiddleware()
+	]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
 		return helper.isMessageCommand("skip", "more")

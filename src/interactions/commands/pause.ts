@@ -2,6 +2,9 @@ import { BaseCommand, CommandHelper, CommandType, ResponseBuilder } from "nova-b
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
+import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
+import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
+import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
 
 export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
@@ -11,7 +14,11 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		description: "Pause the current song"
 	}
 
-	override middleware = []
+	override middleware = [
+		new IsInMyVoiceChannelMiddleware(),
+		new HasMusicServiceMiddleware(),
+		new IsPlayingMiddleware()
+	]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
 		return helper.isMessageCommand("pause", "only")

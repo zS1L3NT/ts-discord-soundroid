@@ -2,6 +2,8 @@ import { BaseCommand, CommandHelper, CommandType, ResponseBuilder } from "nova-b
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
+import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
+import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 
 export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
@@ -9,6 +11,8 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override data = {
 		description: "Shuffles the songs in the queue"
 	}
+
+	override middleware = [new IsInMyVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
 		return helper.isMessageCommand("shuffle", "only")
