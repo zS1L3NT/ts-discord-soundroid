@@ -1,15 +1,19 @@
 import { GuildMember, Message, MessageEmbed } from "discord.js"
 import { useTryAsync } from "no-try"
-import { Emoji, iSelectMenuFile, ResponseBuilder } from "nova-bot"
+import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import DominantColorGetter from "../../utilities/DominantColorGetter"
+import logger from "../../logger"
+import DominantColorGetter from "../../utils/DominantColorGetter"
 
-const file: iSelectMenuFile<Entry, GuildCache> = {
-	defer: false,
-	ephemeral: true,
-	execute: async helper => {
+export default class extends BaseSelectMenu<Entry, GuildCache> {
+	override defer = false
+	override ephemeral = true
+
+	override middleware = []
+
+	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
 		const member = helper.interaction.member as GuildMember
 
 		await helper.interaction.update({
@@ -27,7 +31,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 
 		const [, messageOptions] = await useTryAsync(async () => {
 			try {
-				const id = helper.value()!
+				const id = helper.value!
 				const { title, artiste, cover, lyrics } =
 					await helper.cache.apiHelper.findGeniusLyrics(id)
 				return {
@@ -50,10 +54,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 				logger.error(err)
 				return {
 					embeds: [
-						new ResponseBuilder(
-							Emoji.BAD,
-							"Failed to retrieve lyrics from Genius API"
-						).build()
+						ResponseBuilder.bad("Failed to retrieve lyrics from Genius API").build()
 					],
 					components: []
 				}
@@ -68,5 +69,3 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 		}
 	}
 }
-
-export default file

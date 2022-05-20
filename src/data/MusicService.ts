@@ -3,6 +3,7 @@ import {
 	VoiceConnectionDisconnectReason, VoiceConnectionStatus
 } from "@discordjs/voice"
 
+import logger from "../logger"
 import GuildCache from "./GuildCache"
 import Song from "./Song"
 
@@ -16,21 +17,18 @@ export enum StopStatus {
 }
 
 export default class MusicService {
-	public readonly player: AudioPlayer
-	public disconnectTimeout: NodeJS.Timeout | null = null
-	public queue: Song[]
-	public queueLock = false
-	public readyLock = false
+	readonly player: AudioPlayer
+	disconnectTimeout: NodeJS.Timeout | null = null
+	queue: Song[]
+	queueLock = false
+	readyLock = false
 
-	public stopStatus: StopStatus = StopStatus.NORMAL
+	stopStatus: StopStatus = StopStatus.NORMAL
 
-	public loop = false
-	public queueLoop = false
+	loop = false
+	queueLoop = false
 
-	public constructor(
-		public readonly connection: VoiceConnection,
-		public readonly cache: GuildCache
-	) {
+	constructor(public readonly connection: VoiceConnection, public readonly cache: GuildCache) {
 		this.player = createAudioPlayer()
 		this.queue = []
 
@@ -154,21 +152,21 @@ export default class MusicService {
 		this.connection.subscribe(this.player)
 	}
 
-	public restart() {
+	restart() {
 		this.stopStatus = StopStatus.RESTART
 		this.player.stop()
 		this.processQueue()
 		this.cache.setNickname()
-		this.cache.updateMusicChannel()
+		this.cache.updateMinutely()
 	}
 
-	public destroy() {
+	destroy() {
 		if (this.connection.state.status !== VoiceConnectionStatus.Destroyed) {
 			logger.log("Destroyed music service")
 			this.connection.destroy()
 		}
 		this.cache.setNickname()
-		this.cache.updateMusicChannel()
+		this.cache.updateMinutely()
 		delete this.cache.service
 	}
 
@@ -177,10 +175,10 @@ export default class MusicService {
 	 *
 	 * @param song The song to add to the queue
 	 */
-	public enqueue(song: Song) {
+	enqueue(song: Song) {
 		this.queue.push(song)
 		this.processQueue()
-		this.cache.updateMusicChannel()
+		this.cache.updateMinutely()
 	}
 
 	/**
@@ -194,14 +192,24 @@ export default class MusicService {
 			this.player.state.status !== AudioPlayerStatus.Idle
 		) {
 			if (this.queue.length === 0) {
-				this.cache.updateMusicChannel()
+				this.cache.updateMinutely()
 
 				if (this.disconnectTimeout) {
 					logger.log("Clearing previous disconnect timeout")
 					clearTimeout(this.disconnectTimeout)
+					this.cache.logger.log({
+						title: `Stopped disconnect timer`,
+						description: `A track was played within a minute of the disconnect timeout`,
+						color: "#000000"
+					})
 				}
 
 				logger.log("Nothing in queue, setting one minute disconnect timeout")
+				this.cache.logger.log({
+					title: `Waiting 1 minute before disconnecting`,
+					description: `If nothing is playing, the bot will disconnect after 1 minute`,
+					color: "#000000"
+				})
 				this.disconnectTimeout = setTimeout(() => {
 					logger.log("One minute without anything in queue, disconnecting")
 					this.destroy()
@@ -214,6 +222,11 @@ export default class MusicService {
 			logger.log("Clearing existing disconnect timeout")
 			clearTimeout(this.disconnectTimeout)
 			this.disconnectTimeout = null
+			this.cache.logger.log({
+				title: `Stopped disconnect timer`,
+				description: `A track was played within a minute of the disconnect timeout`,
+				color: "#000000"
+			})
 		}
 
 		// Lock the queue to guarantee safe access
@@ -223,13 +236,18 @@ export default class MusicService {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
 			const resource = await song.createAudioResource(this, this.cache.apiHelper)
 			this.stopStatus = StopStatus.NORMAL
-			this.cache.updateMusicChannel()
+			this.cache.updateMinutely()
 			this.player.play(resource)
 			this.queueLock = false
 		} catch (err) {
 			// If an error occurred, try the next item of the queue instead
 			this.queueLock = false
 			logger.error("Error playing track", err)
+			this.cache.logger.log({
+				title: `Error playing track`,
+				description: (err as Error).stack || "No stack trace available",
+				color: "#DD2E44"
+			})
 			return this.processQueue()
 		}
 	}

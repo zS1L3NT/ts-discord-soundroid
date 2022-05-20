@@ -1,17 +1,20 @@
 import { GuildMember, Message, TextChannel } from "discord.js"
 import { useTryAsync } from "no-try"
-import { Emoji, iSelectMenuFile, ResponseBuilder } from "nova-bot"
+import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import PageSelectBuilder from "../../utilities/PageSelectBuilder"
-import QueueBuilder from "../../utilities/QueueBuilder"
+import PageSelectBuilder from "../../utils/PageSelectBuilder"
+import QueueBuilder from "../../utils/QueueBuilder"
 
-const file: iSelectMenuFile<Entry, GuildCache> = {
-	defer: false,
-	ephemeral: true,
-	execute: async helper => {
-		const [channelId, messageId, pageStr, moreStr] = helper.value()!.split("-")
+export default class extends BaseSelectMenu<Entry, GuildCache> {
+	override defer = false
+	override ephemeral = true
+
+	override middleware = []
+
+	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
+		const [channelId, messageId, pageStr, moreStr] = helper.value!.split("-")
 		const guild = helper.cache.guild
 		const more = +moreStr!
 		const page = +pageStr!
@@ -21,9 +24,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 		)
 
 		if (channelErr) {
-			return helper.respond(
-				new ResponseBuilder(Emoji.BAD, "Channel with the message not found")
-			)
+			return helper.respond(ResponseBuilder.bad("Channel with the message not found"))
 		}
 
 		const [messageErr, message] = await useTryAsync<Message>(
@@ -31,7 +32,7 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 		)
 
 		if (messageErr || message.embeds.length === 0) {
-			return helper.respond(new ResponseBuilder(Emoji.BAD, "Queue message not found"))
+			return helper.respond(ResponseBuilder.bad("Queue message not found"))
 		}
 
 		if (pageStr === "more") {
@@ -45,8 +46,6 @@ const file: iSelectMenuFile<Entry, GuildCache> = {
 				page
 			)
 		)
-		helper.update(new ResponseBuilder(Emoji.GOOD, `Changed to page ${page}`))
+		helper.update(ResponseBuilder.good(`Changed to page ${page}`))
 	}
 }
-
-export default file

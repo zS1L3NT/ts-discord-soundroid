@@ -1,19 +1,20 @@
-import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
+import { MessageEmbed } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 import { BaseGuildCache, ChannelCleaner } from "nova-bot"
 
-import ApiHelper from "../utilities/ApiHelper"
-import QueueBuilder from "../utilities/QueueBuilder"
+import logger from "../logger"
+import ApiHelper from "../utils/ApiHelper"
+import QueueBuilder from "../utils/QueueBuilder"
 import Entry from "./Entry"
 import MusicService from "./MusicService"
 
 export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
-	public apiHelper!: ApiHelper
-	public service?: MusicService
+	apiHelper!: ApiHelper
+	service?: MusicService
 
-	public onConstruct(): void {}
+	onConstruct() {}
 
-	public resolve(resolve: (cache: GuildCache) => void): void {
+	resolve(resolve: (cache: GuildCache) => void) {
 		this.ref.onSnapshot(snap => {
 			if (snap.exists) {
 				this.entry = snap.data() as Entry
@@ -25,16 +26,12 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	/**
 	 * Method run every minute
 	 */
-	public async updateMinutely(_: number) {
-		await this.updateMusicChannel()
-	}
-
-	public async updateMusicChannel() {
-		const musicChannelId = this.getMusicChannelId()
+	async updateMinutely() {
+		const musicChannelId = this.entry.music_channel_id
 		if (!musicChannelId) return
 
 		const [messageErr, message] = await useTryAsync(async () => {
-			const musicMessageId = this.getMusicMessageId()
+			const musicMessageId = this.entry.music_message_id
 			const cleaner = new ChannelCleaner<Entry, GuildCache>(this, musicChannelId, [
 				musicMessageId
 			])
@@ -86,41 +83,17 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 		}
 	}
 
-	public isMemberInMyVoiceChannel(member: GuildMember): boolean {
-		return (
-			member.voice.channel instanceof VoiceChannel &&
-			member.voice.channel.id === this.guild.me?.voice?.channel?.id
-		)
-	}
-
-	public setNickname(nickname?: string) {
+	setNickname(nickname?: string) {
 		this.guild.me?.setNickname(nickname || "SounDroid")
 	}
 
-	public getMusicChannelId() {
-		return this.entry.music_channel_id
-	}
-
-	public async setMusicChannelId(musicChannelId: string) {
+	async setMusicChannelId(musicChannelId: string) {
 		this.entry.music_channel_id = musicChannelId
 		await this.ref.update({ music_channel_id: musicChannelId })
 	}
 
-	public getMusicMessageId() {
-		return this.entry.music_message_id
-	}
-
-	public async setMusicMessageId(musicMessageId: string) {
+	async setMusicMessageId(musicMessageId: string) {
 		this.entry.music_message_id = musicMessageId
 		await this.ref.update({ music_message_id: musicMessageId })
-	}
-
-	public getMessageCommandRegex(command: string) {
-		const alias = this.getAliases()[command]
-		return `\\${this.getPrefix()}${alias ? `(${command}|${alias})` : command}`
-	}
-
-	public getPrefix() {
-		return this.entry.prefix
 	}
 }
