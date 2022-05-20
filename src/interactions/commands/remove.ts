@@ -9,7 +9,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "remove",
 		description: "Removes songs from the queue with either the song position or a range",
 		options: [
 			{

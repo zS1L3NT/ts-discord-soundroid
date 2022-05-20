@@ -18,7 +18,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "now-playing",
 		description:
 			"Shows the currently playing song with a progressbar showing how far into the song you are"
 	}

@@ -14,7 +14,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "play",
 		description: "Play Song/Playlist/Album from YouTube/Spotify",
 		options: [
 			{

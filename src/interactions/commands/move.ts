@@ -9,7 +9,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "move",
 		description: "Move a song in the queue to a specified position",
 		options: [
 			{

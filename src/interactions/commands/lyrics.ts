@@ -8,7 +8,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "lyrics",
 		description: [
 			"Shows the lyrics for the current song",
 			"If `query` given, searches the lyrics of the query instead"

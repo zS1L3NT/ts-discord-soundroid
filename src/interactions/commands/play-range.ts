@@ -12,7 +12,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "play-range",
 		description:
 			"Plays a YouTube/Spotify Playlist and allows choosing the playlist range (max 1000)",
 		options: [

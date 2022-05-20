@@ -8,7 +8,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override ephemeral = true
 
 	override data = {
-		name: "pause",
 		description: "Pause the current song"
 	}
 

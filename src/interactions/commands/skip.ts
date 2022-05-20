@@ -8,7 +8,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "skip",
 		description: "Skips songs in the queue as many times as specified",
 		options: [
 			{

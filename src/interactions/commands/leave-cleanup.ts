@@ -9,7 +9,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "leave-cleanup",
 		description: "Clear all songs in the queue from users that have left the voice channel"
 	}
 

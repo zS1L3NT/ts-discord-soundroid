@@ -10,7 +10,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "music-channel",
 		description: "Set the channel where the bot sends information of playing songs",
 		options: [
 			{
@@ -24,7 +23,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		]
 	}
 
-	override only = CommandType.Message
+	override only = CommandType.Slash
 	override middleware = [new IsAdminMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {}

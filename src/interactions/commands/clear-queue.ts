@@ -10,7 +10,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "clear-queue",
 		description: "Clears the entire queue along with the current song"
 	}
 

@@ -9,7 +9,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "queue-loop",
 		description: "Loop the current queue, disables loop mode"
 	}
 

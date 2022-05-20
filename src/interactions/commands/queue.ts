@@ -9,7 +9,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "queue",
 		description: "Shows a detailed message about all the songs in the queue"
 	}
 

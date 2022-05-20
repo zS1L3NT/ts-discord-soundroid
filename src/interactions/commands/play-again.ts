@@ -10,7 +10,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "play-again",
 		description: "Plays the current playing song again as many times as specified",
 		options: [
 			{

@@ -9,7 +9,6 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		name: "restart",
 		description: "Restarts the current song. Use this if the song stops playing for no reason"
 	}
 
