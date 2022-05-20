@@ -30,5 +30,14 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		helper.respond(
 			ResponseBuilder.good(`Queue Loop ${service.queueLoop ? "enabled" : "disabled"}`)
 		)
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Queue loop ${service.queueLoop ? "enabled" : "disabled"}`,
+			description: `<@${helper.member.id}> **${
+				service.queueLoop ? "enabled" : "disabled"
+			}** queue loop`,
+			command: "queue-loop",
+			color: "#FFD56D"
+		})
 	}
 }

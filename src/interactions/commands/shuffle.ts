@@ -39,5 +39,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 		helper.cache.updateMinutely()
 		helper.respond(ResponseBuilder.good("Shuffled Queue"))
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Shuffled queue`,
+			description: `<@${helper.member.id}> shuffled the queue`,
+			command: "shuffle",
+			color: "#FFD56D"
+		})
 	}
 }

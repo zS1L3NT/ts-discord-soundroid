@@ -55,11 +55,25 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 					],
 					components: []
 				})
+				helper.cache.logger.log({
+					member,
+					title: `Enqueued 1 song by search query`,
+					description: `<@${member.id}> enqueued [${song.title} - ${song.artiste}](${song.url})`,
+					command: "play",
+					color: "#77B255"
+				})
 			} catch (err) {
 				logger.error("Error playing song from url", err)
 				helper.interaction.update({
 					embeds: [ResponseBuilder.bad("Error playing song from url").build()],
 					components: []
+				})
+				helper.cache.logger.log({
+					member,
+					title: `Error playing song from url`,
+					description: (err as Error).stack || "No stack trace available",
+					command: "play",
+					color: "#DD2E44"
 				})
 			}
 		}

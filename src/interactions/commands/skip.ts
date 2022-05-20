@@ -73,5 +73,14 @@ export default class extends BaseCommand<Entry, GuildCache> {
 					(count > 1 ? ` and ${count - 1} songs in the queue` : "")
 			)
 		)
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Skipped ${count} song${count > 1 ? "s" : ""}`,
+			description: `<@${helper.member.id}> skip the current song${
+				count > 1 ? ` and the next ${count - 1} songs` : ""
+			}`,
+			command: "skip",
+			color: "#FFD56D"
+		})
 	}
 }

@@ -150,5 +150,17 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 		helper.cache.updateMinutely()
 		helper.respond(ResponseBuilder.good(`Enqueued ${songs.length + 1} songs`))
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Enqueued ${songs.length + 1} songs`,
+			description: [
+				`<@${helper.member.id}> added ${songs.length + 1} songs to the queue`,
+				`**Link**: ${link}`,
+				`**Start Position**: ${from}`,
+				`**End Position**: ${to}`
+			].join("\n"),
+			command: "play-range",
+			color: "#77B255"
+		})
 	}
 }

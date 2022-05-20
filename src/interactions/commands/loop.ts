@@ -28,5 +28,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 		helper.cache.updateMinutely()
 		helper.respond(ResponseBuilder.good(`Loop ${service.loop ? "enabled" : "disabled"}`))
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Loop ${service.loop ? "enabled" : "disabled"}`,
+			description: `<@${helper.member.id}> **${service.loop ? "enabled" : "disabled"}** loop`,
+			command: "loop",
+			color: "#FFD56D"
+		})
 	}
 }

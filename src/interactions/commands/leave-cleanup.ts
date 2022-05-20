@@ -32,5 +32,14 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		helper.respond(
 			ResponseBuilder.good(`Cleared ${oldLength - newLength} songs from the queue`)
 		)
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Leave cleanup used`,
+			description: `<@${helper.member.id}> activated leave cleanup\n**Songs removed**: ${
+				oldLength - newLength
+			}`,
+			command: "leave-cleanup",
+			color: "#FFD56D"
+		})
 	}
 }

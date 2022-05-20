@@ -60,5 +60,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		helper.respond(
 			ResponseBuilder.good(`Playing "${song.title} - ${song.artiste}" again ${count} times`)
 		)
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Current song played again`,
+			description: `<@${helper.member.id}> played the current song again\n**Times**: ${count}`,
+			command: "play-again",
+			color: "#77B255"
+		})
 	}
 }

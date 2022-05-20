@@ -70,6 +70,17 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 			helper.cache.updateMinutely()
 			helper.respond(ResponseBuilder.good(`Removed ${deleteCount} songs from the queue`))
+			helper.cache.logger.log({
+				member: helper.member,
+				title: `Removed ${deleteCount} songs from the queue`,
+				description: [
+					`<@${helper.member.id}> removed a range of songs from the queue`,
+					`**Start Position**: ${from}`,
+					`**End Position**: ${to}`
+				].join("\n"),
+				command: "remove",
+				color: "#FFD56D"
+			})
 		} else {
 			const song = service.queue.splice(from, 1)[0]
 			if (!song) {
@@ -80,6 +91,13 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			helper.respond(
 				ResponseBuilder.good(`Removed 1 song from queue: "${song.title} - ${song.artiste}"`)
 			)
+			helper.cache.logger.log({
+				member: helper.member,
+				title: `Removed a song from the queue`,
+				description: `<@${helper.member.id}> removed [${song.title} - ${song.artiste}](${song.url}) from the queue\n**Original Index**: ${from}`,
+				command: "remove",
+				color: "#FFD56D"
+			})
 		}
 	}
 }

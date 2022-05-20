@@ -28,10 +28,7 @@ export default class MusicService {
 	loop = false
 	queueLoop = false
 
-	constructor(
-		public readonly connection: VoiceConnection,
-		public readonly cache: GuildCache
-	) {
+	constructor(public readonly connection: VoiceConnection, public readonly cache: GuildCache) {
 		this.player = createAudioPlayer()
 		this.queue = []
 
@@ -200,9 +197,19 @@ export default class MusicService {
 				if (this.disconnectTimeout) {
 					logger.log("Clearing previous disconnect timeout")
 					clearTimeout(this.disconnectTimeout)
+					this.cache.logger.log({
+						title: `Stopped disconnect timer`,
+						description: `A track was played within a minute of the disconnect timeout`,
+						color: "#000000"
+					})
 				}
 
 				logger.log("Nothing in queue, setting one minute disconnect timeout")
+				this.cache.logger.log({
+					title: `Waiting 1 minute before disconnecting`,
+					description: `If nothing is playing, the bot will disconnect after 1 minute`,
+					color: "#000000"
+				})
 				this.disconnectTimeout = setTimeout(() => {
 					logger.log("One minute without anything in queue, disconnecting")
 					this.destroy()
@@ -215,6 +222,11 @@ export default class MusicService {
 			logger.log("Clearing existing disconnect timeout")
 			clearTimeout(this.disconnectTimeout)
 			this.disconnectTimeout = null
+			this.cache.logger.log({
+				title: `Stopped disconnect timer`,
+				description: `A track was played within a minute of the disconnect timeout`,
+				color: "#000000"
+			})
 		}
 
 		// Lock the queue to guarantee safe access
@@ -231,6 +243,11 @@ export default class MusicService {
 			// If an error occurred, try the next item of the queue instead
 			this.queueLock = false
 			logger.error("Error playing track", err)
+			this.cache.logger.log({
+				title: `Error playing track`,
+				description: (err as Error).stack || "No stack trace available",
+				color: "#DD2E44"
+			})
 			return this.processQueue()
 		}
 	}

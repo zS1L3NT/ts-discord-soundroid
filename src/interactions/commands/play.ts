@@ -68,6 +68,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 						helper.cache
 					)
 				}
+
 				const service = helper.cache.service
 
 				service.enqueue(first)
@@ -78,13 +79,34 @@ export default class extends BaseCommand<Entry, GuildCache> {
 					helper.respond(
 						ResponseBuilder.good(`Enqueued: "${first.title} - ${first.artiste}"`)
 					)
+					helper.cache.logger.log({
+						member: helper.member,
+						title: "Enqueued 1 song by song link",
+						description: `<@${helper.member.id}> enqueued [${first.title} - ${first.artiste}](${first.url})`,
+						command: "play",
+						color: "#77B255"
+					})
 				} else {
 					helper.respond(ResponseBuilder.good(`Enqueued ${songs.length + 1} songs`))
+					helper.cache.logger.log({
+						member: helper.member,
+						title: `Enqueued ${songs.length + 1} song by playlist link`,
+						description: `<@${helper.member.id}> enqueued songs in a playlist\n**Link**: ${url}`,
+						command: "play",
+						color: "#77B255"
+					})
 				}
 			})
 
 			if (err) {
 				helper.respond(ResponseBuilder.bad(err.message))
+				helper.cache.logger.log({
+					member: helper.member,
+					title: "Error playing songs from url",
+					description: err.stack || "No stack trace available",
+					command: "play",
+					color: "#DD2E44"
+				})
 			}
 		} else {
 			helper.respond(

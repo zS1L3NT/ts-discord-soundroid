@@ -33,5 +33,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 		helper.cache.updateMinutely()
 		helper.respond(ResponseBuilder.good("Paused song"))
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Paused song`,
+			description: `<@${helper.member.id}> paused the current song`,
+			command: "pause",
+			color: "#FFD56D"
+		})
 	}
 }

@@ -30,5 +30,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 		helper.cache.updateMinutely()
 		helper.respond(ResponseBuilder.good("Cleared queue"))
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Cleared queue`,
+			description: `<@${helper.member.id}> cleared the queue`,
+			command: "clear-queue",
+			color: "#FFD56D"
+		})
 	}
 }

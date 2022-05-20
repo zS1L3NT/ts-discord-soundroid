@@ -74,5 +74,17 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				}`
 			)
 		)
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Moved song in queue`,
+			description: [
+				`<@${helper.member.id}> moved a song's position in the queue`,
+				`**Song**: ${song.title} - ${song.artiste}`,
+				`**Old Position**: ${from}`,
+				`**New Position**: ${to || "Top of the queue"}`
+			].join("\n"),
+			command: "move",
+			color: "#77B255"
+		})
 	}
 }
