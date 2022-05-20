@@ -29,7 +29,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		service.stopStatus = StopStatus.INTENTIONAL
 		service.player.stop()
 
-		helper.cache.updateMusicChannel()
+		helper.cache.updateMinutely()
 		helper.respond(
 			helper.type === CommandType.Slash ? ResponseBuilder.good("Cleared queue") : null
 		)

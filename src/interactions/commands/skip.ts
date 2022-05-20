@@ -58,7 +58,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		service.stopStatus = StopStatus.INTENTIONAL
 		service.player.stop()
 
-		helper.cache.updateMusicChannel()
+		helper.cache.updateMinutely()
 		helper.respond(
 			ResponseBuilder.good(
 				"Skipped the current song" +

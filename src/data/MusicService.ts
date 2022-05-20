@@ -160,7 +160,7 @@ export default class MusicService {
 		this.player.stop()
 		this.processQueue()
 		this.cache.setNickname()
-		this.cache.updateMusicChannel()
+		this.cache.updateMinutely()
 	}
 
 	public destroy() {
@@ -169,7 +169,7 @@ export default class MusicService {
 			this.connection.destroy()
 		}
 		this.cache.setNickname()
-		this.cache.updateMusicChannel()
+		this.cache.updateMinutely()
 		delete this.cache.service
 	}
 
@@ -181,7 +181,7 @@ export default class MusicService {
 	public enqueue(song: Song) {
 		this.queue.push(song)
 		this.processQueue()
-		this.cache.updateMusicChannel()
+		this.cache.updateMinutely()
 	}
 
 	/**
@@ -195,7 +195,7 @@ export default class MusicService {
 			this.player.state.status !== AudioPlayerStatus.Idle
 		) {
 			if (this.queue.length === 0) {
-				this.cache.updateMusicChannel()
+				this.cache.updateMinutely()
 
 				if (this.disconnectTimeout) {
 					logger.log("Clearing previous disconnect timeout")
@@ -224,7 +224,7 @@ export default class MusicService {
 			// Attempt to convert the Track into an AudioResource (i.e. start streaming the video)
 			const resource = await song.createAudioResource(this, this.cache.apiHelper)
 			this.stopStatus = StopStatus.NORMAL
-			this.cache.updateMusicChannel()
+			this.cache.updateMinutely()
 			this.player.play(resource)
 			this.queueLock = false
 		} catch (err) {

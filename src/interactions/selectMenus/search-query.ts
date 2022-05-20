@@ -43,7 +43,8 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 			try {
 				const song = await Song.from(helper.cache.apiHelper, url, member.id)
 				helper.cache.service!.enqueue(song)
-				helper.cache.updateMusicChannel()
+
+				helper.cache.updateMinutely()
 				helper.interaction.update({
 					embeds: [
 						ResponseBuilder.good(

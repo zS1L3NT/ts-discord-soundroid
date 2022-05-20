@@ -27,9 +27,9 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		service.loop = false
 		service.queueLoop = !service.queueLoop
 
+		helper.cache.updateMinutely()
 		helper.respond(
 			ResponseBuilder.good(`Queue Loop ${service.queueLoop ? "enabled" : "disabled"}`)
 		)
-		helper.cache.updateMusicChannel()
 	}
 }

@@ -149,7 +149,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)
 
-		helper.cache.updateMusicChannel()
+		helper.cache.updateMinutely()
 		helper.respond(ResponseBuilder.good(`Enqueued ${songs.length + 1} songs`))
 	}
 }

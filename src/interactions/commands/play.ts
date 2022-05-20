@@ -74,8 +74,8 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 				service.enqueue(first)
 				service.queue.push(...songs.slice(1))
-				helper.cache.updateMusicChannel()
 
+				helper.cache.updateMinutely()
 				if (songs.length === 1) {
 					helper.respond(
 						ResponseBuilder.good(`Enqueued: "${first.title} - ${first.artiste}"`)

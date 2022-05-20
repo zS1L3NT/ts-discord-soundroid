@@ -29,7 +29,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		service.queue = service.queue.filter((song, i) => i === 0 || !!members.get(song.requester))
 		const newLength = service.queue.length
 
-		helper.cache.updateMusicChannel()
+		helper.cache.updateMinutely()
 		helper.respond(
 			ResponseBuilder.good(`Cleared ${oldLength - newLength} songs from the queue`)
 		)

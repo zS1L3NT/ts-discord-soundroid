@@ -34,7 +34,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				.map(({ value }) => value)
 		]
 
-		helper.cache.updateMusicChannel()
+		helper.cache.updateMinutely()
 		helper.respond(
 			helper.type === CommandType.Slash ? ResponseBuilder.good("Shuffled Queue") : null
 		)

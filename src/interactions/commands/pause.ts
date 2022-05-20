@@ -25,7 +25,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 		service.player.pause()
 
-		helper.cache.updateMusicChannel()
+		helper.cache.updateMinutely()
 		helper.respond(
 			helper.type === CommandType.Slash ? ResponseBuilder.good("Paused song") : null
 		)

@@ -67,7 +67,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 		queue.splice(to || 1, 0, ...queue.splice(from, 1))
 
-		helper.cache.updateMusicChannel()
+		helper.cache.updateMinutely()
 		helper.respond(
 			ResponseBuilder.good(
 				`Moved "${song.title} - ${song.artiste}" from ${from} to ${

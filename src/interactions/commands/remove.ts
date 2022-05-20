@@ -69,7 +69,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			const deleteCount = to - from + 1
 			service.queue.splice(from, deleteCount)
 
-			helper.cache.updateMusicChannel()
+			helper.cache.updateMinutely()
 			helper.respond(ResponseBuilder.good(`Removed ${deleteCount} songs from the queue`))
 		} else {
 			const song = service.queue.splice(from, 1)[0]
@@ -77,7 +77,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				return helper.respond(ResponseBuilder.bad(`No song at position ${from}`))
 			}
 
-			helper.cache.updateMusicChannel()
+			helper.cache.updateMinutely()
 			helper.respond(
 				ResponseBuilder.good(`Removed 1 song from queue: "${song.title} - ${song.artiste}"`)
 			)

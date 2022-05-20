@@ -56,7 +56,8 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		}
 
 		service.queue.splice(1, 0, ...Array(count).fill(song))
-		helper.cache.updateMusicChannel()
+
+		helper.cache.updateMinutely()
 		helper.respond(
 			ResponseBuilder.good(`Playing "${song.title} - ${song.artiste}" again ${count} times`)
 		)

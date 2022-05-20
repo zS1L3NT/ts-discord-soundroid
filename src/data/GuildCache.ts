@@ -27,10 +27,6 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	 * Method run every minute
 	 */
 	public async updateMinutely() {
-		await this.updateMusicChannel()
-	}
-
-	public async updateMusicChannel() {
 		const musicChannelId = this.entry.music_channel_id
 		if (!musicChannelId) return
 

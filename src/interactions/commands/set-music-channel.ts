@@ -38,7 +38,8 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				helper.respond(ResponseBuilder.bad("This channel is already the Music channel!"))
 			} else {
 				await helper.cache.setMusicChannelId(channel.id)
-				helper.cache.updateMusicChannel()
+
+				helper.cache.updateMinutely()
 				helper.respond(
 					ResponseBuilder.good(`Music channel reassigned to \`#${channel.name}\``)
 				)
