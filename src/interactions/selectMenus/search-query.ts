@@ -10,7 +10,7 @@ import Song from "../../data/Song"
 import logger from "../../logger"
 
 export default class extends BaseSelectMenu<Entry, GuildCache> {
-	override defer = false
+	override defer = true
 	override ephemeral = true
 
 	override middleware = []
