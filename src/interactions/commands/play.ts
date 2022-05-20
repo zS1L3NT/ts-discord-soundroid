@@ -1,55 +1,46 @@
-import { GuildMember, VoiceChannel } from "discord.js"
+import { channel } from "diagnostics_channel"
 import { useTry, useTryAsync } from "no-try"
-import { iSlashFile, ResponseBuilder } from "nova-bot"
+import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
+import IsInVoiceChannelMiddleware from "../../middleware/IsInVoiceChannelMiddleware"
 import ConversionHelper from "../../utils/ConversionHelper"
 import SearchSelectBuilder from "../../utils/SearchSelectBuilder"
 
-const file: iSlashFile<Entry, GuildCache> = {
-	defer: true,
-	ephemeral: true,
-	data: {
+export default class extends BaseCommand<Entry, GuildCache> {
+	override defer = true
+	override ephemeral = true
+	override data = {
 		name: "play",
-		description: {
-			slash: "Play Song/Playlist/Album from YouTube/Spotify",
-			help: [
-				"Play a song with either",
-				"(1) YouTube Video Link",
-				"(2) YouTube Playlist Link",
-				"(3) Spotify Song Link",
-				"(4) Spotify Playlist Link",
-				"(5) Spotify Album Link",
-				"(6) YouTube Music Search Query",
-				"(7) YouTube Video Search Query"
-			].join("\n")
-		},
+		description: "Play Song/Playlist/Album from YouTube/Spotify",
 		options: [
 			{
 				name: "query",
-				description: {
-					slash: "Can be a YouTube/Spotify Song/Playlist/Album or Search Query",
-					help: "Can be a YouTube/Spotify Song/Playlist/Album or Search Query"
-				},
-				type: "string",
+				description: "This can be a YouTube/Spotify Song/Playlist/Album or Search Query",
+				type: "string" as const,
 				requirements: "Text or URL",
 				required: true
 			}
 		]
-	},
-	execute: async helper => {
-		const member = helper.interaction.member as GuildMember
-		const channel = member.voice.channel
-		if (!(channel instanceof VoiceChannel)) {
-			return helper.respond(
-				ResponseBuilder.bad("You have to be in a voice channel to use this command")
-			)
-		}
+	}
 
+	override middleware = [new IsInVoiceChannelMiddleware()]
+
+	override condition(helper: CommandHelper<Entry, GuildCache>) {
+		return helper.isMessageCommand(helper.cache.getPrefix(), "play", "more")
+	}
+
+	override converter(helper: CommandHelper<Entry, GuildCache>) {
+		return {
+			query: helper.input()!.join(" ") || ""
+		}
+	}
+
+	override async execute(helper: CommandHelper<Entry, GuildCache>) {
 		const query = helper.string("query")!
 
 		const [, url] = useTry(() => new URL(query))
@@ -58,7 +49,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 				const songs = await new ConversionHelper(
 					helper.cache.apiHelper,
 					url,
-					member.id
+					helper.member.id
 				).getSongs()
 				const [first] = songs
 
@@ -67,6 +58,7 @@ const file: iSlashFile<Entry, GuildCache> = {
 				}
 
 				if (!helper.cache.service) {
+					const channel = helper.member.voice.channel!
 					helper.cache.service = new MusicService(
 						joinVoiceChannel({
 							channelId: channel.id,
@@ -98,10 +90,12 @@ const file: iSlashFile<Entry, GuildCache> = {
 			}
 		} else {
 			helper.respond(
-				await new SearchSelectBuilder(helper.cache.apiHelper, query, member.id).buildMusic()
+				await new SearchSelectBuilder(
+					helper.cache.apiHelper,
+					query,
+					helper.member.id
+				).buildMusic()
 			)
 		}
 	}
 }
-
-export default file
