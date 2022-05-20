@@ -6,7 +6,7 @@ import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
-import IsInVoiceChannelMiddleware from "../../middleware/IsInVoiceChannelMiddleware"
+import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 
 export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
@@ -46,7 +46,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		]
 	}
 
-	override middleware = [new IsInVoiceChannelMiddleware()]
+	override middleware = [new IsInMyVoiceChannelMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
 		return helper.isMessageCommand("play-range", "more")

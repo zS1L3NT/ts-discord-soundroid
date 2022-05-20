@@ -1,4 +1,4 @@
-import { GuildMember, MessageEmbed, VoiceChannel } from "discord.js"
+import { MessageEmbed } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 import { BaseGuildCache, ChannelCleaner } from "nova-bot"
 
@@ -85,13 +85,6 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 				components: []
 			})
 		}
-	}
-
-	public isMemberInMyVoiceChannel(member: GuildMember): boolean {
-		return (
-			member.voice.channel instanceof VoiceChannel &&
-			member.voice.channel.id === this.guild.me?.voice?.channel?.id
-		)
 	}
 
 	public setNickname(nickname?: string) {

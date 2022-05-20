@@ -6,7 +6,7 @@ import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voic
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
-import IsInVoiceChannelMiddleware from "../../middleware/IsInVoiceChannelMiddleware"
+import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
 import DominantColorGetter from "../../utils/DominantColorGetter"
 import DurationHelper from "../../utils/DurationHelper"
@@ -24,7 +24,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	}
 
 	override middleware = [
-		new IsInVoiceChannelMiddleware(),
+		new IsInMyVoiceChannelMiddleware(),
 		new HasMusicServiceMiddleware(),
 		new IsPlayingMiddleware()
 	]
