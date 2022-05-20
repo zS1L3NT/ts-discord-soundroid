@@ -9,6 +9,8 @@ import logger from "../../logger"
 export default class extends BaseEvent<Entry, GuildCache, BotCache, "voiceStateUpdate"> {
 	override name = "voiceStateUpdate" as const
 
+	override middleware = []
+
 	override async execute(botCache: BotCache, oldState: VoiceState, newState: VoiceState) {
 		if (newState.channel) {
 			const cache = await botCache.getGuildCache(newState.guild)

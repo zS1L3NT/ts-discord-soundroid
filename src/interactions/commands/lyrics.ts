@@ -23,6 +23,8 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		]
 	}
 
+	override middleware = []
+
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
 		return helper.isMessageCommand("lyrics", "more")
 	}

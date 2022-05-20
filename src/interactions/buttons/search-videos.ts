@@ -10,6 +10,8 @@ export default class extends BaseButton<Entry, GuildCache> {
 	override defer = false
 	override ephemeral = true
 
+	override middleware = []
+
 	override async execute(helper: ButtonHelper<Entry, GuildCache>) {
 		const member = helper.interaction.member as GuildMember
 

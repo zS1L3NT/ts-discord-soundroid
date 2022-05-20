@@ -11,6 +11,8 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 	override defer = false
 	override ephemeral = true
 
+	override middleware = []
+
 	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
 		const member = helper.interaction.member as GuildMember
 

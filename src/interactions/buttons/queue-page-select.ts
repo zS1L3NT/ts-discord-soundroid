@@ -9,6 +9,8 @@ export default class extends BaseButton<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 
+	override middleware = []
+
 	override async execute(helper: ButtonHelper<Entry, GuildCache>) {
 		const message = helper.interaction.message as Message
 		const embed = message.embeds[0]
