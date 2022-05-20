@@ -1,4 +1,3 @@
-import { channel } from "diagnostics_channel"
 import { useTry, useTryAsync } from "no-try"
 import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
@@ -7,7 +6,7 @@ import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
-import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
+import IsInAVoiceChannelMiddleware from "../../middleware/IsInAVoiceChannelMiddleware"
 import ConversionHelper from "../../utils/ConversionHelper"
 import SearchSelectBuilder from "../../utils/SearchSelectBuilder"
 
@@ -28,7 +27,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		]
 	}
 
-	override middleware = [new IsInMyVoiceChannelMiddleware()]
+	override middleware = [new IsInAVoiceChannelMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
 		return helper.isMessageCommand("play", "more")
