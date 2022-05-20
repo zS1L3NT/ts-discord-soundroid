@@ -104,12 +104,7 @@ export default class ApiHelper {
 		return (await this.ytmusic.getPlaylist(playlistId)).videoCount
 	}
 
-	async findYoutubePlaylist(
-		playlistId: string,
-		start: number,
-		end: number,
-		requester: string
-	) {
+	async findYoutubePlaylist(playlistId: string, start: number, end: number, requester: string) {
 		const { items: videos } = await ytpl(playlistId, { limit: end })
 		return videos
 			.slice(start - 1)
@@ -139,12 +134,7 @@ export default class ApiHelper {
 		return (await this.spotify.getPlaylist(playlistId)).body.tracks.total
 	}
 
-	async findSpotifyPlaylist(
-		playlistId: string,
-		start: number,
-		end: number,
-		requester: string
-	) {
+	async findSpotifyPlaylist(playlistId: string, start: number, end: number, requester: string) {
 		await this.refreshSpotifyToken()
 
 		const tracks: Song[] = []
@@ -157,8 +147,8 @@ export default class ApiHelper {
 			const results = await this.spotify.getPlaylistTracks(playlistId, { limit, offset })
 			tracks.push(
 				...results.body.items
-					.map(i => i.track)
-					.filter(result => result !== null)
+					.filter(i => i.track !== null)
+					.map(i => i.track!)
 					.map(
 						result =>
 							new Song(
