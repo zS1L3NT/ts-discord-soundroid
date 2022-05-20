@@ -31,12 +31,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override middleware = [new IsInVoiceChannelMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(helper.cache.getPrefix(), "play", "more")
+		return helper.isMessageCommand("play", "more")
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {
 		return {
-			query: helper.input()!.join(" ") || ""
+			query: helper.input().join(" ") || ""
 		}
 	}
 

@@ -16,7 +16,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override middleware = [new IsInVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(helper.cache.getPrefix(), "loop", "only")
+		return helper.isMessageCommand("loop", "only")
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {}

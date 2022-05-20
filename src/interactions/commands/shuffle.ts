@@ -12,7 +12,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	}
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(helper.cache.getPrefix(), "shuffle", "only")
+		return helper.isMessageCommand("shuffle", "only")
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {}

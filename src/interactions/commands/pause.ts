@@ -15,7 +15,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override middleware = []
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(helper.cache.getPrefix(), "pause", "only")
+		return helper.isMessageCommand("pause", "only")
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {}

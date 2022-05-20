@@ -26,7 +26,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 				components: []
 			})
 		} else {
-			const url = helper.value()!
+			const url = helper.value!
 			if (!helper.cache.service) {
 				helper.cache.service = new MusicService(
 					joinVoiceChannel({

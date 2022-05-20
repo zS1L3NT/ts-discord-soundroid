@@ -27,8 +27,8 @@ new NovaBot({
 			[
 				"Welcome to SounDroid!",
 				"SounDroid is a Music bot which plays songs from Spotify and YouTube",
-				cache.getPrefix()
-					? `My prefix for message commands is \`${cache.getPrefix()}\``
+				cache.prefix
+					? `My prefix for message commands is \`${cache.prefix}\``
 					: `No message command prefix for this server`
 			].join("\n"),
 		icon: "https://cdn.discordapp.com/avatars/899858077027811379/56e8665909db40439b09e13627970b62.png?size=128"

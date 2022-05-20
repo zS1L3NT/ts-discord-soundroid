@@ -27,9 +27,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override only = CommandType.Message
 	override middleware = [new IsAdminMiddleware()]
 
-	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return false
-	}
+	override condition(helper: CommandHelper<Entry, GuildCache>) {}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {}
 

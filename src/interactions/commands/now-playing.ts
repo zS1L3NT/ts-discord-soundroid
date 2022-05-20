@@ -30,7 +30,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(helper.cache.getPrefix(), "now-playing", "only")
+		return helper.isMessageCommand("now-playing", "only")
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {}

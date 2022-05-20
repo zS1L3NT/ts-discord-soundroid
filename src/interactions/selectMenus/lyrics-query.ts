@@ -29,7 +29,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 
 		const [, messageOptions] = await useTryAsync(async () => {
 			try {
-				const id = helper.value()!
+				const id = helper.value!
 				const { title, artiste, cover, lyrics } =
 					await helper.cache.apiHelper.findGeniusLyrics(id)
 				return {

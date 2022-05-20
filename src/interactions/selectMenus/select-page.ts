@@ -12,7 +12,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 	override ephemeral = true
 
 	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
-		const [channelId, messageId, pageStr, moreStr] = helper.value()!.split("-")
+		const [channelId, messageId, pageStr, moreStr] = helper.value!.split("-")
 		const guild = helper.cache.guild
 		const more = +moreStr!
 		const page = +pageStr!

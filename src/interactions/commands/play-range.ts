@@ -49,11 +49,11 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override middleware = [new IsInVoiceChannelMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(helper.cache.getPrefix(), "play-range", "more")
+		return helper.isMessageCommand("play-range", "more")
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {
-		const [linkStr, fromStr, toStr] = helper.input()!
+		const [linkStr, fromStr, toStr] = helper.input()
 		return {
 			link: linkStr || "",
 			from: fromStr === undefined ? 1 : isNaN(+fromStr) ? 0 : +fromStr,

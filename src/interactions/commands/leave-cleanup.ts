@@ -16,7 +16,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override middleware = [new IsInVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(helper.cache.getPrefix(), "leave-cleanup", "only")
+		return helper.isMessageCommand("leave-cleanup", "only")
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {}

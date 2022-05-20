@@ -25,12 +25,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	}
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(helper.cache.getPrefix(), "lyrics", "more")
+		return helper.isMessageCommand("lyrics", "more")
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {
 		return {
-			query: helper.input()!.join(" ")
+			query: helper.input().join(" ")
 		}
 	}
 

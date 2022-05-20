@@ -107,13 +107,4 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 		this.entry.music_message_id = musicMessageId
 		await this.ref.update({ music_message_id: musicMessageId })
 	}
-
-	public getMessageCommandRegex(command: string) {
-		const alias = this.getAliases()[command]
-		return `\\${this.getPrefix()}${alias ? `(${command}|${alias})` : command}`
-	}
-
-	public getPrefix() {
-		return this.entry.prefix
-	}
 }

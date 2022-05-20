@@ -16,7 +16,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override middleware = [new IsInVoiceChannelMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(helper.cache.getPrefix(), "queue", "only")
+		return helper.isMessageCommand("queue", "only")
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {}

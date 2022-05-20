@@ -14,7 +14,7 @@ specifiers:
   libsodium-wrappers: ^0.7.10
   no-try: ^3.1.0
   node-genius-api: ^1.2.0
-  nova-bot: 2.0.0-alpha.8
+  nova-bot: 2.0.0-alpha.9
   spotify-web-api-node: ^5.0.2
   tracer: ^1.1.5
   typescript: ^4.6.3
@@ -35,7 +35,7 @@ dependencies:
   libsodium-wrappers: 0.7.10
   no-try: 3.1.0
   node-genius-api: 1.2.0
-  nova-bot: 2.0.0-alpha.8
+  nova-bot: 2.0.0-alpha.9
   spotify-web-api-node: 5.0.2
   tracer: 1.1.5
   youtube-dl-exec: 2.0.12
@@ -1069,6 +1069,11 @@ packages:
     dev: false
     optional: true
 
+  /escape-string-regexp/5.0.0:
+    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
+    engines: {node: '>=12'}
+    dev: false
+
   /event-target-shim/5.0.1:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
     engines: {node: '>=6'}
@@ -1953,8 +1958,8 @@ packages:
       abbrev: 1.1.1
     dev: false
 
-  /nova-bot/2.0.0-alpha.8:
-    resolution: {integrity: sha512-lh7V9JhP+06sjwvqpGpvZAnpA3Zw+5LZEprH6GyM0YPHO3vmAprdtTlWFPe5HYJgnTPwHTpJPGck3u1iKNVPag==}
+  /nova-bot/2.0.0-alpha.9:
+    resolution: {integrity: sha512-q/p4iolLiZ/DI1/G+wOXQ9eSEAKTGbcL/kcBeZROk/qEiqlzKAN9tXnQzah9DM4H7EAE7zNOrIdyPEKA9bBfGg==}
     dependencies:
       '@discordjs/builders': 0.13.0
       '@discordjs/rest': 0.4.1
@@ -1966,6 +1971,7 @@ packages:
       after-every: 1.0.4
       discord-api-types: 0.33.0
       discord.js: 13.7.0
+      escape-string-regexp: 5.0.0
       firebase-admin: 10.2.0_rpd4ipbmnh3eak32lkxgflhihy
       luxon: 2.4.0
       no-try: 3.1.0
