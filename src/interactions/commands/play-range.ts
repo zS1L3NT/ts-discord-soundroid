@@ -1,55 +1,40 @@
-import { GuildMember, VoiceChannel } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
-import { iSlashFile, ResponseBuilder } from "nova-bot"
+import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
+import IsInVoiceChannelMiddleware from "../../middleware/IsInVoiceChannelMiddleware"
 
-const file: iSlashFile<Entry, GuildCache> = {
-	defer: true,
-	ephemeral: true,
-	data: {
+export default class extends BaseCommand<Entry, GuildCache> {
+	override defer = true
+	override ephemeral = true
+	override data = {
 		name: "play-range",
-		description: {
-			slash: "Plays a YouTube/Spotify Playlist and allows choosing the playlist range",
-			help: [
-				"Plays a YouTube/Spotify Playlist by it's link",
-				"You can define a range to play the playlist",
-				"Cannot add more than 1000 songs"
-			].join("\n")
-		},
+		description:
+			"Plays a YouTube/Spotify Playlist and allows choosing the playlist range (max 1000)",
 		options: [
 			{
 				name: "link",
-				description: {
-					slash: "YouTube/Spotify Playlist link",
-					help: "The YouTube/Spotify Playlist link"
-				},
-				type: "string",
+				description: "The YouTube/Spotify Playlist link",
+				type: "string" as const,
 				requirements: "URL",
 				required: true
 			},
 			{
 				name: "from",
-				description: {
-					slash: "First position of the playlist to play from",
-					help: "The first position of the playlist to play from"
-				},
-				type: "number",
+				description: "The first position of the playlist to play from",
+				type: "number" as const,
 				requirements: "Number that references a song in the Spotify playlist",
 				required: false,
 				default: "1"
 			},
 			{
 				name: "to",
-				description: {
-					slash: "Last position of the playlist to play from",
-					help: "The last position of the playlist to play from"
-				},
-				type: "number",
+				description: "The last position of the playlist to play from",
+				type: "number" as const,
 				requirements: [
 					"Number that references a song in the Spotify playlist",
 					"Cannot be smaller than `from` position specified earlier",
@@ -59,17 +44,26 @@ const file: iSlashFile<Entry, GuildCache> = {
 				default: "End of the playlist"
 			}
 		]
-	},
-	execute: async helper => {
-		const member = helper.interaction.member as GuildMember
-		const channel = member.voice.channel
-		if (!(channel instanceof VoiceChannel)) {
-			return helper.respond(
-				ResponseBuilder.bad("You have to be in a voice channel to use this command")
-			)
-		}
+	}
 
+	override middleware = [new IsInVoiceChannelMiddleware()]
+
+	override condition(helper: CommandHelper<Entry, GuildCache>) {
+		return helper.isMessageCommand(helper.cache.getPrefix(), "play-range", "more")
+	}
+
+	override converter(helper: CommandHelper<Entry, GuildCache>) {
+		const [linkStr, fromStr, toStr] = helper.input()!
+		return {
+			link: linkStr || "",
+			from: fromStr === undefined ? 1 : isNaN(+fromStr) ? 0 : +fromStr,
+			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr
+		}
+	}
+
+	override async execute(helper: CommandHelper<Entry, GuildCache>) {
 		if (!helper.cache.service) {
+			const channel = helper.member.voice.channel!
 			helper.cache.service = new MusicService(
 				joinVoiceChannel({
 					channelId: channel.id,
@@ -83,6 +77,9 @@ const file: iSlashFile<Entry, GuildCache> = {
 		}
 
 		const link = helper.string("link")!
+		let from = helper.integer("from")!
+		let to = helper.integer("to")
+
 		const [err, playlistId] = useTry(() => {
 			const url = new URL(link)
 			if (url.host === "open.spotify.com" && url.pathname.startsWith("/playlist/")) {
@@ -100,9 +97,6 @@ const file: iSlashFile<Entry, GuildCache> = {
 				ResponseBuilder.bad("Link must be a Spotify/Youtube playlist link!")
 			)
 		}
-
-		let from = helper.integer("from") || 1
-		let to = helper.integer("to")
 
 		if (from < 1) {
 			return helper.respond(ResponseBuilder.bad(`Invalid "from" position: ${from}`))
@@ -145,18 +139,17 @@ const file: iSlashFile<Entry, GuildCache> = {
 		helper.respond(ResponseBuilder.good(`Adding songs from #${from} to #${to}...`))
 
 		const [, spotifyPlaylistSongs] = await useTryAsync(() =>
-			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, member.id)
+			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, helper.member.id)
 		)
 		const [, youtubePlaylistSongs] = await useTryAsync(() =>
-			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, member.id)
+			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, helper.member.id)
 		)
 		const songs = spotifyPlaylistSongs || youtubePlaylistSongs
 
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)
+
 		helper.cache.updateMusicChannel()
 		helper.respond(ResponseBuilder.good(`Enqueued ${songs.length + 1} songs`))
 	}
 }
-
-export default file

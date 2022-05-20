@@ -14,7 +14,7 @@ specifiers:
   libsodium-wrappers: ^0.7.10
   no-try: ^3.1.0
   node-genius-api: ^1.2.0
-  nova-bot: 2.0.0-alpha.7
+  nova-bot: 2.0.0-alpha.8
   spotify-web-api-node: ^5.0.2
   tracer: ^1.1.5
   typescript: ^4.6.3
@@ -35,7 +35,7 @@ dependencies:
   libsodium-wrappers: 0.7.10
   no-try: 3.1.0
   node-genius-api: 1.2.0
-  nova-bot: 2.0.0-alpha.7
+  nova-bot: 2.0.0-alpha.8
   spotify-web-api-node: 5.0.2
   tracer: 1.1.5
   youtube-dl-exec: 2.0.12
@@ -69,7 +69,7 @@ packages:
       discord-api-types: 0.31.2
       fast-deep-equal: 3.1.3
       ts-mixer: 6.0.1
-      tslib: 2.3.1
+      tslib: 2.4.0
     dev: false
 
   /@discordjs/collection/0.6.0:
@@ -292,8 +292,8 @@ packages:
     dev: false
     optional: true
 
-  /@google-cloud/storage/5.20.4:
-    resolution: {integrity: sha512-FAquqI1imd6Nq1ifdismGenYzC65DENEzIFAq4uwZMulxh32RvdzWdzx28fKzUDsoAkEfBpXJuptC31hLaHZYg==}
+  /@google-cloud/storage/5.20.5:
+    resolution: {integrity: sha512-lOs/dCyveVF8TkVFnFSF7IGd0CJrTm91qiK6JLu+Z8qiT+7Ag0RyVhxZIWkhiACqwABo7kSHDm8FdH8p2wxSSw==}
     engines: {node: '>=10'}
     requiresBuild: true
     dependencies:
@@ -318,6 +318,7 @@ packages:
       retry-request: 4.2.2
       stream-events: 1.0.5
       teeny-request: 7.2.0
+      uuid: 8.3.2
       xdg-basedir: 4.0.0
     transitivePeerDependencies:
       - encoding
@@ -330,7 +331,7 @@ packages:
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.6.12
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
     dev: false
     optional: true
 
@@ -435,19 +436,19 @@ packages:
     resolution: {integrity: sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g==}
     dependencies:
       '@types/connect': 3.4.35
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
     dev: false
 
   /@types/connect/3.4.35:
     resolution: {integrity: sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==}
     dependencies:
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
     dev: false
 
   /@types/express-serve-static-core/4.17.28:
     resolution: {integrity: sha512-P1BJAEAW3E2DJUlkgq4tOL3RyMunoWXqbSCygWo5ZIWTjUgN1YnaXWW4VWl/oc8vs/XoYibEGBKP0uZyF4AHig==}
     dependencies:
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
       '@types/qs': 6.9.7
       '@types/range-parser': 1.2.4
     dev: false
@@ -488,8 +489,8 @@ packages:
   /@types/node/17.0.23:
     resolution: {integrity: sha512-UxDxWn7dl97rKVeVS61vErvw086aCYhDLyvRQZ5Rk65rZKepaFdm53GeqXaKBuOhED4e9uWq34IC3TdSdJJ2Gw==}
 
-  /@types/node/17.0.34:
-    resolution: {integrity: sha512-XImEz7XwTvDBtzlTnm8YvMqGW/ErMWBsKZ+hMTvnDIjGCKxwK5Xpc+c/oQjOauwq8M4OS11hEkpjX8rrI/eEgA==}
+  /@types/node/17.0.35:
+    resolution: {integrity: sha512-vu1SrqBjbbZ3J6vwY17jBs8Sr/BKA+/a/WtjRG+whKg1iuLFOosq872EXS0eXWILdO36DHQQeku/ZcL6hz2fpg==}
     dev: false
 
   /@types/qs/6.9.7:
@@ -504,7 +505,7 @@ packages:
     resolution: {integrity: sha512-nCkHGI4w7ZgAdNkrEu0bv+4xNV/XDqW+DydknebMOQwkpDGx8G+HTlj7R7ABI8i8nKxVw0wtKPi1D+lPOkh4YQ==}
     dependencies:
       '@types/mime': 1.3.2
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
     dev: false
 
   /@types/spotify-api/0.0.14:
@@ -676,7 +677,7 @@ packages:
     dev: false
 
   /buffer-equal-constant-time/1.0.1:
-    resolution: {integrity: sha512-zRpUiDwd/xk6ADqPMATG8vc9VPrkck7T07OIx0gnjmJAnHnTVXNQG3vfvWNuiZIkwu9KrKdA1iJKfsfTVxE6NA==}
+    resolution: {integrity: sha1-+OcRMvf/5uAaXJaXpMbz5I1cyBk=}
     dev: false
 
   /buffer-from/1.1.2:
@@ -1149,7 +1150,7 @@ packages:
     dependencies:
       '@firebase/database-compat': 0.1.8_rpd4ipbmnh3eak32lkxgflhihy
       '@firebase/database-types': 0.9.8
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
       dicer: 0.3.1
       jsonwebtoken: 8.5.1
       jwks-rsa: 2.1.2
@@ -1157,7 +1158,7 @@ packages:
       uuid: 8.3.2
     optionalDependencies:
       '@google-cloud/firestore': 4.15.1
-      '@google-cloud/storage': 5.20.4
+      '@google-cloud/storage': 5.20.5
     transitivePeerDependencies:
       - '@firebase/app-compat'
       - '@firebase/app-types'
@@ -1952,15 +1953,15 @@ packages:
       abbrev: 1.1.1
     dev: false
 
-  /nova-bot/2.0.0-alpha.7:
-    resolution: {integrity: sha512-RD/MCbUbfjsXq7kgZNTNbVHh+pKmzkqkFIdbH+TG0J4gXk3EQ7HtzcaXUxomSFleMtRqN/cTJCJXQHjLNFpYVw==}
+  /nova-bot/2.0.0-alpha.8:
+    resolution: {integrity: sha512-lh7V9JhP+06sjwvqpGpvZAnpA3Zw+5LZEprH6GyM0YPHO3vmAprdtTlWFPe5HYJgnTPwHTpJPGck3u1iKNVPag==}
     dependencies:
       '@discordjs/builders': 0.13.0
       '@discordjs/rest': 0.4.1
       '@firebase/app-compat': 0.1.25
       '@firebase/app-types': 0.7.0
       '@types/luxon': 2.3.2
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
       '@types/node-fetch': 2.6.1
       after-every: 1.0.4
       discord-api-types: 0.33.0
@@ -2139,7 +2140,7 @@ packages:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 17.0.34
+      '@types/node': 17.0.35
       long: 4.0.0
     dev: false
     optional: true
