@@ -44,7 +44,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			title: `Shuffled queue`,
 			description: `<@${helper.member.id}> shuffled the queue`,
 			command: "shuffle",
-			color: "#FFD56D"
+			color: "YELLOW"
 		})
 	}
 }

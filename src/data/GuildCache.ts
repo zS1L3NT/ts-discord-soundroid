@@ -74,7 +74,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 						.setDescription(
 							"Use `/play <Youtube link, Spotify link, or Search query>` to use me!"
 						)
-						.setColor("#77B255")
+						.setColor("GREEN")
 				],
 				components: []
 			})

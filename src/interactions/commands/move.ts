@@ -84,7 +84,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				`**New Position**: ${to || "Top of the queue"}`
 			].join("\n"),
 			command: "move",
-			color: "#77B255"
+			color: "GREEN"
 		})
 	}
 }

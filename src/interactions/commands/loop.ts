@@ -33,7 +33,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			title: `Loop ${service.loop ? "enabled" : "disabled"}`,
 			description: `<@${helper.member.id}> **${service.loop ? "enabled" : "disabled"}** loop`,
 			command: "loop",
-			color: "#FFD56D"
+			color: "YELLOW"
 		})
 	}
 }

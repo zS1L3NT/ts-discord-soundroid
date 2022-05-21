@@ -39,7 +39,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				oldLength - newLength
 			}`,
 			command: "leave-cleanup",
-			color: "#FFD56D"
+			color: "YELLOW"
 		})
 	}
 }

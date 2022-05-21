@@ -38,7 +38,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			title: `Paused song`,
 			description: `<@${helper.member.id}> paused the current song`,
 			command: "pause",
-			color: "#FFD56D"
+			color: "YELLOW"
 		})
 	}
 }

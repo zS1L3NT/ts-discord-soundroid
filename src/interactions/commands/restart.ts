@@ -25,5 +25,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 		service.restart()
 		helper.respond(ResponseBuilder.good("Restarted the current song"))
+		helper.cache.logger.log({
+			member: helper.member,
+			title: `Restarted Song`,
+			description: `<@${helper.member.id}> restarted the current song`,
+			command: "restart",
+			color: "RED"
+		})
 	}
 }

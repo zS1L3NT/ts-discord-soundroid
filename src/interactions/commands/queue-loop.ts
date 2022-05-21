@@ -37,7 +37,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				service.queueLoop ? "enabled" : "disabled"
 			}** queue loop`,
 			command: "queue-loop",
-			color: "#FFD56D"
+			color: "YELLOW"
 		})
 	}
 }

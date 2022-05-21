@@ -80,7 +80,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				count > 1 ? ` and the next ${count - 1} songs` : ""
 			}`,
 			command: "skip",
-			color: "#FFD56D"
+			color: "YELLOW"
 		})
 	}
 }

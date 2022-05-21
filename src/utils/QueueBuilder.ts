@@ -95,7 +95,7 @@ export default class QueueBuilder {
 						iconURL:
 							"https://firebasestorage.googleapis.com/v0/b/zectan-projects.appspot.com/o/bad.png?alt=media&token=cbd48c77-784c-4f86-8de1-7335b452a894"
 					})
-					.setColor("#DD2E44")
+					.setColor("RED")
 			],
 			components: []
 		}

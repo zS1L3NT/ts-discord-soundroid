@@ -37,7 +37,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			title: `Resumed song`,
 			description: `<@${helper.member.id}> resumed the current song`,
 			command: "resume",
-			color: "#FFD56D"
+			color: "YELLOW"
 		})
 	}
 }

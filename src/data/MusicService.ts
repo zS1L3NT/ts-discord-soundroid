@@ -246,7 +246,7 @@ export default class MusicService {
 			this.cache.logger.log({
 				title: `Error playing track`,
 				description: (err as Error).stack || "No stack trace available",
-				color: "#DD2E44"
+				color: "RED"
 			})
 			return this.processQueue()
 		}

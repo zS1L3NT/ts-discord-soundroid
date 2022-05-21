@@ -65,7 +65,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			title: `Current song played again`,
 			description: `<@${helper.member.id}> played the current song again\n**Times**: ${count}`,
 			command: "play-again",
-			color: "#77B255"
+			color: "GREEN"
 		})
 	}
 }

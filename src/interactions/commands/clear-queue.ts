@@ -35,7 +35,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			title: `Cleared queue`,
 			description: `<@${helper.member.id}> cleared the queue`,
 			command: "clear-queue",
-			color: "#FFD56D"
+			color: "YELLOW"
 		})
 	}
 }

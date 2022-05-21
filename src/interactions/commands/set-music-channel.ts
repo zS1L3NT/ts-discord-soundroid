@@ -53,7 +53,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 						`**New Music Channel**: <#${channel.id}>`
 					].join("\n"),
 					command: "set-music-channel",
-					color: "#4987C7"
+					color: "BLUE"
 				})
 			}
 		} else if (channel === null) {
@@ -64,7 +64,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				title: `Music channel unassigned`,
 				description: `<@${helper.member.id}> unassigned the music channel\b**Old Music Channel**: <#${oldChannelId}>`,
 				command: "set-music-channel",
-				color: "#4987C7"
+				color: "BLUE"
 			})
 		} else {
 			helper.respond(ResponseBuilder.bad(`Please select a text channel`))

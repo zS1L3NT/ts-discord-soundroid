@@ -160,7 +160,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				`**End Position**: ${to}`
 			].join("\n"),
 			command: "play-range",
-			color: "#77B255"
+			color: "GREEN"
 		})
 	}
 }

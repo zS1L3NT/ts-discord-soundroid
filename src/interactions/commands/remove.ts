@@ -79,7 +79,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 					`**End Position**: ${to}`
 				].join("\n"),
 				command: "remove",
-				color: "#FFD56D"
+				color: "YELLOW"
 			})
 		} else {
 			const song = service.queue.splice(from, 1)[0]
@@ -96,7 +96,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				title: `Removed a song from the queue`,
 				description: `<@${helper.member.id}> removed [${song.title} - ${song.artiste}](${song.url}) from the queue\n**Original Index**: ${from}`,
 				command: "remove",
-				color: "#FFD56D"
+				color: "YELLOW"
 			})
 		}
 	}
