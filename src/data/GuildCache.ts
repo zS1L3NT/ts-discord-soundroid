@@ -12,9 +12,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	apiHelper!: ApiHelper
 	service?: MusicService
 
-	onConstruct() {}
-
-	resolve(resolve: (cache: GuildCache) => void) {
+	override resolve(resolve: (cache: GuildCache) => void) {
 		this.ref.onSnapshot(snap => {
 			if (snap.exists) {
 				this.entry = snap.data() as Entry
@@ -26,7 +24,7 @@ export default class GuildCache extends BaseGuildCache<Entry, GuildCache> {
 	/**
 	 * Method run every minute
 	 */
-	async updateMinutely() {
+	override async updateMinutely() {
 		const musicChannelId = this.entry.music_channel_id
 		if (!musicChannelId) return
 

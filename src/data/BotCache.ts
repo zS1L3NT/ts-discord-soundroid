@@ -7,27 +7,25 @@ import GuildCache from "./GuildCache"
 export default class BotCache extends BaseBotCache<Entry, GuildCache> {
 	private apiHelper = new ApiHelper()
 
-	onConstruct() {}
-
-	onSetGuildCache(cache: GuildCache) {
+	override onSetGuildCache(cache: GuildCache) {
 		cache.apiHelper = this.apiHelper
 	}
 
-	async registerGuildCache(guildId: string) {
+	override async registerGuildCache(guildId: string) {
 		const doc = await this.ref.doc(guildId).get()
 		if (!doc.exists) {
 			await this.ref.doc(guildId).set(this.getEmptyEntry())
 		}
 	}
 
-	async eraseGuildCache(guildId: string) {
+	override async eraseGuildCache(guildId: string) {
 		const doc = await this.ref.doc(guildId).get()
 		if (doc.exists) {
 			await this.ref.doc(guildId).delete()
 		}
 	}
 
-	getEmptyEntry(): Entry {
+	override getEmptyEntry(): Entry {
 		return {
 			prefix: "",
 			aliases: {},
