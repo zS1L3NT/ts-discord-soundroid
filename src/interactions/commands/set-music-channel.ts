@@ -32,6 +32,8 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 	override async execute(helper: CommandHelper<Entry, GuildCache>) {
 		const channel = helper.channel("channel")
+		const oldChannelId = helper.cache.entry.log_channel_id
+
 		if (channel instanceof TextChannel) {
 			if (channel.id === helper.cache.entry.music_channel_id) {
 				helper.respond(ResponseBuilder.bad("This channel is already the Music channel!"))
@@ -42,10 +44,28 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				helper.respond(
 					ResponseBuilder.good(`Music channel reassigned to \`#${channel.name}\``)
 				)
+				helper.cache.logger.log({
+					member: helper.member,
+					title: `Music channel changed`,
+					description: [
+						`<@${helper.member.id}> changed the music channel`,
+						`**Old Music Channel**: <#${oldChannelId}>`,
+						`**New Music Channel**: <#${channel.id}>`
+					].join("\n"),
+					command: "set-music-channel",
+					color: "#4987C7"
+				})
 			}
 		} else if (channel === null) {
 			await helper.cache.setMusicChannelId("")
 			helper.respond(ResponseBuilder.good(`Music channel unassigned`))
+			helper.cache.logger.log({
+				member: helper.member,
+				title: `Music channel unassigned`,
+				description: `<@${helper.member.id}> unassigned the music channel\b**Old Music Channel**: <#${oldChannelId}>`,
+				command: "set-music-channel",
+				color: "#4987C7"
+			})
 		} else {
 			helper.respond(ResponseBuilder.bad(`Please select a text channel`))
 		}
