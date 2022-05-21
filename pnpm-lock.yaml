@@ -14,7 +14,7 @@ specifiers:
   libsodium-wrappers: ^0.7.10
   no-try: ^3.1.0
   node-genius-api: ^1.2.0
-  nova-bot: 2.0.0-alpha.26
+  nova-bot: 2.0.0-alpha.29
   spotify-web-api-node: ^5.0.2
   tracer: ^1.1.5
   typescript: ^4.6.3
@@ -35,7 +35,7 @@ dependencies:
   libsodium-wrappers: 0.7.10
   no-try: 3.1.0
   node-genius-api: 1.2.0
-  nova-bot: 2.0.0-alpha.26
+  nova-bot: 2.0.0-alpha.29
   spotify-web-api-node: 5.0.2
   tracer: 1.1.5
   youtube-dl-exec: 2.0.12
@@ -77,8 +77,8 @@ packages:
     engines: {node: '>=16.9.0'}
     dev: false
 
-  /@discordjs/collection/0.7.0-dev.1652918980-adf461b:
-    resolution: {integrity: sha512-46X1nBbEAxhUWmb8suTDMEaHxO8MBSvmDYD4i03evS56PYt2U8p60iQrq0Gw5TaP4nR4ANLnTFKLPeho5yf0WQ==}
+  /@discordjs/collection/0.7.0-dev.1653091708-fdeac9d:
+    resolution: {integrity: sha512-21gKkNVlqWMTf5kkZ2uAkfe8kU149w/JXC9Vpu7nNEir6A5AHNPULtd+1FssvXYAfoEnzus7/gZC6pYD5eX/gQ==}
     engines: {node: '>=16.9.0'}
     dev: false
 
@@ -116,7 +116,7 @@ packages:
     resolution: {integrity: sha512-rtWy+AIfNlfjGkAgA2TJLASdqli07aTNQceVGT6RQQiQaEqV0nsfBO4WtDlDzk7PmO3w+InP3dpwEolJI5jz0A==}
     engines: {node: '>=16.9.0'}
     dependencies:
-      '@discordjs/collection': 0.7.0-dev.1652918980-adf461b
+      '@discordjs/collection': 0.7.0-dev.1653091708-fdeac9d
       '@sapphire/async-queue': 1.3.1
       '@sapphire/snowflake': 3.2.2
       '@types/node-fetch': 2.6.1
@@ -1958,8 +1958,8 @@ packages:
       abbrev: 1.1.1
     dev: false
 
-  /nova-bot/2.0.0-alpha.26:
-    resolution: {integrity: sha512-YcO8gcHsuFNXYFsY7gVOicLnpkM9jAA4yx2VWdP8G/eFxfXVAFyNY8nxUC8+L3BUwy7bcg7oY+nQ6SlLN51LcA==}
+  /nova-bot/2.0.0-alpha.29:
+    resolution: {integrity: sha512-Mt5Yab61lSPjyq9ATIeLQV3Wzsg2eXuYXDpsBPFoqMGnejFO+Xy0x/h81kQESR7P8y2/1QkKyfdzL7ORTgEdsQ==}
     dependencies:
       '@discordjs/builders': 0.13.0
       '@discordjs/rest': 0.4.1
