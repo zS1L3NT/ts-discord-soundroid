@@ -46,19 +46,15 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 			const song = service.queue[0]!
 
-			helper.respond(
-				await new LyricsSelectBuilder(
-					helper.cache.apiHelper,
-					query || `${song.title} - ${song.artiste}`
-				).build(),
-				null
-			)
+			const embed = await new LyricsSelectBuilder(
+				helper.cache.apiHelper,
+				query || `${song.title} - ${song.artiste}`
+			).build()
+			helper.respond(embed, embed.components!.length === 0 ? 5000 : null)
 		} else {
 			if (query) {
-				helper.respond(
-					await new LyricsSelectBuilder(helper.cache.apiHelper, `${query}`).build(),
-					null
-				)
+				const embed = await new LyricsSelectBuilder(helper.cache.apiHelper, query).build()
+				helper.respond(embed, embed.components!.length === 0 ? 5000 : null)
 			} else {
 				helper.respond(
 					ResponseBuilder.bad(

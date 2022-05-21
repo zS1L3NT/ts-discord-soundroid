@@ -10,7 +10,7 @@ import Song from "../../data/Song"
 import logger from "../../logger"
 
 export default class extends BaseSelectMenu<Entry, GuildCache> {
-	override defer = true
+	override defer = false
 	override ephemeral = true
 
 	override middleware = []
@@ -19,7 +19,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 		const member = helper.interaction.member as GuildMember
 		const channel = member.voice.channel
 		if (!(channel instanceof VoiceChannel)) {
-			helper.interaction.update({
+			helper.update({
 				embeds: [
 					ResponseBuilder.bad(
 						"You have to be in a voice channel to use this command"
@@ -47,7 +47,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 				helper.cache.service!.enqueue(song)
 
 				helper.cache.updateMinutely()
-				helper.interaction.update({
+				helper.update({
 					embeds: [
 						ResponseBuilder.good(
 							`Enqueued song: "${song.title} - ${song.artiste}"`
@@ -64,7 +64,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 				})
 			} catch (err) {
 				logger.error("Error playing song from url", err)
-				helper.interaction.update({
+				helper.update({
 					embeds: [ResponseBuilder.bad("Error playing song from url").build()],
 					components: []
 				})
