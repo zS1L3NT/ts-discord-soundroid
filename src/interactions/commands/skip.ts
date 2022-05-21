@@ -31,11 +31,11 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand("skip", "more")
+		return helper.isMessageCommand(null)
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {
-		const [countStr] = helper.input()
+		const [countStr] = helper.args()
 		return {
 			count: countStr === undefined ? 1 : isNaN(+countStr) ? 0 : +countStr
 		}

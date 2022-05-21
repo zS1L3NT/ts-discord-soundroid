@@ -26,12 +26,12 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override middleware = []
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand("lyrics", "more")
+		return helper.isMessageCommand(null)
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {
 		return {
-			query: helper.input().join(" ")
+			query: helper.args().join(" ")
 		}
 	}
 

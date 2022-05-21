@@ -48,11 +48,11 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override middleware = [new IsInAVoiceChannelMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand("play-range", "more")
+		return helper.isMessageCommand(true)
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {
-		const [linkStr, fromStr, toStr] = helper.input()
+		const [linkStr, fromStr, toStr] = helper.args()
 		return {
 			link: linkStr || "",
 			from: fromStr === undefined ? 1 : isNaN(+fromStr) ? 0 : +fromStr,

@@ -35,11 +35,11 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override middleware = [new IsInMyVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand("remove", "more")
+		return helper.isMessageCommand(true)
 	}
 
 	override converter(helper: CommandHelper<Entry, GuildCache>) {
-		const [fromStr, toStr] = helper.input()
+		const [fromStr, toStr] = helper.args()
 		return {
 			from: fromStr === undefined ? 0 : isNaN(+fromStr) ? 0 : +fromStr,
 			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr
