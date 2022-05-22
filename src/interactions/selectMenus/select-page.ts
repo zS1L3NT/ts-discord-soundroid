@@ -1,4 +1,4 @@
-import { GuildMember, Message, TextChannel } from "discord.js"
+import { Message, TextChannel } from "discord.js"
 import { useTryAsync } from "no-try"
 import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
 
@@ -41,11 +41,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 			)
 		}
 
-		message.edit(
-			await new QueueBuilder(helper.cache, helper.interaction.member as GuildMember).build(
-				page
-			)
-		)
+		message.edit(await new QueueBuilder(helper.cache, helper.member).build(page))
 		helper.update(ResponseBuilder.good(`Changed to page ${page}`))
 	}
 }

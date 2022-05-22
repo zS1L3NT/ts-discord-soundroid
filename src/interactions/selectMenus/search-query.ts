@@ -1,4 +1,4 @@
-import { GuildMember, Message, VoiceChannel } from "discord.js"
+import { VoiceChannel } from "discord.js"
 import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
@@ -16,8 +16,8 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 	override middleware = []
 
 	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
-		const member = helper.interaction.member as GuildMember
-		const channel = member.voice.channel
+		const channel = helper.member.voice.channel
+
 		if (!(channel instanceof VoiceChannel)) {
 			helper.update({
 				embeds: [
@@ -43,7 +43,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 			}
 
 			try {
-				const song = await Song.from(helper.cache.apiHelper, url, member.id)
+				const song = await Song.from(helper.cache.apiHelper, url, helper.member.id)
 				helper.cache.service!.enqueue(song)
 
 				helper.cache.updateMinutely()
@@ -56,9 +56,9 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 					components: []
 				})
 				helper.cache.logger.log({
-					member,
+					member: helper.member,
 					title: `Enqueued 1 song by search query`,
-					description: `<@${member.id}> enqueued [${song.title} - ${song.artiste}](${song.url})`,
+					description: `<@${helper.member.id}> enqueued [${song.title} - ${song.artiste}](${song.url})`,
 					command: "play",
 					color: "GREEN"
 				})
@@ -69,7 +69,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 					components: []
 				})
 				helper.cache.logger.log({
-					member,
+					member: helper.member,
 					title: `Error playing song from url`,
 					description: (err as Error).stack || "No stack trace available",
 					command: "play",
@@ -78,10 +78,9 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 			}
 		}
 
-		if (helper.interaction.message.type === "DEFAULT") {
+		if (helper.message.type !== "APPLICATION_COMMAND") {
 			setTimeout(() => {
-				const message = helper.interaction.message as Message
-				message.delete().catch(err => logger.warn("Failed to delete message", err))
+				helper.message.delete().catch(err => logger.warn("Failed to delete message", err))
 			}, 5000)
 		}
 	}

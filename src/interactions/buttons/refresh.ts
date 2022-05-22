@@ -1,4 +1,3 @@
-import { GuildMember } from "discord.js"
 import { BaseButton, ButtonHelper } from "nova-bot"
 
 import Entry from "../../data/Entry"
@@ -12,8 +11,6 @@ export default class extends BaseButton<Entry, GuildCache> {
 	override middleware = []
 
 	override async execute(helper: ButtonHelper<Entry, GuildCache>) {
-		await helper.interaction.update(
-			await new QueueBuilder(helper.cache, helper.interaction.member as GuildMember).build()
-		)
+		helper.update(await new QueueBuilder(helper.cache, helper.member).build())
 	}
 }

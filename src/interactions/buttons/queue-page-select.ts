@@ -1,4 +1,3 @@
-import { Message } from "discord.js"
 import { BaseButton, ButtonHelper, ResponseBuilder } from "nova-bot"
 
 import Entry from "../../data/Entry"
@@ -12,8 +11,7 @@ export default class extends BaseButton<Entry, GuildCache> {
 	override middleware = []
 
 	override async execute(helper: ButtonHelper<Entry, GuildCache>) {
-		const message = helper.interaction.message as Message
-		const embed = message.embeds[0]
+		const embed = helper.message.embeds[0]
 
 		if (!embed) {
 			return helper.respond(
@@ -21,6 +19,8 @@ export default class extends BaseButton<Entry, GuildCache> {
 			)
 		}
 
-		helper.respond(new PageSelectBuilder(embed, message.channel.id, message.id).build())
+		helper.respond(
+			new PageSelectBuilder(embed, helper.message.channel.id, helper.message.id).build()
+		)
 	}
 }

@@ -1,4 +1,4 @@
-import { GuildMember, Message, MessageEmbed } from "discord.js"
+import { MessageEmbed } from "discord.js"
 import { useTryAsync } from "no-try"
 import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
 
@@ -14,16 +14,14 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 	override middleware = []
 
 	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
-		const member = helper.interaction.member as GuildMember
-
-		await helper.interaction.update({
+		await helper.update({
 			embeds: [
 				new MessageEmbed()
 					.setTitle("Genius Lyrics for: `<...>` - `<...>`")
 					.setDescription("`<...>`")
 					.setFooter({
-						text: `Requested by @${member.displayName}`,
-						iconURL: member.user.displayAvatarURL()
+						text: `Requested by @${helper.member.displayName}`,
+						iconURL: helper.member.user.displayAvatarURL()
 					})
 			],
 			components: []
@@ -44,8 +42,8 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 								`${lyrics}\n\n> Lyrics from https://genius.com/songs/${id}`
 							)
 							.setFooter({
-								text: `Requested by @${member.displayName}`,
-								iconURL: member.user.displayAvatarURL()
+								text: `Requested by @${helper.member.displayName}`,
+								iconURL: helper.member.user.displayAvatarURL()
 							})
 					],
 					components: []
@@ -61,11 +59,10 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 			}
 		})
 
-		if (helper.interaction.message.type === "APPLICATION_COMMAND") {
+		if (helper.message.type === "APPLICATION_COMMAND") {
 			await helper.interaction.editReply(messageOptions)
 		} else {
-			const message = helper.interaction.message as Message
-			await message.edit(messageOptions)
+			await helper.message.edit(messageOptions)
 		}
 	}
 }

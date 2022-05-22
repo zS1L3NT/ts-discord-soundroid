@@ -1,4 +1,3 @@
-import { GuildMember } from "discord.js"
 import { useTry } from "no-try"
 import { BaseButton, ButtonHelper, ResponseBuilder } from "nova-bot"
 
@@ -13,10 +12,8 @@ export default class extends BaseButton<Entry, GuildCache> {
 	override middleware = []
 
 	override async execute(helper: ButtonHelper<Entry, GuildCache>) {
-		const member = helper.interaction.member as GuildMember
-
 		const [err, query] = useTry(() => {
-			const embed = helper.interaction.message.embeds[0]
+			const embed = helper.message.embeds[0]
 			const author = embed!.author!.name
 			const [, query] = author.match(/results for: "(.*)"$/)!
 			return query
@@ -28,8 +25,12 @@ export default class extends BaseButton<Entry, GuildCache> {
 			)
 		}
 
-		await helper.interaction.update(
-			await new SearchSelectBuilder(helper.cache.apiHelper, query!, member.id).buildVideo()
+		await helper.update(
+			await new SearchSelectBuilder(
+				helper.cache.apiHelper,
+				query!,
+				helper.member.id
+			).buildVideo()
 		)
 	}
 }
