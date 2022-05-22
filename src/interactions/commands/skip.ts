@@ -37,14 +37,14 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override converter(helper: CommandHelper<Entry, GuildCache>) {
 		const [countStr] = helper.args()
 		return {
-			count: countStr === undefined ? 1 : isNaN(+countStr) ? 0 : +countStr
+			count: countStr === undefined ? 1 : isNaN(+countStr) ? 1 : +countStr
 		}
 	}
 
 	override async execute(helper: CommandHelper<Entry, GuildCache>) {
 		const service = helper.cache.service!
 
-		const count = helper.integer("count") as number
+		const count = helper.integer("count") || 1
 		if (count < 1) {
 			return helper.respond(ResponseBuilder.bad(`Invalid skip count: ${count}`))
 		}
