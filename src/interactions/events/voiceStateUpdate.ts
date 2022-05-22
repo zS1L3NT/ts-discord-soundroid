@@ -55,7 +55,7 @@ export default class extends BaseEvent<Entry, GuildCache, BotCache, "voiceStateU
 						color: "#000000"
 					})
 				}, 60_000)
-			} else if (oldState.member && oldState.member.id === process.env.DISCORD__BOT_ID) {
+			} else if (!newState.channel && oldState.member?.id === process.env.DISCORD__BOT_ID) {
 				logger.log("Bot was disconnected from voice channel")
 				cache.service?.destroy()
 				cache.logger.log({
