@@ -49,7 +49,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 					title: `Music channel changed`,
 					description: [
 						`<@${helper.member.id}> changed the music channel`,
-						oldChannelId ? `**Old Music Channel**: <#${oldChannelId}>` : "",
+						oldChannelId ? `**Old Music Channel**: <#${oldChannelId}>` : null,
 						`**New Music Channel**: <#${channel.id}>`
 					].join("\n"),
 					command: "set-music-channel",
