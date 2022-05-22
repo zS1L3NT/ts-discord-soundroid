@@ -55,6 +55,14 @@ export default class extends BaseEvent<Entry, GuildCache, BotCache, "voiceStateU
 						color: "#000000"
 					})
 				}, 60_000)
+			} else if (oldState.member && oldState.member.id === process.env.DISCORD__BOT_ID) {
+				logger.log("Bot was disconnected from voice channel")
+				cache.service?.destroy()
+				cache.logger.log({
+					title: `Bot was disconnected`,
+					description: `Immediately destroying music service`,
+					color: "#000000"
+				})
 			}
 		}
 	}
