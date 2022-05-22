@@ -9,7 +9,7 @@ import DominantColorGetter from "../../utils/DominantColorGetter"
 
 export default class extends BaseSelectMenu<Entry, GuildCache> {
 	override defer = false
-	override ephemeral = true
+	override ephemeral = false
 
 	override middleware = []
 

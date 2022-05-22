@@ -7,7 +7,7 @@ import SearchSelectBuilder from "../../utils/SearchSelectBuilder"
 
 export default class extends BaseButton<Entry, GuildCache> {
 	override defer = false
-	override ephemeral = true
+	override ephemeral = false
 
 	override middleware = []
 
