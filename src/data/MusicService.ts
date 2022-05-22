@@ -200,7 +200,7 @@ export default class MusicService {
 					this.cache.logger.log({
 						title: `Stopped disconnect timer`,
 						description: `A track was played within a minute of the disconnect timeout`,
-						color: "#000000"
+						color: "GREY"
 					})
 				}
 
@@ -208,11 +208,16 @@ export default class MusicService {
 				this.cache.logger.log({
 					title: `Waiting 1 minute before disconnecting`,
 					description: `If nothing is playing, the bot will disconnect after 1 minute`,
-					color: "#000000"
+					color: "GREY"
 				})
 				this.disconnectTimeout = setTimeout(() => {
 					logger.log("One minute without anything in queue, disconnecting")
 					this.destroy()
+					this.cache.logger.log({
+						title: `One minute without activity`,
+						description: `No activity within a minute, destroying music service and disconnecting...`,
+						color: "#000000"
+					})
 				}, 60_000)
 			}
 			return
@@ -225,7 +230,7 @@ export default class MusicService {
 			this.cache.logger.log({
 				title: `Stopped disconnect timer`,
 				description: `A track was played within a minute of the disconnect timeout`,
-				color: "#000000"
+				color: "GREY"
 			})
 		}
 
