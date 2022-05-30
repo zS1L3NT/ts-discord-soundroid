@@ -1,67 +1,53 @@
-import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
+import { MessageEmbed } from "discord.js"
+import { BaseCommand, CommandHelper } from "nova-bot"
 
 import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
-import LyricsSelectBuilder from "../../utils/LyricsSelectBuilder"
+import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
+import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
+import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
+import DominantColorGetter from "../../utils/DominantColorGetter"
 
 export default class extends BaseCommand<Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		description: [
-			"Shows the lyrics for the current song",
-			"If `query` given, searches the lyrics of the query instead"
-		].join("\n"),
-		options: [
-			{
-				name: "query",
-				description: "The query for the lyrics",
-				type: "string" as const,
-				requirements: "Text",
-				required: false
-			}
-		]
+		description: "Shows the lyrics for the current song"
 	}
 
-	override middleware = []
+	override middleware = [
+		new IsInMyVoiceChannelMiddleware(),
+		new HasMusicServiceMiddleware(),
+		new IsPlayingMiddleware()
+	]
 
 	override condition(helper: CommandHelper<Entry, GuildCache>) {
-		return helper.isMessageCommand(null)
+		return helper.isMessageCommand(false)
 	}
 
-	override converter(helper: CommandHelper<Entry, GuildCache>) {
-		return {
-			query: helper.args().join(" ")
-		}
-	}
+	override converter(helper: CommandHelper<Entry, GuildCache>) {}
 
 	override async execute(helper: CommandHelper<Entry, GuildCache>) {
-		const query = helper.string("query")
-		const service = helper.cache.service
+		const service = helper.cache.service!
+		const song = service.queue[0]!
 
-		if (service) {
-			if (service.queue.length === 0 && !query) {
-				return helper.respond(ResponseBuilder.bad("I am not playing anything right now"))
-			}
+		const { lyrics, url } = await helper.cache.apiHelper.findGeniusLyrics(song)
 
-			const song = service.queue[0]!
-
-			const embed = await new LyricsSelectBuilder(
-				helper.cache.apiHelper,
-				query || `${song.title} - ${song.artiste}`
-			).build()
-			helper.respond(embed, embed.components!.length === 0 ? 5000 : null)
-		} else {
-			if (query) {
-				const embed = await new LyricsSelectBuilder(helper.cache.apiHelper, query).build()
-				helper.respond(embed, embed.components!.length === 0 ? 5000 : null)
-			} else {
-				helper.respond(
-					ResponseBuilder.bad(
-						"No song playing right now, please pass in a query to find lyrics"
-					)
-				)
-			}
-		}
+		helper.respond(
+			{
+				embeds: [
+					new MessageEmbed()
+						.setTitle(`Genius Lyrics for: ${song.title} - ${song.artiste}`)
+						.setColor(await new DominantColorGetter(song.cover).getColor())
+						.setThumbnail(song.cover)
+						.setDescription(`${lyrics}\n\n> Lyrics from ${url}`)
+						.setFooter({
+							text: `Requested by @${helper.member.displayName}`,
+							iconURL: helper.member.user.displayAvatarURL()
+						})
+				]
+			},
+			null
+		)
 	}
 }

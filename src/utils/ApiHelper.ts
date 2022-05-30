@@ -1,4 +1,5 @@
 import axios from "axios"
+import googleIt from "google-it"
 import { useTry } from "no-try"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
@@ -202,28 +203,18 @@ export default class ApiHelper {
 		)
 	}
 
-	async searchGeniusLyrics(query: string): Promise<
-		{
-			id: string
-			title: string
-			artiste: string
-		}[]
-	> {
-		const results = await this.genius.search(query)
-		return results
-			.map((r: any) => r.result)
-			.map((result: any) => ({
-				id: `${result.id}`,
-				title: result.title,
-				artiste: result.artist_names
-			}))
-	}
+	async findGeniusLyrics(song: Song): Promise<{ lyrics: string; url: string }> {
+		const results = await googleIt({
+			query: `${song.title} ${song.artiste} site:genius.com`,
+			"no-display": true
+		})
 
-	async findGeniusLyrics(
-		id: string
-	): Promise<{ title: string; artiste: string; cover: string; lyrics: string }> {
-		const song = await this.genius.song(id)
-		const html = (await axios.get<string>(`https://genius.com/songs/${id}`)).data
+		const result = results
+			.filter(result => result.link.match(/^https:\/\/genius\.com\/[\w-]+$/))
+			.filter(result => !result.title.match(/\(Romanized|\w+ Translation\) Lyrics - Genius$/))
+			.at(0)!
+
+		const html = (await axios.get<string>(result.link)).data
 
 		const lyrics = html
 			.match(/JSON\.parse\('(.*)'\)/)!
@@ -252,12 +243,10 @@ export default class ApiHelper {
 		}
 
 		return {
-			title: song.title,
-			artiste: song.artist_names,
-			cover: song.song_art_image_url,
 			lyrics: getLyrics(lyrics)
 				.replaceAll("\n\n", "\n")
-				.replaceAll(/(\[.*\])/g, "\n`$1`")
+				.replaceAll(/(\[.*\])/g, "\n`$1`"),
+			url: result.link
 		}
 	}
 }
