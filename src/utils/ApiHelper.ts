@@ -203,9 +203,9 @@ export default class ApiHelper {
 		)
 	}
 
-	async findGeniusLyrics(song: Song): Promise<{ lyrics: string; url: string }> {
+	async findGeniusLyrics(query: string): Promise<{ lyrics: string; url: string }> {
 		const results = await googleIt({
-			query: `${song.title} ${song.artiste} site:genius.com`,
+			query: `${query} site:genius.com`,
 			"no-display": true
 		})
 
