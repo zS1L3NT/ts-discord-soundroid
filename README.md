@@ -95,7 +95,7 @@ DiscordJS provided a template for a music playing bot [here](https://github.com/
     -   [![@discordjs/voice](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/@discordjs/voice?style=flat-square)](https://npmjs.com/package/@discordjs/voice)
     -   [![discord.js](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/discord.js?style=flat-square)](https://npmjs.com/package/discord.js)
 -   Data APIs
-    -   [![node-genius-api](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/node-genius-api?style=flat-square)](https://npmjs.com/package/node-genius-api)
+    -   [![google-it](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/google-it?style=flat-square)](https://npmjs.com/package/google-it)
     -   [![spotify-web-api-node](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/spotify-web-api-node?style=flat-square)](https://npmjs.com/package/spotify-web-api-node)
     -   [![youtube-dl-exec](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/youtube-dl-exec?style=flat-square)](https://npmjs.com/package/youtube-dl-exec)
     -   [![ytdl-core](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/ytdl-core?style=flat-square)](https://npmjs.com/package/ytdl-core)

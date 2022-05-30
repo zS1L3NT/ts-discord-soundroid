@@ -11,7 +11,6 @@ import logger from "../logger"
 export default class ApiHelper {
 	private ytmusic: YTMusic
 	private spotify: SpotifyWebApi
-	private genius: any
 
 	constructor() {
 		this.ytmusic = new YTMusic()
@@ -21,7 +20,6 @@ export default class ApiHelper {
 			clientSecret: process.env.SPOTIFY__CLIENT_SECRET,
 			refreshToken: process.env.SPOTIFY__REFRESH_TOKEN
 		})
-		this.genius = new (require("node-genius-api"))(process.env.GENIUS__ACCESS_TOKEN)
 	}
 
 	async searchYoutubeSongs(query: string, requester: string) {
