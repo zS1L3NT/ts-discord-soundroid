@@ -14,7 +14,7 @@ specifiers:
   google-it: ^1.6.2
   libsodium-wrappers: ^0.7.10
   no-try: ^3.1.0
-  nova-bot: 2.1.2
+  nova-bot: 2.1.4
   spotify-web-api-node: ^5.0.2
   tracer: ^1.1.5
   typescript: ^4.6.3
@@ -35,7 +35,7 @@ dependencies:
   google-it: 1.6.2
   libsodium-wrappers: 0.7.10
   no-try: 3.1.0
-  nova-bot: 2.1.2
+  nova-bot: 2.1.4
   spotify-web-api-node: 5.0.2
   tracer: 1.1.5
   youtube-dl-exec: 2.0.12
@@ -80,6 +80,7 @@ packages:
   /@discordjs/collection/0.7.0-dev.1653091708-fdeac9d:
     resolution: {integrity: sha512-21gKkNVlqWMTf5kkZ2uAkfe8kU149w/JXC9Vpu7nNEir6A5AHNPULtd+1FssvXYAfoEnzus7/gZC6pYD5eX/gQ==}
     engines: {node: '>=16.9.0'}
+    deprecated: no longer supported
     dev: false
 
   /@discordjs/node-pre-gyp/0.4.2:
@@ -1081,7 +1082,7 @@ packages:
     optional: true
 
   /ent/2.2.0:
-    resolution: {integrity: sha1-6WQhkyWiHQX0RGai9obtbOX13R0=}
+    resolution: {integrity: sha512-GHrMyVZQWvTIdDtpiEXdHZnFQKzeO09apj8Cbl4pKWy4i0Oprcq17usfDt5aO63swf0JOeMWjWQE/LzgSRuWpA==}
     dev: false
     optional: true
 
@@ -1283,7 +1284,7 @@ packages:
     dev: false
 
   /functional-red-black-tree/1.0.1:
-    resolution: {integrity: sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=}
+    resolution: {integrity: sha512-dsKNQNdj6xA3T+QlADDA7mOSlX0qiMINjn0cgr+eGHGsbSHzTabcIogz2+p/iqP1Xs6EP/sS2SbqH+brGTbq0g==}
     dev: false
     optional: true
 
@@ -1578,7 +1579,7 @@ packages:
     dev: false
 
   /imurmurhash/0.1.4:
-    resolution: {integrity: sha1-khi5srkoojixPcT7a21XbyMUU+o=}
+    resolution: {integrity: sha512-JmXMZ6wuvDmLiHEml9ykzqO6lwFbof0GG4IkcGaENdCRDDmMVnny7s5HsIgHCbaq0w2MyPhDqkhTUgS2LU2PHA==}
     engines: {node: '>=0.8.19'}
     dev: false
     optional: true
@@ -1773,35 +1774,35 @@ packages:
     dev: false
 
   /lodash.clonedeep/4.5.0:
-    resolution: {integrity: sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=}
+    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
     dev: false
 
   /lodash.includes/4.3.0:
-    resolution: {integrity: sha1-YLuYqHy5I8aMoeUTJUgzFISfVT8=}
+    resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
     dev: false
 
   /lodash.isboolean/3.0.3:
-    resolution: {integrity: sha1-bC4XHbKiV82WgC/UOwGyDV9YcPY=}
+    resolution: {integrity: sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg==}
     dev: false
 
   /lodash.isinteger/4.0.4:
-    resolution: {integrity: sha1-YZwK89A/iwTDH1iChAt3sRzWg0M=}
+    resolution: {integrity: sha512-DBwtEWN2caHQ9/imiNeEA5ys1JoRtRfY3d7V9wkqtbycnAmTvRRmbHKDV4a0EYc678/dia0jrte4tjYwVBaZUA==}
     dev: false
 
   /lodash.isnumber/3.0.3:
-    resolution: {integrity: sha1-POdoEMWSjQM1IwGsKHMX8RwLH/w=}
+    resolution: {integrity: sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==}
     dev: false
 
   /lodash.isplainobject/4.0.6:
-    resolution: {integrity: sha1-fFJqUtibRcRcxpC4gWO+BJf1UMs=}
+    resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
     dev: false
 
   /lodash.isstring/4.0.1:
-    resolution: {integrity: sha1-1SfftUVuynzJu5XV2ur4i6VKVFE=}
+    resolution: {integrity: sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==}
     dev: false
 
   /lodash.once/4.1.1:
-    resolution: {integrity: sha1-DdOXEhPHxW34gJd9UEyI+0cal6w=}
+    resolution: {integrity: sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==}
     dev: false
 
   /log-symbols/3.0.0:
@@ -1817,7 +1818,7 @@ packages:
     optional: true
 
   /lru-cache/4.0.2:
-    resolution: {integrity: sha1-HRdnnAac2l0ECZGgnbwsDbN35V4=}
+    resolution: {integrity: sha512-uQw9OqphAGiZhkuPlpFGmdTU2tEuhxTourM/19qGJrxBPHAr/f8BT1a0i/lOclESnGatdJG/UCkP9kZB/Lh1iw==}
     dependencies:
       pseudomap: 1.0.2
       yallist: 2.1.2
@@ -2006,8 +2007,8 @@ packages:
       abbrev: 1.1.1
     dev: false
 
-  /nova-bot/2.1.2:
-    resolution: {integrity: sha512-EoU9VM03G1Z45890+oSooB2i/bTsFl42hNVt7Pge8f7Jv+m4P8G7tHfJFuRHZjPVSHPDnNCC+NKFxF2B8bfwTg==}
+  /nova-bot/2.1.4:
+    resolution: {integrity: sha512-uNUzV1i/qZJQZNE/ItXLZDpg3vbFI4wBZcJLZx3nN/1ofHeX+Raz+f1ykoFls/bg2kW+gycv1wtK4fILZYqQOQ==}
     dependencies:
       '@discordjs/builders': 0.13.0
       '@discordjs/rest': 0.4.1
@@ -2231,7 +2232,7 @@ packages:
     optional: true
 
   /pseudomap/1.0.2:
-    resolution: {integrity: sha1-8FKijacOYYkX7wqKw0wa5aaChrM=}
+    resolution: {integrity: sha512-b/YwNhb8lk1Zz2+bXXpS/LK9OisiZZ1SNsSLxN1x2OXVEhW2Ckr/7mWE5vrC1ZTiJlD9g19jWszTmJsB+oEpFQ==}
     dev: false
 
   /psl/1.8.0:
@@ -2321,7 +2322,7 @@ packages:
     dev: false
 
   /require-directory/2.1.1:
-    resolution: {integrity: sha1-jGStX9MNqxyXbiNE/+f3kqam30I=}
+    resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
     dev: false
     optional: true
@@ -2495,7 +2496,7 @@ packages:
     dev: false
 
   /stubs/3.0.0:
-    resolution: {integrity: sha1-6NK6H6nJBXAwPAMLaQD31fiavls=}
+    resolution: {integrity: sha512-PdHt7hHUJKxvTCgbKX9C1V/ftOcjJQgz8BZwNfV5c4B6dcGqlpelTbJ999jBGZ2jYiPAwcX5dP6oBwVlBlUbxw==}
     dev: false
     optional: true
 
@@ -2818,7 +2819,7 @@ packages:
     optional: true
 
   /yallist/2.1.2:
-    resolution: {integrity: sha1-HBH5IY8HYImkfdUS+TxmmaaoHVI=}
+    resolution: {integrity: sha512-ncTzHV7NvsQZkYe1DW7cbDLm0YpzHmZF5r/iyP3ZnQtMiJ+pjzisCiMNI+Sj+xQF5pXhSHxSB3uDbsBTzY/c2A==}
     dev: false
 
   /yallist/4.0.0:
