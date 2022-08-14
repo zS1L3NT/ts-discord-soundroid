@@ -211,11 +211,10 @@ export default class ApiHelper {
 
 		const result = results
 			.filter(result => result.link.match(/^https:\/\/genius\.com\/[\w-]+$/))
-			.filter(result => !result.title.match(/\(Romanized|\w+ Translation\) Lyrics - Genius$/))
+			.filter(result => !result.title.match(/\(Romanized|\w+ Translation\) Lyrics - /))
 			.at(0)!
 
 		const html = (await axios.get<string>(result.link)).data
-
 		const lyrics = html
 			.match(/JSON\.parse\('(.*)'\)/)!
 			.map(j => j.slice(12, -2))
