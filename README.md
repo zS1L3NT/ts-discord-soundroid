@@ -94,6 +94,9 @@ DiscordJS provided a template for a music playing bot [here](https://github.com/
     -   [![@discordjs/opus](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/@discordjs/opus?style=flat-square)](https://npmjs.com/package/@discordjs/opus)
     -   [![@discordjs/voice](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/@discordjs/voice?style=flat-square)](https://npmjs.com/package/@discordjs/voice)
     -   [![discord.js](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/discord.js?style=flat-square)](https://npmjs.com/package/discord.js)
+-	Prisma
+    -   [![@prisma/client](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-reminder/@prisma/client?style=flat-square)](https://npmjs.com/package/@prisma/client)
+    -   [![prisma](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-reminder/prisma?style=flat-square)](https://npmjs.com/package/prisma)
 -   Data APIs
     -   [![google-it](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/google-it?style=flat-square)](https://npmjs.com/package/google-it)
     -   [![spotify-web-api-node](https://img.shields.io/github/package-json/dependency-version/zS1L3NT/ts-discord-soundroid/spotify-web-api-node?style=flat-square)](https://npmjs.com/package/spotify-web-api-node)
