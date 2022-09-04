@@ -1,13 +1,16 @@
+import { Colors } from "discord.js"
 import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
-import Entry from "../../data/Entry"
+import { Entry } from "@prisma/client"
+
 import GuildCache from "../../data/GuildCache"
 import { StopStatus } from "../../data/MusicService"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
+import prisma from "../../prisma"
 
-export default class extends BaseCommand<Entry, GuildCache> {
+export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -30,18 +33,18 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		new IsPlayingMiddleware()
 	]
 
-	override condition(helper: CommandHelper<Entry, GuildCache>) {
+	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		return helper.isMessageCommand(null)
 	}
 
-	override converter(helper: CommandHelper<Entry, GuildCache>) {
+	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const [countStr] = helper.args()
 		return {
 			count: countStr === undefined ? 1 : isNaN(+countStr) ? 1 : +countStr
 		}
 	}
 
-	override async execute(helper: CommandHelper<Entry, GuildCache>) {
+	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const service = helper.cache.service!
 
 		const count = helper.integer("count") || 1
@@ -80,7 +83,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				count > 1 ? ` and the next ${count - 1} songs` : ""
 			}`,
 			command: "skip",
-			color: "YELLOW"
+			color: Colors.Yellow
 		})
 	}
 }

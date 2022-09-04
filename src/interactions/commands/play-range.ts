@@ -1,14 +1,16 @@
+import { Colors } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { Entry } from "@prisma/client"
 
-import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
 import IsInAVoiceChannelMiddleware from "../../middleware/IsInAVoiceChannelMiddleware"
+import prisma from "../../prisma"
 
-export default class extends BaseCommand<Entry, GuildCache> {
+export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -47,11 +49,11 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 	override middleware = [new IsInAVoiceChannelMiddleware()]
 
-	override condition(helper: CommandHelper<Entry, GuildCache>) {
+	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		return helper.isMessageCommand(true)
 	}
 
-	override converter(helper: CommandHelper<Entry, GuildCache>) {
+	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const [linkStr, fromStr, toStr] = helper.args()
 		return {
 			link: linkStr || "",
@@ -60,7 +62,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		}
 	}
 
-	override async execute(helper: CommandHelper<Entry, GuildCache>) {
+	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		if (!helper.cache.service) {
 			const channel = helper.member.voice.channel!
 			helper.cache.service = new MusicService(
@@ -160,7 +162,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 				`**End Position**: ${to}`
 			].join("\n"),
 			command: "play-range",
-			color: "GREEN"
+			color: Colors.Green
 		})
 	}
 }

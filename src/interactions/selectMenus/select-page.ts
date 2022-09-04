@@ -2,18 +2,20 @@ import { Message, TextChannel } from "discord.js"
 import { useTryAsync } from "no-try"
 import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
 
-import Entry from "../../data/Entry"
+import { Entry } from "@prisma/client"
+
 import GuildCache from "../../data/GuildCache"
+import prisma from "../../prisma"
 import PageSelectBuilder from "../../utils/PageSelectBuilder"
 import QueueBuilder from "../../utils/QueueBuilder"
 
-export default class extends BaseSelectMenu<Entry, GuildCache> {
+export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 	override defer = false
 	override ephemeral = false
 
 	override middleware = []
 
-	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
+	override async execute(helper: SelectMenuHelper<typeof prisma, Entry, GuildCache>) {
 		const [channelId, messageId, pageStr, moreStr] = helper.value!.split("-")
 		const guild = helper.cache.guild
 		const more = +moreStr!

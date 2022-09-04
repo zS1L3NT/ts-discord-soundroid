@@ -1,20 +1,21 @@
-import { MessageEmbed } from "discord.js"
+import { EmbedBuilder } from "discord.js"
 import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
 import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
+import { Entry } from "@prisma/client"
 
-import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
+import prisma from "../../prisma"
 import DominantColorGetter from "../../utils/DominantColorGetter"
 import DurationHelper from "../../utils/DurationHelper"
 
 const thumb = "🔘"
 const track = "▬"
 
-export default class extends BaseCommand<Entry, GuildCache> {
+export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -28,13 +29,13 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		new IsPlayingMiddleware()
 	]
 
-	override condition(helper: CommandHelper<Entry, GuildCache>) {
+	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		return helper.isMessageCommand(false)
 	}
 
-	override converter(helper: CommandHelper<Entry, GuildCache>) {}
+	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
 
-	override async execute(helper: CommandHelper<Entry, GuildCache>) {
+	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const service = helper.cache.service!
 
 		const song = service.queue[0]
@@ -51,19 +52,21 @@ export default class extends BaseCommand<Entry, GuildCache> {
 		helper.respond(
 			{
 				embeds: [
-					new MessageEmbed()
+					new EmbedBuilder()
 						.setTitle("Now Playing")
 						.setThumbnail(song.cover)
 						.setColor(await new DominantColorGetter(song.cover).getColor())
-						.addField(
-							`**${song.title} - ${song.artiste}**`,
-							`Requested by <@!${song.requester}>`
-						)
-						.addField(
-							`\`${seekbar}\``,
-							`\`${new DurationHelper(
-								state.playbackDuration / 1000
-							).format()} / ${new DurationHelper(song.duration).format()}\``
+						.addFields(
+							{
+								name: `**${song.title} - ${song.artiste}**`,
+								value: `Requested by <@!${song.requester}>`
+							},
+							{
+								name: `\`${seekbar}\``,
+								value: `\`${new DurationHelper(
+									state.playbackDuration / 1000
+								).format()} / ${new DurationHelper(song.duration).format()}\``
+							}
 						)
 						.setFooter({
 							text: `Requested by @${helper.member.displayName}`,

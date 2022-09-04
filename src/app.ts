@@ -1,14 +1,16 @@
 import "dotenv/config"
 
-import { Intents } from "discord.js"
+import { ActivityType, GatewayIntentBits } from "discord.js"
 import http from "http"
 import NovaBot from "nova-bot"
 import path from "path"
 
+import { Entry } from "@prisma/client"
+
 import BotCache from "./data/BotCache"
-import Entry from "./data/Entry"
 import GuildCache from "./data/GuildCache"
 import logger from "./logger"
+import prisma from "./prisma"
 
 process.on("uncaughtException", err => {
 	if (err.message !== "The user aborted a request.") {
@@ -16,15 +18,15 @@ process.on("uncaughtException", err => {
 	}
 })
 
-class SounDroidBot extends NovaBot<Entry, GuildCache, BotCache> {
+class SounDroidBot extends NovaBot<typeof prisma, Entry, GuildCache, BotCache> {
 	override name = "SounDroid#5566"
 	override icon =
 		"https://cdn.discordapp.com/avatars/899858077027811379/56e8665909db40439b09e13627970b62.png?size=128"
 	override directory = path.join(__dirname, "interactions")
 	override intents = [
-		Intents.FLAGS.GUILD_VOICE_STATES,
-		Intents.FLAGS.GUILD_MESSAGES,
-		Intents.FLAGS.GUILDS
+		GatewayIntentBits.GuildVoiceStates,
+		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.Guilds
 	]
 
 	override helpMessage = (cache: GuildCache) =>
@@ -42,18 +44,20 @@ class SounDroidBot extends NovaBot<Entry, GuildCache, BotCache> {
 	//@ts-ignore
 	override logger = logger
 
+	override prisma = prisma
+
 	override onSetup(botCache: BotCache) {
 		botCache.bot.user!.setPresence({
 			activities: [
 				{
 					name: "/help",
-					type: "LISTENING"
+					type: ActivityType.Listening
 				}
 			]
 		})
 
 		for (const guild of botCache.bot.guilds.cache.toJSON()) {
-			guild.me?.setNickname("SounDroid")
+			guild.members.me!.setNickname("SounDroid")
 		}
 	}
 }

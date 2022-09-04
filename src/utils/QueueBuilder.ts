@@ -1,4 +1,6 @@
-import { GuildMember, MessageActionRow, MessageButton, MessageEmbed } from "discord.js"
+import {
+	ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, GuildMember
+} from "discord.js"
 import { CommandPayload } from "nova-bot"
 
 import GuildCache from "../data/GuildCache"
@@ -11,7 +13,7 @@ export default class QueueBuilder {
 
 	async build(page: number = 1): Promise<CommandPayload> {
 		if (this.cache.service) {
-			const embed = new MessageEmbed()
+			const embed = new EmbedBuilder()
 			const playingDuration = this.cache.service.queue
 				.slice(1)
 				.map(song => song.duration)
@@ -28,39 +30,62 @@ export default class QueueBuilder {
 			embed.setTitle(`Queue for ${this.cache.guild.name}`)
 
 			const song = this.cache.service.queue[0]
-			embed.addField(`\u200B`, `__Now Playing:__`)
+			embed.addFields({
+				name: `\u200B`,
+				value: `__Now Playing:__`
+			})
 
 			if (song) {
-				embed.addField(...this.songFormat(song))
+				embed.addFields(this.songFormat(song))
 				embed.setThumbnail(song.cover)
 				try {
 					embed.setColor(await new DominantColorGetter(song.cover).getColor())
 				} catch {}
 			} else {
-				embed.addField(`Not playing anything at the moment`, `\u200B`)
+				embed.addFields({
+					name: `Not playing anything at the moment`,
+					value: `\u200B`
+				})
 			}
 
 			if (this.cache.service) {
 				if (queue.length > 0) {
-					embed.addField(`\u200B`, `__Queue:__`)
+					embed.addFields([{ name: `\u200B`, value: `__Queue:__` }])
 					queue.forEach((song, i) => {
 						const songIndex = `\`${pageOffset + i + 1}.\` `
 						const fieldFormat = this.songFormat(song)
-						embed.addField(songIndex + fieldFormat[0], fieldFormat[1])
+						embed.addFields({
+							name: songIndex + fieldFormat.name,
+							value: fieldFormat.value
+						})
 					})
-					embed.addField(
-						`\u200B`,
-						`**${
+					embed.addFields({
+						name: `\u200B`,
+						value: `**${
 							this.cache.service.queue.length - 1
 						} songs in queue | ${new DurationHelper(
 							playingDuration
 						).format()} total length**`
-					)
+					})
 				}
 
-				embed.addField(`Page`, `${page}/${maxPages}`, true)
-				embed.addField(`Loop`, this.cache.service.loop ? "✅" : "❌", true)
-				embed.addField(`Queue Loop`, this.cache.service.queueLoop ? "✅" : "❌", true)
+				embed.addFields(
+					{
+						name: "Page",
+						value: `${page}/${maxPages}`,
+						inline: true
+					},
+					{
+						name: "Loop",
+						value: this.cache.service.loop ? "✅" : "❌",
+						inline: true
+					},
+					{
+						name: "Queue Loop",
+						value: this.cache.service.queueLoop ? "✅" : "❌",
+						inline: true
+					}
+				)
 				if (this.member) {
 					embed.setFooter({
 						text: `Requested by @${this.member.displayName}`,
@@ -71,15 +96,15 @@ export default class QueueBuilder {
 				return {
 					embeds: [embed],
 					components: [
-						new MessageActionRow().addComponents([
-							new MessageButton()
+						new ActionRowBuilder<ButtonBuilder>().addComponents([
+							new ButtonBuilder()
 								.setCustomId("queue-page-select")
-								.setStyle("PRIMARY")
+								.setStyle(ButtonStyle.Primary)
 								.setLabel("Choose page")
 								.setDisabled(maxPages === 1),
-							new MessageButton()
+							new ButtonBuilder()
 								.setCustomId("refresh")
-								.setStyle("SUCCESS")
+								.setStyle(ButtonStyle.Success)
 								.setLabel("Refresh queue")
 						])
 					]
@@ -89,22 +114,25 @@ export default class QueueBuilder {
 
 		return {
 			embeds: [
-				new MessageEmbed()
+				new EmbedBuilder()
 					.setAuthor({
 						name: "I am not currently in a voice channel",
 						iconURL:
 							"https://firebasestorage.googleapis.com/v0/b/zectan-projects.appspot.com/o/bad.png?alt=media&token=cbd48c77-784c-4f86-8de1-7335b452a894"
 					})
-					.setColor("RED")
+					.setColor(Colors.Red)
 			],
 			components: []
 		}
 	}
 
-	songFormat(song: Song): [string, string] {
-		return [
-			`${song.title} - ${song.artiste} | ${new DurationHelper(song.duration).format()}`,
-			`Requested by <@!${song.requester}> | [Open song](${song.url})`
-		]
+	songFormat(song: Song): {
+		name: string
+		value: string
+	} {
+		return {
+			name: `${song.title} - ${song.artiste} | ${new DurationHelper(song.duration).format()}`,
+			value: `Requested by <@!${song.requester}> | [Open song](${song.url})`
+		}
 	}
 }

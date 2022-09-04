@@ -1,10 +1,12 @@
 import { BaseBotCache } from "nova-bot"
 
+import { Entry } from "@prisma/client"
+
+import prisma from "../prisma"
 import ApiHelper from "../utils/ApiHelper"
-import Entry from "./Entry"
 import GuildCache from "./GuildCache"
 
-export default class BotCache extends BaseBotCache<Entry, GuildCache> {
+export default class BotCache extends BaseBotCache<typeof prisma, Entry, GuildCache> {
 	private apiHelper = new ApiHelper()
 
 	override onSetGuildCache(cache: GuildCache) {
@@ -12,26 +14,19 @@ export default class BotCache extends BaseBotCache<Entry, GuildCache> {
 	}
 
 	override async registerGuildCache(guildId: string) {
-		const doc = await this.ref.doc(guildId).get()
-		if (!doc.exists) {
-			await this.ref.doc(guildId).set(this.getEmptyEntry())
-		}
+		await this.prisma.entry.create({
+			data: {
+				guild_id: guildId,
+				prefix: null,
+				log_channel_id: null,
+				music_channel_id: null,
+				music_message_id: null
+			}
+		})
 	}
 
 	override async eraseGuildCache(guildId: string) {
-		const doc = await this.ref.doc(guildId).get()
-		if (doc.exists) {
-			await this.ref.doc(guildId).delete()
-		}
-	}
-
-	override getEmptyEntry(): Entry {
-		return {
-			prefix: "",
-			aliases: {},
-			log_channel_id: "",
-			music_channel_id: "",
-			music_message_id: ""
-		}
+		await this.prisma.entry.delete({ where: { guild_id: guildId } })
+		await this.prisma.alias.deleteMany({ where: { guild_id: guildId } })
 	}
 }

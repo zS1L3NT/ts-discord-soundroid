@@ -1,11 +1,13 @@
-import { MessageEmbed } from "discord.js"
+import { Colors, EmbedBuilder } from "discord.js"
 import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
 
-import Entry from "../../data/Entry"
+import { Entry } from "@prisma/client"
+
 import GuildCache from "../../data/GuildCache"
+import prisma from "../../prisma"
 import DominantColorGetter from "../../utils/DominantColorGetter"
 
-export default class extends BaseCommand<Entry, GuildCache> {
+export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -26,17 +28,17 @@ export default class extends BaseCommand<Entry, GuildCache> {
 
 	override middleware = []
 
-	override condition(helper: CommandHelper<Entry, GuildCache>) {
+	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		return helper.isMessageCommand(null)
 	}
 
-	override converter(helper: CommandHelper<Entry, GuildCache>) {
+	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		return {
 			query: helper.args().join(" ")
 		}
 	}
 
-	override async execute(helper: CommandHelper<Entry, GuildCache>) {
+	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const query = helper.string("query")
 		const service = helper.cache.service
 
@@ -52,7 +54,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 					helper.respond(
 						{
 							embeds: [
-								new MessageEmbed()
+								new EmbedBuilder()
 									.setTitle(`Genius Lyrics for: ${song.title} - ${song.artiste}`)
 									.setColor(await new DominantColorGetter(song.cover).getColor())
 									.setThumbnail(song.cover)
@@ -80,7 +82,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 							err.stack || "No stack trace available"
 						].join("\n"),
 						command: "lyrics",
-						color: "RED"
+						color: Colors.Red
 					})
 				})
 		} else {
@@ -91,7 +93,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 						helper.respond(
 							{
 								embeds: [
-									new MessageEmbed()
+									new EmbedBuilder()
 										.setTitle(`Genius Lyrics for query: ${query}`)
 										.setDescription(`${lyrics}\n\n> Lyrics from ${url}`)
 										.setFooter({
@@ -115,7 +117,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 								err.stack || "No stack trace available"
 							].join("\n"),
 							command: "lyrics",
-							color: "RED"
+							color: Colors.Red
 						})
 					})
 			} else {

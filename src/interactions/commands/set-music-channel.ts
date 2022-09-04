@@ -1,12 +1,14 @@
-import { TextChannel } from "discord.js"
+import { Colors, TextChannel } from "discord.js"
 import {
 	BaseCommand, CommandHelper, CommandType, IsAdminMiddleware, ResponseBuilder
 } from "nova-bot"
 
-import Entry from "../../data/Entry"
-import GuildCache from "../../data/GuildCache"
+import { Entry } from "@prisma/client"
 
-export default class extends BaseCommand<Entry, GuildCache> {
+import GuildCache from "../../data/GuildCache"
+import prisma from "../../prisma"
+
+export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -26,11 +28,11 @@ export default class extends BaseCommand<Entry, GuildCache> {
 	override only = CommandType.Slash
 	override middleware = [new IsAdminMiddleware()]
 
-	override condition(helper: CommandHelper<Entry, GuildCache>) {}
+	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
 
-	override converter(helper: CommandHelper<Entry, GuildCache>) {}
+	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
 
-	override async execute(helper: CommandHelper<Entry, GuildCache>) {
+	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const channel = helper.channel("channel")
 		const oldChannelId = helper.cache.entry.log_channel_id
 
@@ -38,7 +40,7 @@ export default class extends BaseCommand<Entry, GuildCache> {
 			if (channel.id === helper.cache.entry.music_channel_id) {
 				helper.respond(ResponseBuilder.bad("This channel is already the Music channel!"))
 			} else {
-				await helper.cache.setMusicChannelId(channel.id)
+				await helper.cache.update({ music_channel_id: channel.id })
 
 				helper.cache.updateMinutely()
 				helper.respond(
@@ -53,18 +55,18 @@ export default class extends BaseCommand<Entry, GuildCache> {
 						`**New Music Channel**: <#${channel.id}>`
 					].join("\n"),
 					command: "set-music-channel",
-					color: "BLUE"
+					color: Colors.Blue
 				})
 			}
 		} else if (channel === null) {
-			await helper.cache.setMusicChannelId("")
+			await helper.cache.update({ music_channel_id: null })
 			helper.respond(ResponseBuilder.good(`Music channel unassigned`))
 			helper.cache.logger.log({
 				member: helper.member,
 				title: `Music channel unassigned`,
 				description: `<@${helper.member.id}> unassigned the music channel\b**Old Music Channel**: <#${oldChannelId}>`,
 				command: "set-music-channel",
-				color: "BLUE"
+				color: Colors.Blue
 			})
 		} else {
 			helper.respond(ResponseBuilder.bad(`Please select a text channel`))

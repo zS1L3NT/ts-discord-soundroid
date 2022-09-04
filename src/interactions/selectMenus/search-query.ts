@@ -1,21 +1,22 @@
-import { VoiceChannel } from "discord.js"
+import { Colors, MessageType, VoiceChannel } from "discord.js"
 import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
 
 import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import { Entry } from "@prisma/client"
 
-import Entry from "../../data/Entry"
 import GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
 import Song from "../../data/Song"
 import logger from "../../logger"
+import prisma from "../../prisma"
 
-export default class extends BaseSelectMenu<Entry, GuildCache> {
+export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 	override defer = false
 	override ephemeral = false
 
 	override middleware = []
 
-	override async execute(helper: SelectMenuHelper<Entry, GuildCache>) {
+	override async execute(helper: SelectMenuHelper<typeof prisma, Entry, GuildCache>) {
 		const channel = helper.member.voice.channel
 
 		if (!(channel instanceof VoiceChannel)) {
@@ -60,7 +61,7 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 					title: `Enqueued 1 song by search query`,
 					description: `<@${helper.member.id}> enqueued [${song.title} - ${song.artiste}](${song.url})`,
 					command: "play",
-					color: "GREEN"
+					color: Colors.Green
 				})
 			} catch (err) {
 				logger.error("Error playing song from url", err)
@@ -73,12 +74,12 @@ export default class extends BaseSelectMenu<Entry, GuildCache> {
 					title: `Error playing song from url`,
 					description: (err as Error).stack || "No stack trace available",
 					command: "play",
-					color: "RED"
+					color: Colors.Red
 				})
 			}
 		}
 
-		if (helper.message.type !== "APPLICATION_COMMAND") {
+		if (helper.message.type !== MessageType.ChatInputCommand) {
 			setTimeout(() => {
 				helper.message.delete().catch(err => logger.warn("Failed to delete message", err))
 			}, 5000)

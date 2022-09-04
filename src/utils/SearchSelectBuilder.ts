@@ -1,4 +1,6 @@
-import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from "discord.js"
+import {
+	ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, SelectMenuBuilder
+} from "discord.js"
 import { CommandPayload } from "nova-bot"
 
 import ApiHelper from "./ApiHelper"
@@ -13,7 +15,7 @@ export default class SearchSelectBuilder {
 
 		return {
 			embeds: [
-				new MessageEmbed()
+				new EmbedBuilder()
 					.setAuthor({
 						name: `YouTube Video search results for: "${this.query}"`,
 						iconURL: `https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`
@@ -21,8 +23,8 @@ export default class SearchSelectBuilder {
 					.setColor("#FF0000")
 			],
 			components: [
-				new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId("search-query").addOptions(
+				new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+					new SelectMenuBuilder().setCustomId("search-query").addOptions(
 						results.map((result, i) => ({
 							emoji: SearchSelectBuilder.emojis[i],
 							label: result.title.slice(0, 95),
@@ -31,12 +33,12 @@ export default class SearchSelectBuilder {
 						}))
 					)
 				),
-				new MessageActionRow().addComponents(
-					new MessageButton()
+				new ActionRowBuilder<ButtonBuilder>().addComponents(
+					new ButtonBuilder()
 						.setCustomId("search-music")
 						.setEmoji("🎵")
 						.setLabel("Search YouTube Music")
-						.setStyle("PRIMARY")
+						.setStyle(ButtonStyle.Primary)
 				)
 			]
 		}
@@ -47,7 +49,7 @@ export default class SearchSelectBuilder {
 
 		return {
 			embeds: [
-				new MessageEmbed()
+				new EmbedBuilder()
 					.setAuthor({
 						name: `YouTube Music search results for: "${this.query}"`,
 						iconURL: `https://brandlogos.net/wp-content/uploads/2021/11/youtube-music-logo-1-512x512.png`
@@ -55,8 +57,8 @@ export default class SearchSelectBuilder {
 					.setColor("#FF0000")
 			],
 			components: [
-				new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId("search-query").addOptions(
+				new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+					new SelectMenuBuilder().setCustomId("search-query").addOptions(
 						results.map((result, i) => ({
 							emoji: SearchSelectBuilder.emojis[i],
 							label: result.title.slice(0, 95),
@@ -65,12 +67,12 @@ export default class SearchSelectBuilder {
 						}))
 					)
 				),
-				new MessageActionRow().addComponents(
-					new MessageButton()
+				new ActionRowBuilder<ButtonBuilder>().addComponents(
+					new ButtonBuilder()
 						.setCustomId("search-videos")
 						.setEmoji("📺")
 						.setLabel("Search YouTube Video")
-						.setStyle("PRIMARY")
+						.setStyle(ButtonStyle.Primary)
 				)
 			]
 		}

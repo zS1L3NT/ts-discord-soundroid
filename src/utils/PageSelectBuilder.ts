@@ -1,4 +1,4 @@
-import { MessageActionRow, MessageEmbed, MessageSelectMenu } from "discord.js"
+import { ActionRowBuilder, Embed, EmbedBuilder, SelectMenuBuilder } from "discord.js"
 import { CommandPayload } from "nova-bot"
 
 export default class PageSelectBuilder {
@@ -7,11 +7,7 @@ export default class PageSelectBuilder {
 	private startPage = 0
 	private endPage = 0
 
-	constructor(
-		private embed: MessageEmbed,
-		private channelId: string,
-		private messageId: string
-	) {}
+	constructor(private embed: Embed, private channelId: string, private messageId: string) {}
 
 	build(startPage?: number): CommandPayload {
 		const pageInfo = this.embed.fields.find(field => field.name === `Page`)!.value
@@ -45,10 +41,10 @@ export default class PageSelectBuilder {
 		}
 
 		return {
-			embeds: [new MessageEmbed().setTitle(`Which page of the queue do you want to go to?`)],
+			embeds: [new EmbedBuilder().setTitle(`Which page of the queue do you want to go to?`)],
 			components: [
-				new MessageActionRow().addComponents(
-					new MessageSelectMenu().setCustomId("select-page").addOptions(pages)
+				new ActionRowBuilder<SelectMenuBuilder>().addComponents(
+					new SelectMenuBuilder().setCustomId("select-page").addOptions(pages)
 				)
 			]
 		}
