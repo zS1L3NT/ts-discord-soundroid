@@ -87,7 +87,7 @@ export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, Gui
 
 	override getEmptyEntry(): Entry {
 		return {
-			guild_id: this.guild.id,
+			guild_id: "",
 			prefix: null,
 			log_channel_id: null,
 			music_channel_id: null,
