@@ -22,7 +22,7 @@
 		"google-it": "^1.6.3",
 		"libsodium-wrappers": "^0.7.10",
 		"no-try": "^3.1.0",
-		"nova-bot": "file:..\\ts-npm-nova-bot\\nova-bot-3.0.0-alpha.8.tgz",
+		"nova-bot": "^3.0.0",
 		"prisma": "^4.3.1",
 		"spotify-web-api-node": "^5.0.2",
 		"tracer": "^1.1.6",
