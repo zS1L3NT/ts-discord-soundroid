@@ -15,7 +15,7 @@ specifiers:
   google-it: ^1.6.3
   libsodium-wrappers: ^0.7.10
   no-try: ^3.1.0
-  nova-bot: file:..\ts-npm-nova-bot\nova-bot-3.0.0-alpha.4.tgz
+  nova-bot: file:..\ts-npm-nova-bot\nova-bot-3.0.0-alpha.6.tgz
   prisma: ^4.3.1
   spotify-web-api-node: ^5.0.2
   tracer: ^1.1.6
@@ -38,7 +38,7 @@ dependencies:
   google-it: 1.6.3
   libsodium-wrappers: 0.7.10
   no-try: 3.1.0
-  nova-bot: file:../ts-npm-nova-bot/nova-bot-3.0.0-alpha.4.tgz
+  nova-bot: file:../ts-npm-nova-bot/nova-bot-3.0.0-alpha.6.tgz
   prisma: 4.3.1
   spotify-web-api-node: 5.0.2
   tracer: 1.1.6
@@ -663,9 +663,9 @@ packages:
     engines: {node: '>=0.8.0'}
     dev: false
 
-  /escape-string-regexp/5.0.0:
-    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
-    engines: {node: '>=12'}
+  /escape-string-regexp/4.0.0:
+    resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
+    engines: {node: '>=10'}
     dev: false
 
   /execa/5.1.1:
@@ -1835,10 +1835,10 @@ packages:
       miniget: 4.2.2
     dev: false
 
-  file:../ts-npm-nova-bot/nova-bot-3.0.0-alpha.4.tgz:
-    resolution: {integrity: sha512-MKBZOscVJ6YHVoU6yn5LaDo6ynzX+cK7wQl/1UVah2dOdSljJixR5qAXwl7htcD5UgnSPm7+o8Fej6cR0A052w==, tarball: file:../ts-npm-nova-bot/nova-bot-3.0.0-alpha.4.tgz}
+  file:../ts-npm-nova-bot/nova-bot-3.0.0-alpha.6.tgz:
+    resolution: {integrity: sha512-6iUVn5SGTigowMRxT5jmGIydlW2FUzZHwpSn+FQWp0SEEn69QuTRoB26t6m5dbMvm23u+w5YigbE107jyCA26g==, tarball: file:../ts-npm-nova-bot/nova-bot-3.0.0-alpha.6.tgz}
     name: nova-bot
-    version: 3.0.0-alpha.4
+    version: 3.0.0-alpha.6
     dependencies:
       '@discordjs/rest': 1.1.0
       '@prisma/client': 4.3.1_prisma@4.3.1
@@ -1847,7 +1847,7 @@ packages:
       after-every: 1.0.4
       discord-api-types: 0.37.5
       discord.js: 14.3.0
-      escape-string-regexp: 5.0.0
+      escape-string-regexp: 4.0.0
       luxon: 3.0.3
       no-try: 3.1.0
       prisma: 4.3.1
