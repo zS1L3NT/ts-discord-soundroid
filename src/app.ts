@@ -41,7 +41,6 @@ class SounDroidBot extends NovaBot<typeof prisma, Entry, GuildCache, BotCache> {
 	override GuildCache = GuildCache
 	override BotCache = BotCache
 
-	//@ts-ignore
 	override logger = logger
 
 	override prisma = prisma
