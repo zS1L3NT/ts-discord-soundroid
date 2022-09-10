@@ -10,6 +10,7 @@ export default class ConversionHelper {
 				return await this.handleSpotify()
 			case "music.youtube.com":
 			case "www.youtube.com":
+			case "youtube.com":
 				return await this.handleYoutube()
 			case "youtu.be":
 				return await this.handleYoutubeShort()
