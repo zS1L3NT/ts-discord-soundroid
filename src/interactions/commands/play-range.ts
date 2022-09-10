@@ -78,7 +78,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		}
 
 		const link = helper.string("link")!
-		let from = helper.integer("from")!
+		let from = helper.integer("from") ?? 1
 		let to = helper.integer("to")
 
 		const [err, playlistId] = useTry(() => {
@@ -86,7 +86,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			if (url.host === "open.spotify.com" && url.pathname.startsWith("/playlist/")) {
 				return url.pathname.slice("/playlist/".length)
 			}
-			if (url.host.endsWith(".youtube.com") && url.pathname === "/playlist") {
+			if (url.host.endsWith("youtube.com") && url.pathname === "/playlist") {
 				return url.searchParams.get("list")!
 			}
 
