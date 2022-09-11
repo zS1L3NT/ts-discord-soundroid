@@ -63,7 +63,7 @@ export default class SearchSelectBuilder {
 							emoji: SearchSelectBuilder.emojis[i],
 							label: result.title.slice(0, 95),
 							value: result.url,
-							description: result.artiste
+							description: result.artiste || "?"
 						}))
 					)
 				),
