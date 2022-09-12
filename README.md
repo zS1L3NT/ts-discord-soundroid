@@ -2,6 +2,8 @@
 
 ![License](https://img.shields.io/github/license/zS1L3NT/ts-discord-soundroid?style=for-the-badge) ![Languages](https://img.shields.io/github/languages/count/zS1L3NT/ts-discord-soundroid?style=for-the-badge) ![Top Language](https://img.shields.io/github/languages/top/zS1L3NT/ts-discord-soundroid?style=for-the-badge) ![Commit Activity](https://img.shields.io/github/commit-activity/y/zS1L3NT/ts-discord-soundroid?style=for-the-badge) ![Last commit](https://img.shields.io/github/last-commit/zS1L3NT/ts-discord-soundroid?style=for-the-badge)
 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/U7U3EZHPS)
+
 SounDroid (Discord) is a Discord Music bot that plays music from Spotify or YouTube. SounDroid (Discord) is part of a bigger project consisting of a [Mobile Application](https://github.com/zS1L3NT/android-soundroid-v2), [Discord Bot](https://github.com/zS1L3NT/ts-discord-soundroid) and Web Application (coming in the far future). You can add it to your server by clicking [this](https://soundroid-bot.zectan.com) link and selecting your server. Do make sure to give SounDroid admin permissions.
 
 ## Motivation
