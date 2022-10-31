@@ -1,7 +1,6 @@
 import "dotenv/config"
 
 import { ActivityType, GatewayIntentBits } from "discord.js"
-import http from "http"
 import NovaBot from "nova-bot"
 import path from "path"
 
@@ -62,10 +61,3 @@ class SounDroidBot extends NovaBot<typeof prisma, Entry, GuildCache, BotCache> {
 }
 
 new SounDroidBot().start()
-
-const PORT = process.env.PORT || 8080
-http.createServer((_, res) => {
-	res.writeHead(200, { "Content-Type": "text/plain" })
-	res.write("SounDroid running!")
-	res.end()
-}).listen(PORT, () => console.log(`Server running on PORT ${PORT}`))
