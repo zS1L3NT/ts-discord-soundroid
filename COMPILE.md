@@ -1,8 +1,8 @@
 # Instructions to compile SounDriod into a standalone executable
 
-## Install Dependencies
+@vercel/ncc cannot read dynamic imports. We need to show @vercel/ncc what to import
 
-Run
+## Install Dependencies
 
 ```bash
 npm i
@@ -26,8 +26,6 @@ In [this](./node_modules/nova-bot/dist/utils/FilesSetupHelper.js) file, manually
 
 ## Create our workspace
 
-Run
-
 ```bash
 mkdir soundroid
 ```
@@ -36,10 +34,15 @@ This is where all the files needed to be compiled will be stored
 
 ## Import .env
 
-Run
-
 ```bash
 copy .env soundroid
+```
+
+Make sure to add a link to `youtube-dl.exe`
+
+```env
+YOUTUBE_DL_DIR="."
+YOUTUBE_DL_FILENAME="youtube-dl"
 ```
 
 ## Import youtube-dl.exe
@@ -49,15 +52,11 @@ The copy given in `youtube-dl-exec` doesn't work
 
 ## Import ffmpeg.exe
 
-Run
-
 ```bash
 copy node_modules\ffmpeg-static\ffmpeg.exe soundroid
 ```
 
 ## Import node.exe
-
-Run
 
 ```bash
 move "C:/Program Files/nodejs/node.exe" soundroid
@@ -67,18 +66,40 @@ We don't want to depend on a user having node installed to run the executable
 
 ## Make sure libsodium-wrappers is imported
 
-Add
+In [this](./node_modules/@discordjs/voice/dist/index.js) file, go to the section with
 
-```ts
-import "libsodium-wrappers"
+```js
+// src/util/Secretbox.ts
 ```
 
-to line 2 of `src/app.ts`
-This is to garuntee that @vercel/ncc includes this in the single file build
+as a comment, and replace that section with this piece of code
+
+```js
+const libsodiumWrappers = require("libsodium-wrappers")
+var fallbackError = /* @__PURE__ */ __name(() => {
+	throw new Error(`Cannot play audio as no valid encryption package is installed.
+- Install sodium, libsodium-wrappers, or tweetnacl.
+- Use the generateDependencyReport() function for more information.
+`)
+}, "fallbackError")
+var methods = {
+	open: fallbackError,
+	close: fallbackError,
+	random: fallbackError
+}
+void (async () => {
+	await libsodiumWrappers.ready
+	Object.assign(methods, {
+		open: libsodiumWrappers.crypto_secretbox_open_easy,
+		close: libsodiumWrappers.crypto_secretbox_easy,
+		random: libsodiumWrappers.randombytes_buf
+	})
+})()
+```
+
+this forces @vercel/ncc to use libsodium-wrappers
 
 ## Add rest of dependencies
-
-Run
 
 ```bash
 tsc
@@ -106,12 +127,4 @@ PAUSE
 
 Run `iexpress` as an Administrator
 
-### Install Program
-
-```bash
-cmd /c run.bat
-```
-
-### Options
-
--   Check both options
+Import [this](./soundroid.sed) to configure the installer
