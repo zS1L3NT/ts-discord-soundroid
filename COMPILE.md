@@ -1,11 +1,11 @@
-# Instructions to compile SounDriod into a standalone executable
+# Instructions to compile SounDroid into a standalone executable
 
 @vercel/ncc cannot read dynamic imports. We need to show @vercel/ncc what to import
 
 ## Install Dependencies
 
 ```bash
-npm i
+pnpm i
 ```
 
 ## Fix minify error
