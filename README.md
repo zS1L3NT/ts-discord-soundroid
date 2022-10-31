@@ -4,7 +4,7 @@
 
 SounDroid (Discord) is a Discord Music bot that plays music from Spotify or YouTube. SounDroid (Discord) is part of a bigger project consisting of a [Mobile Application](https://github.com/zS1L3NT/android-soundroid-v2), [Discord Bot](https://github.com/zS1L3NT/ts-discord-soundroid) and Web Application (coming in the far future). You can add it to your server by clicking [this](https://soundroid-bot.zectan.com) link and selecting your server. Do make sure to give SounDroid admin permissions.
 
-From 25 October 2022, SounDroid has been discontinued due me being unable to find a free hosting service that provides both **enough RAM** and a **strong enough internet connection** that can run the music bot. SounDroid used to work flawlessly with Heroku until they removed their free tier. Thank you to everyone who has used and supported SounDroid.
+From 25 October 2022, SounDroid has been discontinued (only hosted privately) due me being unable to find a free hosting service that provides both **enough RAM** and a **strong enough internet connection** that can run the music bot. SounDroid used to work flawlessly with Heroku until they removed their free tier. Thank you to everyone who has used and supported SounDroid.
 
 ## Motivation
 
