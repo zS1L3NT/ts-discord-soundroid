@@ -25,7 +25,8 @@ class SounDroidBot extends NovaBot<typeof prisma, Entry, GuildCache, BotCache> {
 	override intents = [
 		GatewayIntentBits.GuildVoiceStates,
 		GatewayIntentBits.GuildMessages,
-		GatewayIntentBits.Guilds
+		GatewayIntentBits.Guilds,
+		GatewayIntentBits.MessageContent
 	]
 
 	override helpMessage = (cache: GuildCache) =>
