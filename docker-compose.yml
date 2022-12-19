@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  ts-discord-soundroid:
+    build: .
+    working_dir: /home/ts-discord-soundroid
+    container_name: ts-discord-soundroid
+    image: zs1l3nt/ts-discord-soundroid
+    env_file:
+      - .env

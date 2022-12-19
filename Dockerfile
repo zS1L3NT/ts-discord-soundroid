@@ -15,4 +15,4 @@ ENV YOUTUBE_DL_DIR=/usr/local/bin/
 ENV YOUTUBE_DL_FILENAME=youtube-dl
 
 EXPOSE 8080
-CMD ["pnpm", "start"]
+CMD pnpm start
