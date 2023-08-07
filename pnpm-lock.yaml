@@ -42,8 +42,8 @@ dependencies:
     specifier: ^3.1.0
     version: 3.1.0
   nova-bot:
-    specifier: ^3.0.1
-    version: 3.0.1
+    specifier: ^3.0.2
+    version: 3.0.2
   prisma:
     specifier: ^5.1.1
     version: 5.1.1
@@ -185,7 +185,7 @@ packages:
       '@discordjs/util': 0.2.0
       '@sapphire/async-queue': 1.5.0
       '@sapphire/snowflake': 3.5.1
-      discord-api-types: 0.37.39
+      discord-api-types: 0.37.52
       file-type: 18.5.0
       tslib: 2.6.1
       undici: 5.23.0
@@ -1172,12 +1172,6 @@ packages:
   /escape-string-regexp@4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
-    dev: true
-
-  /escape-string-regexp@5.0.0:
-    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
-    engines: {node: '>=12'}
-    dev: false
 
   /eslint-config-prettier@9.0.0(eslint@8.46.0):
     resolution: {integrity: sha512-IcJsTkJae2S35pRsRAwoCE+925rJJStOdkKnLVgtE+tEpqU0EVVM7OqrwxqgptKdX29NUwC82I5pXsGFIgSevw==}
@@ -2027,8 +2021,8 @@ packages:
       abbrev: 1.1.1
     dev: false
 
-  /nova-bot@3.0.1:
-    resolution: {integrity: sha512-rDzFVQRhVO8u3rnm3uGnpwQdwCA+dmndHeQF8cf87R3fiAz6Zr/b0+wVo9Ns/78fQrflnIDq8Xigl1nvr4sY2A==}
+  /nova-bot@3.0.2:
+    resolution: {integrity: sha512-lvLyNAxBOJjPBFGpLxM6J9ux277Wtb8uFSn77NwAXr9COW/UzCJlzy3rtNG10VveR4OXpeHfP5WezStdr32TFA==}
     dependencies:
       '@discordjs/rest': 1.7.0
       '@prisma/client': 4.16.2(prisma@4.16.2)
@@ -2037,7 +2031,7 @@ packages:
       after-every: 1.0.4
       discord-api-types: 0.37.39
       discord.js: 14.12.1
-      escape-string-regexp: 5.0.0
+      escape-string-regexp: 4.0.0
       luxon: 3.3.0
       no-try: 3.1.0
       prisma: 4.16.2

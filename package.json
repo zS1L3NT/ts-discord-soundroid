@@ -5,9 +5,7 @@
 	"author": "zS1L3NT",
 	"license": "GPL-3.0",
 	"scripts": {
-		"start": "node --loader ts-node/esm --watch --no-warnings src/app.mts",
-		"dev": "ts-node --files src/app.ts",
-		"build": "prisma generate && tsc",
+		"start": "node -r ts-node/register --watch --no-warnings src/app.ts",
 		"lint": "tsc --noEmit && eslint src --fix && prettier src --write"
 	},
 	"dependencies": {
@@ -23,7 +21,7 @@
 		"google-it": "^1.6.4",
 		"libsodium-wrappers": "^0.7.11",
 		"no-try": "^3.1.0",
-		"nova-bot": "^3.0.1",
+		"nova-bot": "^3.0.2",
 		"prisma": "^5.1.1",
 		"spotify-web-api-node": "^5.0.2",
 		"tracer": "^1.1.6",

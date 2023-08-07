@@ -124,7 +124,7 @@ export default class ApiHelper {
 		const refreshResponse = (await this.spotify.refreshAccessToken()).body
 		this.spotify.setAccessToken(refreshResponse.access_token)
 		this.spotify.setRefreshToken(
-			refreshResponse.refresh_token || process.env.SPOTIFY__REFRESH_TOKEN,
+			refreshResponse.refresh_token || process.env.SPOTIFY__REFRESH_TOKEN || "",
 		)
 	}
 
