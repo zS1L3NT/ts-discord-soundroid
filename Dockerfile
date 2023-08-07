@@ -8,7 +8,6 @@ RUN curl -L https://yt-dl.org/downloads/latest/youtube-dl -o /usr/local/bin/yout
 RUN chmod a+rx /usr/local/bin/youtube-dl
 RUN npm i -g pnpm
 RUN pnpm i --ignore-scripts
-RUN pnpx prisma generate
 RUN pnpm build
 
 ENV YOUTUBE_DL_DIR=/usr/local/bin/
