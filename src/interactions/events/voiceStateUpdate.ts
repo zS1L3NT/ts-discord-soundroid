@@ -35,7 +35,7 @@ export default class extends BaseEvent<
 				cache.logger.log({
 					title: `Stopped disconnect timer`,
 					description: `A track was played within a minute of the disconnect timeout`,
-					color: Colors.Grey
+					color: Colors.Grey,
 				})
 			}
 		}
@@ -52,7 +52,7 @@ export default class extends BaseEvent<
 				cache.logger.log({
 					title: `Waiting 1 minute before disconnecting`,
 					description: `If no one is listening, the bot will disconnect after 1 minute`,
-					color: Colors.Grey
+					color: Colors.Grey,
 				})
 				cache.service.disconnectTimeout = setTimeout(() => {
 					logger.log("One minute without any users in VC, disconnecting")
@@ -60,7 +60,7 @@ export default class extends BaseEvent<
 					cache.logger.log({
 						title: `One minute without activity`,
 						description: `No activity within a minute, destroying music service and disconnecting...`,
-						color: 0x000000
+						color: 0x000000,
 					})
 				}, 60_000)
 			} else if (!newState.channel && oldState.member?.id === process.env.DISCORD__BOT_ID) {
@@ -69,7 +69,7 @@ export default class extends BaseEvent<
 				cache.logger.log({
 					title: `Bot was disconnected`,
 					description: `Immediately destroying music service`,
-					color: 0x000000
+					color: 0x000000,
 				})
 			}
 		}

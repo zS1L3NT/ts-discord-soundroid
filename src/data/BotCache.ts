@@ -20,8 +20,8 @@ export default class BotCache extends BaseBotCache<typeof prisma, Entry, GuildCa
 				prefix: null,
 				log_channel_id: null,
 				music_channel_id: null,
-				music_message_id: null
-			}
+				music_message_id: null,
+			},
 		})
 	}
 

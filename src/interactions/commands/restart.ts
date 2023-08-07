@@ -12,7 +12,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		description: "Restarts the current song. Use this if the song stops playing for no reason"
+		description: "Restarts the current song. Use this if the song stops playing for no reason",
 	}
 
 	override middleware = [new IsInMyVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
@@ -21,7 +21,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		return helper.isMessageCommand(false)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
+	override converter() {}
 
 	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const service = helper.cache.service!
@@ -33,7 +33,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			title: `Restarted Song`,
 			description: `<@${helper.member.id}> restarted the current song`,
 			command: "restart",
-			color: Colors.Red
+			color: Colors.Red,
 		})
 	}
 }

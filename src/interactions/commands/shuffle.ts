@@ -12,7 +12,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		description: "Shuffles the songs in the queue"
+		description: "Shuffles the songs in the queue",
 	}
 
 	override middleware = [new IsInMyVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
@@ -21,7 +21,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		return helper.isMessageCommand(false)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
+	override converter() {}
 
 	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const service = helper.cache.service!
@@ -37,7 +37,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				.slice(1)
 				.map(value => ({ value, sort: Math.random() }))
 				.sort((a, b) => a.sort - b.sort)
-				.map(({ value }) => value)
+				.map(({ value }) => value),
 		]
 
 		helper.cache.updateMinutely()
@@ -47,7 +47,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			title: `Shuffled queue`,
 			description: `<@${helper.member.id}> shuffled the queue`,
 			command: "shuffle",
-			color: Colors.Yellow
+			color: Colors.Yellow,
 		})
 	}
 }

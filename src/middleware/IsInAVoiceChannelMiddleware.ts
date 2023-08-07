@@ -10,7 +10,7 @@ export default class extends CommandMiddleware<typeof prisma, Entry, GuildCache>
 	override handler(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		if (!(helper.member.voice.channel instanceof VoiceChannel)) {
 			helper.respond(
-				ResponseBuilder.bad("You have to be a voice channel to use this command")
+				ResponseBuilder.bad("You have to be a voice channel to use this command"),
 			)
 			return false
 		}

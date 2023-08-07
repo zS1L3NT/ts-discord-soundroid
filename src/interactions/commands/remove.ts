@@ -19,7 +19,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				description: "The song to remove or the position to start removing from",
 				type: "number" as const,
 				requirements: "Number that references a song in the queue",
-				required: true
+				required: true,
 			},
 			{
 				name: "to",
@@ -28,11 +28,11 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				type: "number" as const,
 				requirements: [
 					"Number that references a song in the queue",
-					"Cannot be smaller than `from` position specified earlier"
+					"Cannot be smaller than `from` position specified earlier",
 				].join("\n"),
-				required: false
-			}
-		]
+				required: false,
+			},
+		],
 	}
 
 	override middleware = [new IsInMyVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
@@ -45,7 +45,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		const [fromStr, toStr] = helper.args()
 		return {
 			from: fromStr === undefined ? 0 : isNaN(+fromStr) ? 0 : +fromStr,
-			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr
+			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr,
 		}
 	}
 
@@ -63,8 +63,8 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			if (to <= from || to >= service.queue.length) {
 				return helper.respond(
 					ResponseBuilder.bad(
-						"Invalid ending position in queue, ensure the end position is greater than the start position"
-					)
+						"Invalid ending position in queue, ensure the end position is greater than the start position",
+					),
 				)
 			}
 
@@ -79,10 +79,10 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				description: [
 					`<@${helper.member.id}> removed a range of songs from the queue`,
 					`**Start Position**: ${from}`,
-					`**End Position**: ${to}`
+					`**End Position**: ${to}`,
 				].join("\n"),
 				command: "remove",
-				color: Colors.Yellow
+				color: Colors.Yellow,
 			})
 		} else {
 			const song = service.queue.splice(from, 1)[0]
@@ -92,14 +92,16 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 			helper.cache.updateMinutely()
 			helper.respond(
-				ResponseBuilder.good(`Removed 1 song from queue: "${song.title} - ${song.artiste}"`)
+				ResponseBuilder.good(
+					`Removed 1 song from queue: "${song.title} - ${song.artiste}"`,
+				),
 			)
 			helper.cache.logger.log({
 				member: helper.member,
 				title: `Removed a song from the queue`,
 				description: `<@${helper.member.id}> removed [${song.title} - ${song.artiste}](${song.url}) from the queue\n**Original Index**: ${from}`,
 				command: "remove",
-				color: Colors.Yellow
+				color: Colors.Yellow,
 			})
 		}
 	}

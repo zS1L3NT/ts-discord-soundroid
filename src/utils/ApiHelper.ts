@@ -19,7 +19,7 @@ export default class ApiHelper {
 		this.spotify = new SpotifyWebApi({
 			clientId: process.env.SPOTIFY__CLIENT_ID,
 			clientSecret: process.env.SPOTIFY__CLIENT_SECRET,
-			refreshToken: process.env.SPOTIFY__REFRESH_TOKEN
+			refreshToken: process.env.SPOTIFY__REFRESH_TOKEN,
 		})
 	}
 
@@ -36,9 +36,9 @@ export default class ApiHelper {
 						result.thumbnails.at(-1)?.url || "",
 						`https://youtu.be/${result.videoId}`,
 						result.duration,
-						requester
-					)
-			)
+						requester,
+					),
+			),
 		)
 	}
 
@@ -66,7 +66,7 @@ export default class ApiHelper {
 			song.thumbnails.at(-1)?.url || "",
 			`https://youtu.be/${song.videoId}`,
 			song.duration,
-			requester
+			requester,
 		)
 	}
 
@@ -81,8 +81,8 @@ export default class ApiHelper {
 						video.thumbnails.at(-1)?.url || "",
 						`https://youtu.be/${video.videoId}`,
 						video.duration,
-						requester
-					)
+						requester,
+					),
 			)
 			.slice(0, 10)
 	}
@@ -95,7 +95,7 @@ export default class ApiHelper {
 			info.thumbnails.at(-1)?.url || "",
 			info.video_url,
 			parseInt(info.lengthSeconds) || 0,
-			requester
+			requester,
 		)
 	}
 
@@ -115,8 +115,8 @@ export default class ApiHelper {
 						video.bestThumbnail.url || "",
 						"https://youtu.be/" + video.id,
 						video.durationSec || 0,
-						requester
-					)
+						requester,
+					),
 			)
 	}
 
@@ -124,7 +124,7 @@ export default class ApiHelper {
 		const refreshResponse = (await this.spotify.refreshAccessToken()).body
 		this.spotify.setAccessToken(refreshResponse.access_token)
 		this.spotify.setRefreshToken(
-			refreshResponse.refresh_token || process.env.SPOTIFY__REFRESH_TOKEN
+			refreshResponse.refresh_token || process.env.SPOTIFY__REFRESH_TOKEN,
 		)
 	}
 
@@ -156,9 +156,9 @@ export default class ApiHelper {
 								result.album.images[0]?.url || "",
 								`https://open.spotify.com/track/${result.id}`,
 								Math.floor(result.duration_ms / 1000),
-								requester
-							)
-					)
+								requester,
+							),
+					),
 			)
 
 			if (limit === 100) {
@@ -184,8 +184,8 @@ export default class ApiHelper {
 					album.images[0]?.url || "",
 					`https://open.spotify.com/track/${result.id}`,
 					Math.floor(result.duration_ms / 1000),
-					requester
-				)
+					requester,
+				),
 		)
 	}
 
@@ -199,14 +199,14 @@ export default class ApiHelper {
 			result.album.images[0]?.url || "",
 			`https://open.spotify.com/track/${trackId}`,
 			Math.floor(result.duration_ms / 1000),
-			requester
+			requester,
 		)
 	}
 
 	async findGeniusLyrics(query: string): Promise<{ lyrics: string; url: string }> {
 		const results = await googleIt({
 			query: `${query} site:genius.com`,
-			"no-display": true
+			"no-display": true,
 		})
 
 		const result = results
@@ -245,7 +245,7 @@ export default class ApiHelper {
 			lyrics: getLyrics(lyrics)
 				.replaceAll("\n\n", "\n")
 				.replaceAll(/(\[.*\])/g, "\n`$1`"),
-			url: result.link
+			url: result.link,
 		}
 	}
 }

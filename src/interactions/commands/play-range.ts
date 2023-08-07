@@ -22,7 +22,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				description: "The YouTube/Spotify Playlist link",
 				type: "string" as const,
 				requirements: "URL",
-				required: true
+				required: true,
 			},
 			{
 				name: "from",
@@ -30,7 +30,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				type: "number" as const,
 				requirements: "Number that references a song in the Spotify playlist",
 				required: false,
-				default: "1"
+				default: "1",
 			},
 			{
 				name: "to",
@@ -39,12 +39,12 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				requirements: [
 					"Number that references a song in the Spotify playlist",
 					"Cannot be smaller than `from` position specified earlier",
-					"Cannot be more than 1000 songs away from `from` position specified earlier"
+					"Cannot be more than 1000 songs away from `from` position specified earlier",
 				].join("\n"),
 				required: false,
-				default: "End of the playlist"
-			}
-		]
+				default: "End of the playlist",
+			},
+		],
 	}
 
 	override middleware = [new IsInAVoiceChannelMiddleware()]
@@ -58,7 +58,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		return {
 			link: linkStr || "",
 			from: fromStr === undefined ? 1 : isNaN(+fromStr) ? 0 : +fromStr,
-			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr
+			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr,
 		}
 	}
 
@@ -71,14 +71,14 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 					guildId: channel.guild.id,
 					adapterCreator: channel.guild
 						.voiceAdapterCreator as DiscordGatewayAdapterCreator,
-					selfDeaf: false
+					selfDeaf: false,
 				}),
-				helper.cache
+				helper.cache,
 			)
 		}
 
 		const link = helper.string("link")!
-		let from = helper.integer("from") ?? 1
+		const from = helper.integer("from") ?? 1
 		let to = helper.integer("to")
 
 		const [err, playlistId] = useTry(() => {
@@ -95,7 +95,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 		if (err) {
 			return helper.respond(
-				ResponseBuilder.bad("Link must be a Spotify/Youtube playlist link!")
+				ResponseBuilder.bad("Link must be a Spotify/Youtube playlist link!"),
 			)
 		}
 
@@ -106,30 +106,30 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		if (to) {
 			if (from > to) {
 				return helper.respond(
-					ResponseBuilder.bad(`Invalid "from" and "to" positions: ${from} and ${to}`)
+					ResponseBuilder.bad(`Invalid "from" and "to" positions: ${from} and ${to}`),
 				)
 			}
 
 			if (to - from > 1000) {
 				return helper.respond(
 					ResponseBuilder.bad(
-						`Cannot add more than 1000 songs, bot will take too long to respond`
-					)
+						`Cannot add more than 1000 songs, bot will take too long to respond`,
+					),
 				)
 			}
 		}
 
 		const [, spotifyPlaylistLength] = await useTryAsync(() =>
-			helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId)
+			helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId),
 		)
 		const [, youtubePlaylistLength] = await useTryAsync(() =>
-			helper.cache.apiHelper.findYoutubePlaylistLength(playlistId)
+			helper.cache.apiHelper.findYoutubePlaylistLength(playlistId),
 		)
 		const length = spotifyPlaylistLength || youtubePlaylistLength
 
 		if (to && to > length) {
 			return helper.respond(
-				ResponseBuilder.bad(`Invalid "to" position: Playlist only has ${length} songs`)
+				ResponseBuilder.bad(`Invalid "to" position: Playlist only has ${length} songs`),
 			)
 		}
 
@@ -140,10 +140,10 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		helper.respond(ResponseBuilder.good(`Adding songs from #${from} to #${to}...`))
 
 		const [, spotifyPlaylistSongs] = await useTryAsync(() =>
-			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, helper.member.id)
+			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, helper.member.id),
 		)
 		const [, youtubePlaylistSongs] = await useTryAsync(() =>
-			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, helper.member.id)
+			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, helper.member.id),
 		)
 		const songs = spotifyPlaylistSongs || youtubePlaylistSongs
 
@@ -159,10 +159,10 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				`<@${helper.member.id}> added ${songs.length + 1} songs to the queue`,
 				`**Link**: ${link}`,
 				`**Start Position**: ${from}`,
-				`**End Position**: ${to}`
+				`**End Position**: ${to}`,
 			].join("\n"),
 			command: "play-range",
-			color: Colors.Green
+			color: Colors.Green,
 		})
 	}
 }

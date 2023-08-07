@@ -1,5 +1,10 @@
 import {
-	ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, GuildMember
+	ActionRowBuilder,
+	ButtonBuilder,
+	ButtonStyle,
+	Colors,
+	EmbedBuilder,
+	GuildMember,
 } from "discord.js"
 import { CommandPayload } from "nova-bot"
 
@@ -9,7 +14,10 @@ import DominantColorGetter from "./DominantColorGetter"
 import DurationHelper from "./DurationHelper"
 
 export default class QueueBuilder {
-	constructor(private cache: GuildCache, private member?: GuildMember) {}
+	constructor(
+		private cache: GuildCache,
+		private member?: GuildMember,
+	) {}
 
 	async build(page: number = 1): Promise<CommandPayload> {
 		if (this.cache.service) {
@@ -32,7 +40,7 @@ export default class QueueBuilder {
 			const song = this.cache.service.queue[0]
 			embed.addFields({
 				name: `\u200B`,
-				value: `__Now Playing:__`
+				value: `__Now Playing:__`,
 			})
 
 			if (song) {
@@ -40,11 +48,13 @@ export default class QueueBuilder {
 				embed.setThumbnail(song.cover)
 				try {
 					embed.setColor(await new DominantColorGetter(song.cover).getColor())
-				} catch {}
+				} catch {
+					// Ignore errors
+				}
 			} else {
 				embed.addFields({
 					name: `Not playing anything at the moment`,
-					value: `\u200B`
+					value: `\u200B`,
 				})
 			}
 
@@ -56,7 +66,7 @@ export default class QueueBuilder {
 						const fieldFormat = this.songFormat(song)
 						embed.addFields({
 							name: songIndex + fieldFormat.name,
-							value: fieldFormat.value
+							value: fieldFormat.value,
 						})
 					})
 					embed.addFields({
@@ -64,8 +74,8 @@ export default class QueueBuilder {
 						value: `**${
 							this.cache.service.queue.length - 1
 						} songs in queue | ${new DurationHelper(
-							playingDuration
-						).format()} total length**`
+							playingDuration,
+						).format()} total length**`,
 					})
 				}
 
@@ -73,23 +83,23 @@ export default class QueueBuilder {
 					{
 						name: "Page",
 						value: `${page}/${maxPages}`,
-						inline: true
+						inline: true,
 					},
 					{
 						name: "Loop",
 						value: this.cache.service.loop ? "✅" : "❌",
-						inline: true
+						inline: true,
 					},
 					{
 						name: "Queue Loop",
 						value: this.cache.service.queueLoop ? "✅" : "❌",
-						inline: true
-					}
+						inline: true,
+					},
 				)
 				if (this.member) {
 					embed.setFooter({
 						text: `Requested by @${this.member.displayName}`,
-						iconURL: this.member.user.displayAvatarURL()
+						iconURL: this.member.user.displayAvatarURL(),
 					})
 				}
 
@@ -105,9 +115,9 @@ export default class QueueBuilder {
 							new ButtonBuilder()
 								.setCustomId("refresh")
 								.setStyle(ButtonStyle.Success)
-								.setLabel("Refresh queue")
-						])
-					]
+								.setLabel("Refresh queue"),
+						]),
+					],
 				}
 			}
 		}
@@ -118,11 +128,11 @@ export default class QueueBuilder {
 					.setAuthor({
 						name: "I am not currently in a voice channel",
 						iconURL:
-							"https://firebasestorage.googleapis.com/v0/b/zectan-projects.appspot.com/o/bad.png?alt=media&token=cbd48c77-784c-4f86-8de1-7335b452a894"
+							"https://firebasestorage.googleapis.com/v0/b/zectan-projects.appspot.com/o/bad.png?alt=media&token=cbd48c77-784c-4f86-8de1-7335b452a894",
 					})
-					.setColor(Colors.Red)
+					.setColor(Colors.Red),
 			],
-			components: []
+			components: [],
 		}
 	}
 
@@ -132,7 +142,7 @@ export default class QueueBuilder {
 	} {
 		return {
 			name: `${song.title} - ${song.artiste} | ${new DurationHelper(song.duration).format()}`,
-			value: `Requested by <@!${song.requester}> | [Open song](${song.url})`
+			value: `Requested by <@!${song.requester}> | [Open song](${song.url})`,
 		}
 	}
 }

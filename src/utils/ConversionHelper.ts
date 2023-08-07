@@ -2,7 +2,11 @@ import logger from "../logger"
 import ApiHelper from "./ApiHelper"
 
 export default class ConversionHelper {
-	constructor(private apiHelper: ApiHelper, private url: URL, private requester: string) {}
+	constructor(
+		private apiHelper: ApiHelper,
+		private url: URL,
+		private requester: string,
+	) {}
 
 	async getSongs() {
 		switch (this.url.host) {
@@ -34,7 +38,7 @@ export default class ConversionHelper {
 				} catch (err) {
 					logger.alert!(`Error playing playlist from Spotify url`, {
 						url: this.url.pathname,
-						err
+						err,
 					})
 					throw new Error("Error playing playlist from Spotify url")
 				}
@@ -44,7 +48,7 @@ export default class ConversionHelper {
 				} catch (err) {
 					logger.alert!(`Error playing album from Spotify url`, {
 						url: this.url.pathname,
-						err
+						err,
 					})
 					throw new Error("Error playing album from Spotify url")
 				}
@@ -54,7 +58,7 @@ export default class ConversionHelper {
 				} catch (err) {
 					logger.alert!(`Error playing track from Spotify url`, {
 						url: this.url.pathname,
-						err
+						err,
 					})
 					throw new Error("Error playing song from Spotify url")
 				}
@@ -75,7 +79,7 @@ export default class ConversionHelper {
 					} catch (err) {
 						logger.alert!(`Error playing playlist from YouTube url`, {
 							url: this.url.pathname,
-							err
+							err,
 						})
 						throw new Error("Error playing playlist from Youtube url")
 					}
@@ -89,7 +93,7 @@ export default class ConversionHelper {
 					} catch (err) {
 						logger.alert!(`Error playing track from YouTube url`, {
 							url: this.url.pathname,
-							err
+							err,
 						})
 						throw new Error("Error playing song from Youtube url")
 					}
@@ -103,12 +107,12 @@ export default class ConversionHelper {
 	private async handleYoutubeShort() {
 		try {
 			return [
-				await this.apiHelper.findYoutubeVideo(this.url.pathname.slice(1), this.requester)
+				await this.apiHelper.findYoutubeVideo(this.url.pathname.slice(1), this.requester),
 			]
 		} catch (err) {
 			logger.alert!(`Error playing track from YouTube url`, {
 				url: this.url.pathname,
-				err
+				err,
 			})
 			throw new Error("Error playing song from Youtube url")
 		}

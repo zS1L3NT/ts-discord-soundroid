@@ -22,7 +22,7 @@ export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 		const page = +pageStr!
 
 		const [channelErr, channel] = await useTryAsync<TextChannel>(
-			() => guild.channels.fetch(channelId!) as Promise<TextChannel>
+			() => guild.channels.fetch(channelId!) as Promise<TextChannel>,
 		)
 
 		if (channelErr) {
@@ -30,7 +30,7 @@ export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 		}
 
 		const [messageErr, message] = await useTryAsync<Message>(
-			() => channel.messages.fetch(messageId!) as Promise<Message>
+			() => channel.messages.fetch(messageId!) as Promise<Message>,
 		)
 
 		if (messageErr || message.embeds.length === 0) {
@@ -39,7 +39,7 @@ export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 
 		if (pageStr === "more") {
 			return helper.update(
-				new PageSelectBuilder(message.embeds[0]!, channelId!, messageId!).build(more)
+				new PageSelectBuilder(message.embeds[0]!, channelId!, messageId!).build(more),
 			)
 		}
 

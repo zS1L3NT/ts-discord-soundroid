@@ -17,13 +17,13 @@ export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, Gui
 	override async refresh(): Promise<void> {
 		this.entry = await this.prisma.entry.findFirstOrThrow({
 			where: {
-				guild_id: this.guild.id
-			}
+				guild_id: this.guild.id,
+			},
 		})
 		this.aliases = await this.prisma.alias.findMany({
 			where: {
-				guild_id: this.guild.id
-			}
+				guild_id: this.guild.id,
+			},
 		})
 	}
 
@@ -76,11 +76,11 @@ export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, Gui
 					new EmbedBuilder()
 						.setTitle(`No song currently playing`)
 						.setDescription(
-							"Use `/play <Youtube link, Spotify link, or Search query>` to use me!"
+							"Use `/play <Youtube link, Spotify link, or Search query>` to use me!",
 						)
-						.setColor(Colors.Green)
+						.setColor(Colors.Green),
 				],
-				components: []
+				components: [],
 			})
 		}
 	}
@@ -91,7 +91,7 @@ export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, Gui
 			prefix: null,
 			log_channel_id: null,
 			music_channel_id: null,
-			music_message_id: null
+			music_message_id: null,
 		}
 	}
 

@@ -1,8 +1,13 @@
 import { Colors } from "discord.js"
 
 import {
-	AudioPlayer, AudioPlayerStatus, createAudioPlayer, entersState, VoiceConnection,
-	VoiceConnectionDisconnectReason, VoiceConnectionStatus
+	AudioPlayer,
+	AudioPlayerStatus,
+	createAudioPlayer,
+	entersState,
+	VoiceConnection,
+	VoiceConnectionDisconnectReason,
+	VoiceConnectionStatus,
 } from "@discordjs/voice"
 
 import logger from "../logger"
@@ -15,7 +20,7 @@ export enum StopStatus {
 	NORMAL,
 	INTENTIONAL,
 	RESTART,
-	KILLED
+	KILLED,
 }
 
 export default class MusicService {
@@ -30,7 +35,10 @@ export default class MusicService {
 	loop = false
 	queueLoop = false
 
-	constructor(public readonly connection: VoiceConnection, public readonly cache: GuildCache) {
+	constructor(
+		public readonly connection: VoiceConnection,
+		public readonly cache: GuildCache,
+	) {
 		this.player = createAudioPlayer()
 		this.queue = []
 
@@ -52,7 +60,7 @@ export default class MusicService {
 						// Probably moved voice channel
 					} catch {
 						logger.alert!(
-							"Bot didn't enter connecting state after 15, destroying session"
+							"Bot didn't enter connecting state after 15, destroying session",
 						)
 						this.destroy()
 						// Probably removed from voice channel
@@ -202,7 +210,7 @@ export default class MusicService {
 					this.cache.logger.log({
 						title: `Stopped disconnect timer`,
 						description: `A track was played within a minute of the disconnect timeout`,
-						color: Colors.Grey
+						color: Colors.Grey,
 					})
 				}
 
@@ -210,7 +218,7 @@ export default class MusicService {
 				this.cache.logger.log({
 					title: `Waiting 1 minute before disconnecting`,
 					description: `If nothing is playing, the bot will disconnect after 1 minute`,
-					color: Colors.Grey
+					color: Colors.Grey,
 				})
 				this.disconnectTimeout = setTimeout(() => {
 					logger.log("One minute without anything in queue, disconnecting")
@@ -218,7 +226,7 @@ export default class MusicService {
 					this.cache.logger.log({
 						title: `One minute without activity`,
 						description: `No activity within a minute, destroying music service and disconnecting...`,
-						color: 0x000000
+						color: 0x000000,
 					})
 				}, 60_000)
 			}
@@ -232,7 +240,7 @@ export default class MusicService {
 			this.cache.logger.log({
 				title: `Stopped disconnect timer`,
 				description: `A track was played within a minute of the disconnect timeout`,
-				color: Colors.Grey
+				color: Colors.Grey,
 			})
 		}
 
@@ -253,7 +261,7 @@ export default class MusicService {
 			this.cache.logger.log({
 				title: `Error playing track`,
 				description: (err as Error).stack || "No stack trace available",
-				color: Colors.Red
+				color: Colors.Red,
 			})
 			return this.processQueue()
 		}

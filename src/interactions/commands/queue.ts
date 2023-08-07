@@ -11,7 +11,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		description: "Shows a detailed message about all the songs in the queue"
+		description: "Shows a detailed message about all the songs in the queue",
 	}
 
 	override middleware = [new IsInMyVoiceChannelMiddleware()]
@@ -20,7 +20,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		return helper.isMessageCommand(false)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
+	override converter() {}
 
 	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		helper.respond(await new QueueBuilder(helper.cache, helper.member).build(), 15_000)

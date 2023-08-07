@@ -20,20 +20,20 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override ephemeral = true
 	override data = {
 		description:
-			"Shows the currently playing song with a progressbar showing how far into the song you are"
+			"Shows the currently playing song with a progressbar showing how far into the song you are",
 	}
 
 	override middleware = [
 		new IsInMyVoiceChannelMiddleware(),
 		new HasMusicServiceMiddleware(),
-		new IsPlayingMiddleware()
+		new IsPlayingMiddleware(),
 	]
 
 	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		return helper.isMessageCommand(false)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
+	override converter() {}
 
 	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const service = helper.cache.service!
@@ -59,22 +59,22 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 						.addFields(
 							{
 								name: `**${song.title} - ${song.artiste}**`,
-								value: `Requested by <@!${song.requester}>`
+								value: `Requested by <@!${song.requester}>`,
 							},
 							{
 								name: `\`${seekbar}\``,
 								value: `\`${new DurationHelper(
-									state.playbackDuration / 1000
-								).format()} / ${new DurationHelper(song.duration).format()}\``
-							}
+									state.playbackDuration / 1000,
+								).format()} / ${new DurationHelper(song.duration).format()}\``,
+							},
 						)
 						.setFooter({
 							text: `Requested by @${helper.member.displayName}`,
-							iconURL: helper.member.user.displayAvatarURL()
-						})
-				]
+							iconURL: helper.member.user.displayAvatarURL(),
+						}),
+				],
 			},
-			15_000
+			15_000,
 		)
 	}
 }

@@ -17,12 +17,12 @@ export default class extends BaseButton<typeof prisma, Entry, GuildCache> {
 
 		if (!embed) {
 			return helper.respond(
-				ResponseBuilder.bad("Failed to get information about queue page number")
+				ResponseBuilder.bad("Failed to get information about queue page number"),
 			)
 		}
 
 		helper.respond(
-			new PageSelectBuilder(embed, helper.message.channel.id, helper.message.id).build()
+			new PageSelectBuilder(embed, helper.message.channel.id, helper.message.id).build(),
 		)
 	}
 }

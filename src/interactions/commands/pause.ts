@@ -14,20 +14,20 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override ephemeral = true
 
 	override data = {
-		description: "Pause the current song"
+		description: "Pause the current song",
 	}
 
 	override middleware = [
 		new IsInMyVoiceChannelMiddleware(),
 		new HasMusicServiceMiddleware(),
-		new IsPlayingMiddleware()
+		new IsPlayingMiddleware(),
 	]
 
 	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		return helper.isMessageCommand(false)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
+	override converter() {}
 
 	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const service = helper.cache.service!
@@ -41,7 +41,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			title: `Paused song`,
 			description: `<@${helper.member.id}> paused the current song`,
 			command: "pause",
-			color: Colors.Yellow
+			color: Colors.Yellow,
 		})
 	}
 }

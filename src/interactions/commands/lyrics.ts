@@ -13,7 +13,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override data = {
 		description: [
 			"Shows the lyrics for the current song",
-			"If `query` given, searches the lyrics of the query instead"
+			"If `query` given, searches the lyrics of the query instead",
 		].join("\n"),
 		options: [
 			{
@@ -21,9 +21,9 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				description: "The query for the lyrics",
 				type: "string" as const,
 				requirements: "Text",
-				required: false
-			}
-		]
+				required: false,
+			},
+		],
 	}
 
 	override middleware = []
@@ -34,7 +34,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		return {
-			query: helper.args().join(" ")
+			query: helper.args().join(" "),
 		}
 	}
 
@@ -61,28 +61,28 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 									.setDescription(`${lyrics}\n\n> Lyrics from ${url}`)
 									.setFooter({
 										text: `Requested by @${helper.member.displayName}`,
-										iconURL: helper.member.user.displayAvatarURL()
-									})
-							]
+										iconURL: helper.member.user.displayAvatarURL(),
+									}),
+							],
 						},
-						null
+						null,
 					)
 				})
 				.catch(err => {
 					helper.respond(
 						ResponseBuilder.bad(
-							`Failed to get lyrics for: ${song.title} - ${song.artiste}`
-						)
+							`Failed to get lyrics for: ${song.title} - ${song.artiste}`,
+						),
 					)
 					helper.cache.logger.log({
 						member: helper.member,
 						title: "Failed to get lyrics",
 						description: [
 							`**Song**: ${song.title} - ${song.artiste}`,
-							err.stack || "No stack trace available"
+							err.stack || "No stack trace available",
 						].join("\n"),
 						command: "lyrics",
-						color: Colors.Red
+						color: Colors.Red,
 					})
 				})
 		} else {
@@ -98,33 +98,33 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 										.setDescription(`${lyrics}\n\n> Lyrics from ${url}`)
 										.setFooter({
 											text: `Requested by @${helper.member.displayName}`,
-											iconURL: helper.member.user.displayAvatarURL()
-										})
-								]
+											iconURL: helper.member.user.displayAvatarURL(),
+										}),
+								],
 							},
-							null
+							null,
 						)
 					})
 					.catch(err => {
 						helper.respond(
-							ResponseBuilder.bad(`Failed to get lyrics for query: ${query}`)
+							ResponseBuilder.bad(`Failed to get lyrics for query: ${query}`),
 						)
 						helper.cache.logger.log({
 							member: helper.member,
 							title: "Failed to get lyrics",
 							description: [
 								`**Query**: ${query}`,
-								err.stack || "No stack trace available"
+								err.stack || "No stack trace available",
 							].join("\n"),
 							command: "lyrics",
-							color: Colors.Red
+							color: Colors.Red,
 						})
 					})
 			} else {
 				helper.respond(
 					ResponseBuilder.bad(
-						"No song playing right now, please pass in a query to find lyrics"
-					)
+						"No song playing right now, please pass in a query to find lyrics",
+					),
 				)
 			}
 		}

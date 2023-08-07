@@ -13,7 +13,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		description: "Clears the entire queue along with the current song"
+		description: "Clears the entire queue along with the current song",
 	}
 
 	override middleware = [new IsInMyVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
@@ -22,7 +22,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		return helper.isMessageCommand(false)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
+	override converter() {}
 
 	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const service = helper.cache.service!
@@ -38,7 +38,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			title: `Cleared queue`,
 			description: `<@${helper.member.id}> cleared the queue`,
 			command: "clear-queue",
-			color: Colors.Yellow
+			color: Colors.Yellow,
 		})
 	}
 }

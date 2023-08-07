@@ -23,7 +23,7 @@ export default class extends BaseButton<typeof prisma, Entry, GuildCache> {
 
 		if (err) {
 			return helper.respond(
-				ResponseBuilder.bad("Failed to get information about previous search")
+				ResponseBuilder.bad("Failed to get information about previous search"),
 			)
 		}
 
@@ -31,8 +31,8 @@ export default class extends BaseButton<typeof prisma, Entry, GuildCache> {
 			await new SearchSelectBuilder(
 				helper.cache.apiHelper,
 				query!,
-				helper.member.id
-			).buildVideo()
+				helper.member.id,
+			).buildVideo(),
 		)
 	}
 }

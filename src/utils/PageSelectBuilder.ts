@@ -7,7 +7,11 @@ export default class PageSelectBuilder {
 	private startPage = 0
 	private endPage = 0
 
-	constructor(private embed: Embed, private channelId: string, private messageId: string) {}
+	constructor(
+		private embed: Embed,
+		private channelId: string,
+		private messageId: string,
+	) {}
 
 	build(startPage?: number): CommandPayload {
 		const pageInfo = this.embed.fields.find(field => field.name === `Page`)!.value
@@ -23,20 +27,20 @@ export default class PageSelectBuilder {
 			.map((_, i) => i + this.startPage + 1)
 			.map(page => ({
 				label: `Page ${page}`,
-				value: `${this.channelId}-${this.messageId}-${page}`
+				value: `${this.channelId}-${this.messageId}-${page}`,
 			}))
 
 		if (this.allowPreviousPage()) {
 			pages.splice(0, 0, {
 				label: "Previous page",
-				value: `${this.channelId}-${this.messageId}-more-${this.startPage - 20 + 1}`
+				value: `${this.channelId}-${this.messageId}-more-${this.startPage - 20 + 1}`,
 			})
 		}
 
 		if (this.allowNextPage()) {
 			pages.push({
 				label: "Next page",
-				value: `${this.channelId}-${this.messageId}-more-${this.endPage + 1}`
+				value: `${this.channelId}-${this.messageId}-more-${this.endPage + 1}`,
 			})
 		}
 
@@ -44,9 +48,9 @@ export default class PageSelectBuilder {
 			embeds: [new EmbedBuilder().setTitle(`Which page of the queue do you want to go to?`)],
 			components: [
 				new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-					new SelectMenuBuilder().setCustomId("select-page").addOptions(pages)
-				)
-			]
+					new SelectMenuBuilder().setCustomId("select-page").addOptions(pages),
+				),
+			],
 		}
 	}
 
