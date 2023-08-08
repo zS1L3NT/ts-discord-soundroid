@@ -127,8 +127,7 @@ export default class QueueBuilder {
 				new EmbedBuilder()
 					.setAuthor({
 						name: "I am not currently in a voice channel",
-						iconURL:
-							"https://firebasestorage.googleapis.com/v0/b/zectan-projects.appspot.com/o/bad.png?alt=media&token=cbd48c77-784c-4f86-8de1-7335b452a894",
+						iconURL: "https://res.cloudinary.com/zs1l3nt/image/upload/icons/cross.png",
 					})
 					.setColor(Colors.Red),
 			],
