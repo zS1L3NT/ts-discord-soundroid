@@ -38,6 +38,7 @@
 		"eslint": "latest",
 		"eslint-config-prettier": "latest",
 		"eslint-plugin-simple-import-sort": "latest",
+		"nodemon": "^3.0.1",
 		"prettier": "latest",
 		"ts-node": "latest",
 		"typescript": "latest"
