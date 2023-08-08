@@ -1,4 +1,4 @@
-import { ActionRowBuilder, Embed, EmbedBuilder, SelectMenuBuilder } from "discord.js"
+import { ActionRowBuilder, Embed, EmbedBuilder, StringSelectMenuBuilder } from "discord.js"
 import { CommandPayload } from "nova-bot"
 
 export default class PageSelectBuilder {
@@ -47,8 +47,8 @@ export default class PageSelectBuilder {
 		return {
 			embeds: [new EmbedBuilder().setTitle(`Which page of the queue do you want to go to?`)],
 			components: [
-				new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-					new SelectMenuBuilder().setCustomId("select-page").addOptions(pages),
+				new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+					new StringSelectMenuBuilder().setCustomId("select-page").addOptions(pages),
 				),
 			],
 		}

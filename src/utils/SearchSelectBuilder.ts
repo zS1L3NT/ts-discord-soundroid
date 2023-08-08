@@ -3,7 +3,7 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	EmbedBuilder,
-	SelectMenuBuilder,
+	StringSelectMenuBuilder,
 } from "discord.js"
 import { CommandPayload } from "nova-bot"
 
@@ -31,8 +31,8 @@ export default class SearchSelectBuilder {
 					.setColor("#FF0000"),
 			],
 			components: [
-				new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-					new SelectMenuBuilder().setCustomId("search-query").addOptions(
+				new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+					new StringSelectMenuBuilder().setCustomId("search-query").addOptions(
 						results.map((result, i) => ({
 							emoji: SearchSelectBuilder.emojis[i],
 							label: result.title.slice(0, 95),
@@ -65,8 +65,8 @@ export default class SearchSelectBuilder {
 					.setColor("#FF0000"),
 			],
 			components: [
-				new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-					new SelectMenuBuilder().setCustomId("search-query").addOptions(
+				new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+					new StringSelectMenuBuilder().setCustomId("search-query").addOptions(
 						results.map((result, i) => ({
 							emoji: SearchSelectBuilder.emojis[i],
 							label: result.title.slice(0, 95),
