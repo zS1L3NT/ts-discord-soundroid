@@ -19,7 +19,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				description: "This is the song's position in the queue that you want to move",
 				type: "number" as const,
 				requirements: "Number that references a song in the queue",
-				required: true
+				required: true,
 			},
 			{
 				name: "to",
@@ -28,9 +28,9 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				type: "number" as const,
 				requirements: "Number that references a position in the queue",
 				required: false,
-				default: "1"
-			}
-		]
+				default: "1",
+			},
+		],
 	}
 
 	override middleware = [new IsInMyVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
@@ -43,7 +43,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		const [fromStr, toStr] = helper.args()
 		return {
 			from: fromStr === undefined ? 0 : isNaN(+fromStr) ? 0 : +fromStr,
-			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr
+			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr,
 		}
 	}
 
@@ -74,8 +74,8 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			ResponseBuilder.good(
 				`Moved "${song.title} - ${song.artiste}" from ${from} to ${
 					to ?? `the top of the queue`
-				}`
-			)
+				}`,
+			),
 		)
 		helper.cache.logger.log({
 			member: helper.member,
@@ -84,10 +84,10 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				`<@${helper.member.id}> moved a song's position in the queue`,
 				`**Song**: ${song.title} - ${song.artiste}`,
 				`**Old Position**: ${from}`,
-				`**New Position**: ${to || "Top of the queue"}`
+				`**New Position**: ${to || "Top of the queue"}`,
 			].join("\n"),
 			command: "move",
-			color: Colors.Green
+			color: Colors.Green,
 		})
 	}
 }

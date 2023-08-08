@@ -14,8 +14,8 @@ export default class extends CommandMiddleware<typeof prisma, Entry, GuildCache>
 		) {
 			helper.respond(
 				ResponseBuilder.bad(
-					"You have to be in the same voice channel as me to use this command"
-				)
+					"You have to be in the same voice channel as me to use this command",
+				),
 			)
 			return false
 		}

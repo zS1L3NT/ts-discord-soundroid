@@ -22,15 +22,15 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				type: "number" as const,
 				requirements: "Number",
 				required: false,
-				default: "1"
-			}
-		]
+				default: "1",
+			},
+		],
 	}
 
 	override middleware = [
 		new IsInMyVoiceChannelMiddleware(),
 		new HasMusicServiceMiddleware(),
-		new IsPlayingMiddleware()
+		new IsPlayingMiddleware(),
 	]
 
 	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
@@ -40,7 +40,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const [countStr] = helper.args()
 		return {
-			count: countStr === undefined ? 1 : isNaN(+countStr) ? 1 : +countStr
+			count: countStr === undefined ? 1 : isNaN(+countStr) ? 1 : +countStr,
 		}
 	}
 
@@ -56,8 +56,8 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		if (count >= queue.length && count > 1) {
 			return helper.respond(
 				ResponseBuilder.bad(
-					`The queue only has ${queue.length} songs, cannot skip ${count} songs`
-				)
+					`The queue only has ${queue.length} songs, cannot skip ${count} songs`,
+				),
 			)
 		}
 
@@ -73,8 +73,8 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		helper.respond(
 			ResponseBuilder.good(
 				"Skipped the current song" +
-					(count > 1 ? ` and ${count - 1} songs in the queue` : "")
-			)
+					(count > 1 ? ` and ${count - 1} songs in the queue` : ""),
+			),
 		)
 		helper.cache.logger.log({
 			member: helper.member,
@@ -83,7 +83,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				count > 1 ? ` and the next ${count - 1} songs` : ""
 			}`,
 			command: "skip",
-			color: Colors.Yellow
+			color: Colors.Yellow,
 		})
 	}
 }

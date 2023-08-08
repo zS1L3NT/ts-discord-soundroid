@@ -23,9 +23,9 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				description: "This can be a YouTube/Spotify Song/Playlist/Album or Search Query",
 				type: "string" as const,
 				requirements: "Text or URL",
-				required: true
-			}
-		]
+				required: true,
+			},
+		],
 	}
 
 	override middleware = [new IsInAVoiceChannelMiddleware()]
@@ -36,7 +36,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		return {
-			query: helper.args().join(" ") || ""
+			query: helper.args().join(" ") || "",
 		}
 	}
 
@@ -49,7 +49,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				const songs = await new ConversionHelper(
 					helper.cache.apiHelper,
 					url,
-					helper.member.id
+					helper.member.id,
 				).getSongs()
 				const [first] = songs
 
@@ -65,9 +65,9 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 							guildId: channel.guild.id,
 							adapterCreator: channel.guild
 								.voiceAdapterCreator as DiscordGatewayAdapterCreator,
-							selfDeaf: false
+							selfDeaf: false,
 						}),
-						helper.cache
+						helper.cache,
 					)
 				}
 
@@ -79,14 +79,14 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				helper.cache.updateMinutely()
 				if (songs.length === 1) {
 					helper.respond(
-						ResponseBuilder.good(`Enqueued: "${first.title} - ${first.artiste}"`)
+						ResponseBuilder.good(`Enqueued: "${first.title} - ${first.artiste}"`),
 					)
 					helper.cache.logger.log({
 						member: helper.member,
 						title: "Enqueued 1 song by song link",
 						description: `<@${helper.member.id}> enqueued [${first.title} - ${first.artiste}](${first.url})`,
 						command: "play",
-						color: Colors.Green
+						color: Colors.Green,
 					})
 				} else {
 					helper.respond(ResponseBuilder.good(`Enqueued ${songs.length + 1} songs`))
@@ -95,7 +95,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 						title: `Enqueued ${songs.length + 1} song by playlist link`,
 						description: `<@${helper.member.id}> enqueued songs in a playlist\n**Link**: ${url}`,
 						command: "play",
-						color: Colors.Green
+						color: Colors.Green,
 					})
 				}
 			})
@@ -107,7 +107,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 					title: "Error playing songs from url",
 					description: err.stack || "No stack trace available",
 					command: "play",
-					color: Colors.Red
+					color: Colors.Red,
 				})
 			}
 		} else {
@@ -115,9 +115,9 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				await new SearchSelectBuilder(
 					helper.cache.apiHelper,
 					query,
-					helper.member.id
+					helper.member.id,
 				).buildMusic(),
-				null
+				null,
 			)
 		}
 	}

@@ -21,15 +21,15 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				type: "number" as const,
 				requirements: "Number between 1 and 1000",
 				required: false,
-				default: "1"
-			}
-		]
+				default: "1",
+			},
+		],
 	}
 
 	override middleware = [
 		new IsInMyVoiceChannelMiddleware(),
 		new HasMusicServiceMiddleware(),
-		new IsPlayingMiddleware()
+		new IsPlayingMiddleware(),
 	]
 
 	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
@@ -39,7 +39,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const [countStr] = helper.args()
 		return {
-			count: countStr === undefined ? 1 : isNaN(+countStr) ? 0 : +countStr
+			count: countStr === undefined ? 1 : isNaN(+countStr) ? 0 : +countStr,
 		}
 	}
 
@@ -61,14 +61,14 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 		helper.cache.updateMinutely()
 		helper.respond(
-			ResponseBuilder.good(`Playing "${song.title} - ${song.artiste}" again ${count} times`)
+			ResponseBuilder.good(`Playing "${song.title} - ${song.artiste}" again ${count} times`),
 		)
 		helper.cache.logger.log({
 			member: helper.member,
 			title: `Current song played again`,
 			description: `<@${helper.member.id}> played the current song again\n**Times**: ${count}`,
 			command: "play-again",
-			color: Colors.Green
+			color: Colors.Green,
 		})
 	}
 }

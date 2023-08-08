@@ -16,8 +16,8 @@ export default Tracer.colorConsole({
 		{
 			alert: "[{{timestamp}}] <{{path}}, Line {{line}}> {{message}}",
 			warn: "[{{timestamp}}] <{{path}}, Line {{line}}> {{message}}",
-			error: "[{{timestamp}}] <{{path}}, Line {{line}} at {{pos}}> {{message}}"
-		}
+			error: "[{{timestamp}}] <{{path}}, Line {{line}} at {{pos}}> {{message}}",
+		},
 	],
 	methods: ["log", "discord", "debug", "info", "alert", "warn", "error"],
 	dateformat: "dd mmm yyyy, hh:MM:sstt",
@@ -28,7 +28,7 @@ export default Tracer.colorConsole({
 		info: colors.green,
 		alert: colors.yellow,
 		warn: colors.yellow.bold.italic,
-		error: colors.red.bold.italic
+		error: colors.red.bold.italic,
 	},
 	preprocess: data => {
 		data.path = data.path
@@ -41,5 +41,5 @@ export default Tracer.colorConsole({
 			.at(-1)!
 			.replace(/^(\/|\\)(dist|src)/, "src")
 			.replaceAll("\\", "/")
-	}
+	},
 })

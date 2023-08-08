@@ -12,7 +12,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
 	override ephemeral = true
 	override data = {
-		description: "Loop the current song in the queue, disables queue-loop mode"
+		description: "Loop the current song in the queue, disables queue-loop mode",
 	}
 
 	override middleware = [new IsInMyVoiceChannelMiddleware(), new HasMusicServiceMiddleware()]
@@ -21,7 +21,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		return helper.isMessageCommand(false)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {}
+	override converter() {}
 
 	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const service = helper.cache.service!
@@ -36,7 +36,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			title: `Loop ${service.loop ? "enabled" : "disabled"}`,
 			description: `<@${helper.member.id}> **${service.loop ? "enabled" : "disabled"}** loop`,
 			command: "loop",
-			color: Colors.Yellow
+			color: Colors.Yellow,
 		})
 	}
 }

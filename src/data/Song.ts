@@ -13,7 +13,7 @@ export default class Song {
 		public cover: string,
 		public url: string,
 		public duration: number,
-		public requester: string
+		public requester: string,
 	) {}
 
 	static async from(apiHelper: ApiHelper, url: string, requester: string) {
@@ -29,17 +29,15 @@ export default class Song {
 		}
 	}
 
-	createAudioResource(
-		service: MusicService,
-		apiHelper: ApiHelper
-	): Promise<AudioResource<Song>> {
+	createAudioResource(service: MusicService, apiHelper: ApiHelper): Promise<AudioResource<Song>> {
+		// eslint-disable-next-line no-async-promise-executor
 		return new Promise(async (resolve, reject) => {
 			let source = this.url
 			const _URL = new URL(source)
 			if (_URL.host === "open.spotify.com") {
 				const youtubeResult = await apiHelper.findYoutubeSong(
 					`${this.title} ${this.artiste}`,
-					this.requester
+					this.requester,
 				)
 				source = youtubeResult.url
 			}
@@ -49,9 +47,9 @@ export default class Song {
 				{
 					limitRate: "10M",
 					format: "bestaudio[ext=webm+acodec=opus+asr=48000]/bestaudio",
-					output: "-"
+					output: "-",
 				},
-				{ stdio: ["ignore", "pipe"] }
+				{ stdio: ["ignore", "pipe"] },
 			)
 			const { stdout } = childProcess
 			if (!stdout) {
@@ -67,9 +65,9 @@ export default class Song {
 							resolve(
 								createAudioResource(probe.stream, {
 									metadata: this,
-									inputType: probe.type
-								})
-							)
+									inputType: probe.type,
+								}),
+							),
 						)
 						.catch(err => {
 							if (!childProcess.killed) childProcess.kill()

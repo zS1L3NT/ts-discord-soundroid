@@ -23,10 +23,10 @@ export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 			helper.update({
 				embeds: [
 					ResponseBuilder.bad(
-						"You have to be in a voice channel to use this command"
-					).build()
+						"You have to be in a voice channel to use this command",
+					).build(),
 				],
-				components: []
+				components: [],
 			})
 		} else {
 			const url = helper.value!
@@ -37,9 +37,9 @@ export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 						guildId: channel.guild.id,
 						adapterCreator: channel.guild
 							.voiceAdapterCreator as DiscordGatewayAdapterCreator,
-						selfDeaf: false
+						selfDeaf: false,
 					}),
-					helper.cache
+					helper.cache,
 				)
 			}
 
@@ -51,30 +51,30 @@ export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 				helper.update({
 					embeds: [
 						ResponseBuilder.good(
-							`Enqueued song: "${song.title} - ${song.artiste}"`
-						).build()
+							`Enqueued song: "${song.title} - ${song.artiste}"`,
+						).build(),
 					],
-					components: []
+					components: [],
 				})
 				helper.cache.logger.log({
 					member: helper.member,
 					title: `Enqueued 1 song by search query`,
 					description: `<@${helper.member.id}> enqueued [${song.title} - ${song.artiste}](${song.url})`,
 					command: "play",
-					color: Colors.Green
+					color: Colors.Green,
 				})
 			} catch (err) {
 				logger.error("Error playing song from url", err)
 				helper.update({
 					embeds: [ResponseBuilder.bad("Error playing song from url").build()],
-					components: []
+					components: [],
 				})
 				helper.cache.logger.log({
 					member: helper.member,
 					title: `Error playing song from url`,
 					description: (err as Error).stack || "No stack trace available",
 					command: "play",
-					color: Colors.Red
+					color: Colors.Red,
 				})
 			}
 		}
