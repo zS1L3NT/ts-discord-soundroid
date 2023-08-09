@@ -18,9 +18,8 @@ process.on("uncaughtException", err => {
 })
 
 class SounDroidBot extends NovaBot<typeof prisma, Entry, GuildCache, BotCache> {
-	override name = "SounDroid#5566"
-	override icon =
-		"https://cdn.discordapp.com/avatars/899858077027811379/56e8665909db40439b09e13627970b62.png?size=128"
+	override name = "SounDroid#9390"
+	override icon = "https://res.cloudinary.com/zs1l3nt/image/upload/icons/soundroid.png"
 	override directory = path.join(__dirname, "interactions")
 	override intents = [
 		GatewayIntentBits.GuildVoiceStates,

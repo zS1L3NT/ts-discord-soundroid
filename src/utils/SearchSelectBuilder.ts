@@ -26,7 +26,7 @@ export default class SearchSelectBuilder {
 				new EmbedBuilder()
 					.setAuthor({
 						name: `YouTube Video search results for: "${this.query}"`,
-						iconURL: `https://www.iconpacks.net/icons/2/free-youtube-logo-icon-2431-thumb.png`,
+						iconURL: `https://res.cloudinary.com/zs1l3nt/image/upload/icons/youtube.png`,
 					})
 					.setColor("#FF0000"),
 			],
@@ -60,7 +60,7 @@ export default class SearchSelectBuilder {
 				new EmbedBuilder()
 					.setAuthor({
 						name: `YouTube Music search results for: "${this.query}"`,
-						iconURL: `https://brandlogos.net/wp-content/uploads/2021/11/youtube-music-logo-1-512x512.png`,
+						iconURL: `https://res.cloudinary.com/zs1l3nt/image/upload/icons/youtubemusic.png`,
 					})
 					.setColor("#FF0000"),
 			],
