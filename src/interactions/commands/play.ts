@@ -89,10 +89,10 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 						color: Colors.Green,
 					})
 				} else {
-					helper.respond(ResponseBuilder.good(`Enqueued ${songs.length + 1} songs`))
+					helper.respond(ResponseBuilder.good(`Enqueued ${songs.length} songs`))
 					helper.cache.logger.log({
 						member: helper.member,
-						title: `Enqueued ${songs.length + 1} song by playlist link`,
+						title: `Enqueued ${songs.length} song by playlist link`,
 						description: `<@${helper.member.id}> enqueued songs in a playlist\n**Link**: ${url}`,
 						command: "play",
 						color: Colors.Green,
