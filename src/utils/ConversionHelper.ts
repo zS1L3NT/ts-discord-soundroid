@@ -34,7 +34,7 @@ export default class ConversionHelper {
 		switch (type) {
 			case "playlist":
 				try {
-					return await this.apiHelper.findSpotifyPlaylist(id, 1, 100, this.requester)
+					return await this.apiHelper.findSpotifyPlaylist(id, 1, 1000, this.requester)
 				} catch (err) {
 					logger.alert!(`Error playing playlist from Spotify url`, {
 						url: this.url.pathname,
@@ -75,7 +75,7 @@ export default class ConversionHelper {
 				id = this.url.searchParams.get("list")
 				if (id) {
 					try {
-						return await this.apiHelper.findYoutubePlaylist(id, 1, 100, this.requester)
+						return await this.apiHelper.findYoutubePlaylist(id, 1, 1000, this.requester)
 					} catch (err) {
 						logger.alert!(`Error playing playlist from YouTube url`, {
 							url: this.url.pathname,
