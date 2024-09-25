@@ -33,7 +33,7 @@
 		// "noEmit": true,
 		// "allowJs": true,
 		// "jsx": "react-jsx",
-		"skipLibCheck": true,
+		"skipLibCheck": true
 		// "isolatedModules": true,
 		// "incremental": true
 	},

@@ -31,6 +31,7 @@
 		"ytpl": "^2.3.0"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "1.9.2",
 		"@types/node": "latest",
 		"@types/spotify-web-api-node": "^5.0.7",
 		"@typescript-eslint/eslint-plugin": "latest",
@@ -42,5 +43,6 @@
 		"prettier": "latest",
 		"ts-node": "latest",
 		"typescript": "latest"
-	}
+	},
+	"trustedDependencies": ["youtube-dl-exec"]
 }
