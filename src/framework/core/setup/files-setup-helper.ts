@@ -1,6 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
-import { Collection } from "discord.js"
+import { type ClientEvents, Collection } from "discord.js"
 
 import type { PrismaClient } from "@prisma/client"
 
@@ -36,26 +36,13 @@ export default class FilesSetupHelper<
 	readonly buttonFiles = new Collection<string, BaseButton<P, E, GC>>()
 	readonly selectMenuFiles = new Collection<string, BaseSelectMenu<P, E, GC>>()
 	readonly modalFiles = new Collection<string, BaseModal<P, E, GC>>()
-	readonly eventFiles: BaseEvent<P, E, GC, BC, any>[] = []
+	readonly eventFiles = new Collection<string, BaseEvent<P, E, GC, BC, keyof ClientEvents>>()
 
 	constructor(
 		public readonly directory: string,
 		public readonly icon: string,
 		public readonly helpMessage: (cache: GC) => string,
 	) {
-		this.commandFiles.set("help", new CommandHelp(this))
-		this.commandFiles.set("set-alias", new CommandSetAlias(this.readEntities("messages") ?? []))
-		this.commandFiles.set("set-log-channel", new CommandSetLogChannel())
-		this.commandFiles.set("set-prefix", new CommandSetPrefix())
-		this.buttonFiles.set("help-maximum", new ButtonHelpMaximum(this))
-		this.buttonFiles.set("help-minimum", new ButtonHelpMinimum(this))
-		this.selectMenuFiles.set("help-item", new SelectMenuHelpItem(this))
-		this.eventFiles.push(
-			new EventGuildCreate(this),
-			new EventGuildDelete<P, E, GC, BC>(),
-			new EventRoleUpdate<P, E, GC, BC>(),
-		)
-
 		this.setupCommands()
 		this.setupButtons()
 		this.setupSelectMenus()
@@ -78,6 +65,11 @@ export default class FilesSetupHelper<
 	}
 
 	private setupCommands() {
+		this.commandFiles.set("help", new CommandHelp(this))
+		this.commandFiles.set("set-alias", new CommandSetAlias(this.readEntities("messages") ?? []))
+		this.commandFiles.set("set-log-channel", new CommandSetLogChannel())
+		this.commandFiles.set("set-prefix", new CommandSetPrefix())
+
 		const fileNames = this.readEntities("commands")
 		if (fileNames === null) return
 
@@ -89,6 +81,9 @@ export default class FilesSetupHelper<
 	}
 
 	private setupButtons() {
+		this.buttonFiles.set("help-maximum", new ButtonHelpMaximum(this))
+		this.buttonFiles.set("help-minimum", new ButtonHelpMinimum(this))
+
 		const fileNames = this.readEntities("buttons")
 		if (fileNames === null) return
 
@@ -100,6 +95,8 @@ export default class FilesSetupHelper<
 	}
 
 	private setupSelectMenus() {
+		this.selectMenuFiles.set("help-item", new SelectMenuHelpItem(this))
+
 		const fileNames = this.readEntities("selectMenus")
 		if (fileNames === null) return
 
@@ -124,12 +121,19 @@ export default class FilesSetupHelper<
 	}
 
 	private setupEvents() {
+		this.eventFiles.set("guild-create", new EventGuildCreate(this))
+		this.eventFiles.set("guild-delete", new EventGuildDelete<P, E, GC, BC>())
+		this.eventFiles.set("role-update", new EventRoleUpdate<P, E, GC, BC>())
+
 		const fileNames = this.readEntities("events")
 		if (fileNames === null) return
 
 		for (const fileName of fileNames) {
-			const Event = this.require<new () => BaseEvent<P, E, GC, BC, any>>(`events/${fileName}`)
-			this.eventFiles.push(new Event())
+			const name = fileName.split(".")[0]!
+			const Event = this.require<new () => BaseEvent<P, E, GC, BC, keyof ClientEvents>>(
+				`events/${fileName}`,
+			)
+			this.eventFiles.set(name, new Event())
 		}
 	}
 }

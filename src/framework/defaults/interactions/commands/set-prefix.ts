@@ -46,7 +46,6 @@ export default class<
 		const prefix = helper.string("prefix")
 		const oldPrefix = helper.cache.prefix
 
-		//@ts-ignore
 		await helper.cache.update({ prefix })
 		helper.respond(ResponseBuilder.good(`Prefix changed to \`${prefix}\``))
 		helper.cache.logger.log({

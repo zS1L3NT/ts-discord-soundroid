@@ -1,9 +1,10 @@
-import type {
-	ButtonInteraction,
-	ChatInputCommandInteraction,
-	Message,
-	ModalMessageModalSubmitInteraction,
-	StringSelectMenuInteraction,
+import {
+	type ButtonInteraction,
+	type ChatInputCommandInteraction,
+	type Message,
+	type ModalMessageModalSubmitInteraction,
+	PartialGroupDMChannel,
+	type StringSelectMenuInteraction,
 } from "discord.js"
 
 import type { PrismaClient } from "@prisma/client"
@@ -31,7 +32,7 @@ export default class EventSetupHelper<
 		private readonly botCache: BC,
 		public readonly fsh: FilesSetupHelper<P, E, GC, BC>,
 	) {
-		for (const eventFile of this.fsh.eventFiles) {
+		for (const eventFile of this.fsh.eventFiles.values()) {
 			this.botCache.bot.on(eventFile.name, async (...args) => {
 				let broke = false
 				for (const middleware of eventFile.middleware) {
@@ -56,12 +57,18 @@ export default class EventSetupHelper<
 			if (!interaction.guild) return
 			const cache = await this.botCache.getGuildCache(interaction.guild!)
 
-			if (interaction.isChatInputCommand()) await this.onSlashInteraction(cache, interaction)
-			if (interaction.isButton()) await this.onButtonInteraction(cache, interaction)
-			if (interaction.isStringSelectMenu())
+			if (interaction.isChatInputCommand()) {
+				await this.onSlashInteraction(cache, interaction)
+			}
+			if (interaction.isButton()) {
+				await this.onButtonInteraction(cache, interaction)
+			}
+			if (interaction.isStringSelectMenu()) {
 				await this.onSelectMenuInteraction(cache, interaction)
-			if (interaction.isModalSubmit() && interaction.isFromMessage())
+			}
+			if (interaction.isModalSubmit() && interaction.isFromMessage()) {
 				await this.onModalInteraction(cache, interaction)
+			}
 		})
 	}
 
@@ -77,7 +84,11 @@ export default class EventSetupHelper<
 
 			if (cache.isAdministrator) {
 				try {
-					helper.params = commandFile.converter(helper) ?? {}
+					if (message.channel instanceof PartialGroupDMChannel) {
+						throw new Error("Cannot send message to PartialGroupDMChannel")
+					}
+
+					helper.params = (commandFile.converter(helper) as typeof helper.params) ?? {}
 					await message.channel
 						.sendTyping()
 						.catch(err =>

@@ -50,7 +50,6 @@ export default class<
 			if (channel.id === helper.cache.entry.log_channel_id) {
 				helper.respond(ResponseBuilder.bad("This channel is already the Log channel!"))
 			} else {
-				//@ts-ignore
 				await helper.cache.update({ log_channel_id: channel.id })
 				helper.respond(
 					ResponseBuilder.good(`Log channel reassigned to \`#${channel.name}\``),
@@ -68,7 +67,6 @@ export default class<
 				})
 			}
 		} else if (channel === null) {
-			//@ts-ignore
 			await helper.cache.update({ log_channel_id: null })
 			helper.respond(ResponseBuilder.good("Log channel unassigned"))
 			helper.cache.logger.log({

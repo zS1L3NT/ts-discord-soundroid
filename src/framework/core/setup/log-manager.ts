@@ -38,7 +38,6 @@ export default class LogManager<
 		const logChannel = this.cache.guild.channels.cache.get(logChannelId)
 		if (!(logChannel instanceof TextChannel)) {
 			console.error(`Guild(${this.cache.guild.name}) has no TextChannel(${logChannelId})`)
-			//@ts-ignore
 			await this.cache.update({ log_channel_id: null })
 			return
 		}
