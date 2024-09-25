@@ -1,8 +1,8 @@
-import path from "path"
+import path from "node:path"
 import { ActivityType, GatewayIntentBits } from "discord.js"
 import NovaBot from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
 import BotCache from "./data/BotCache"
 import GuildCache from "./data/GuildCache"
@@ -34,7 +34,7 @@ class SounDroidBot extends NovaBot<typeof prisma, Entry, GuildCache, BotCache> {
 			"SounDroid is a Music bot which plays songs from Spotify and YouTube",
 			cache.prefix
 				? `My prefix for message commands is \`${cache.prefix}\``
-				: `No message command prefix for this server`,
+				: "No message command prefix for this server",
 		].join("\n")
 
 	override GuildCache = GuildCache

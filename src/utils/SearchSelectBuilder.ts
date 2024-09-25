@@ -5,9 +5,9 @@ import {
 	EmbedBuilder,
 	StringSelectMenuBuilder,
 } from "discord.js"
-import { CommandPayload } from "nova-bot"
+import type { CommandPayload } from "nova-bot"
 
-import ApiHelper from "./ApiHelper"
+import type ApiHelper from "./ApiHelper"
 
 export default class SearchSelectBuilder {
 	private static emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
@@ -26,7 +26,8 @@ export default class SearchSelectBuilder {
 				new EmbedBuilder()
 					.setAuthor({
 						name: `YouTube Video search results for: "${this.query}"`,
-						iconURL: `https://res.cloudinary.com/zs1l3nt/image/upload/icons/youtube.png`,
+						iconURL:
+							"https://res.cloudinary.com/zs1l3nt/image/upload/icons/youtube.png",
 					})
 					.setColor("#FF0000"),
 			],
@@ -60,7 +61,8 @@ export default class SearchSelectBuilder {
 				new EmbedBuilder()
 					.setAuthor({
 						name: `YouTube Music search results for: "${this.query}"`,
-						iconURL: `https://res.cloudinary.com/zs1l3nt/image/upload/icons/youtubemusic.png`,
+						iconURL:
+							"https://res.cloudinary.com/zs1l3nt/image/upload/icons/youtubemusic.png",
 					})
 					.setColor("#FF0000"),
 			],

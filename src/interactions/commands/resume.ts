@@ -1,13 +1,13 @@
 import { Colors } from "discord.js"
-import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
+import type GuildCache from "../../data/GuildCache"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 
 export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
@@ -37,7 +37,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		helper.respond(ResponseBuilder.good("Resumed song"))
 		helper.cache.logger.log({
 			member: helper.member,
-			title: `Resumed song`,
+			title: "Resumed song",
 			description: `<@${helper.member.id}> resumed the current song`,
 			command: "resume",
 			color: Colors.Yellow,

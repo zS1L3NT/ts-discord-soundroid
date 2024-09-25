@@ -1,10 +1,11 @@
 import { exec } from "youtube-dl-exec"
 
-import { AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice"
+import { type AudioResource, createAudioResource, demuxProbe } from "@discordjs/voice"
 
 import logger from "../logger"
-import ApiHelper from "../utils/ApiHelper"
-import MusicService, { StopStatus } from "./MusicService"
+import type ApiHelper from "../utils/ApiHelper"
+import type MusicService from "./MusicService"
+import { StopStatus } from "./MusicService"
 
 export default class Song {
 	constructor(
@@ -20,12 +21,12 @@ export default class Song {
 		const _URL = new URL(url)
 		if (_URL.host === "open.spotify.com") {
 			return await apiHelper.findSpotifySong(_URL.pathname.slice(7), requester)
-		} else {
-			try {
-				return await apiHelper.findYoutubeSong(url, requester)
-			} catch {
-				return await apiHelper.findYoutubeVideo(url, requester)
-			}
+		}
+
+		try {
+			return await apiHelper.findYoutubeSong(url, requester)
+		} catch {
+			return await apiHelper.findYoutubeVideo(url, requester)
 		}
 	}
 
@@ -68,7 +69,7 @@ export default class Song {
 								if (!childProcess.killed) childProcess.kill()
 								stdout.resume()
 
-								err.message = `[SOURCE>DEMUXPROBE]: ` + err.message
+								err.message = `[SOURCE>DEMUXPROBE]: ${err.message}`
 								reject(err)
 
 								service.stopStatus = StopStatus.KILLED
@@ -93,7 +94,7 @@ export default class Song {
 								logger.log("Player restarted, nothing abnormal")
 							} else {
 								service.stopStatus = StopStatus.KILLED
-								err.message = `[SOURCE>PROCESS]: ` + err.message
+								err.message = `[SOURCE>PROCESS]: ${err.message}`
 								logger.warn("Track crashed, attempting to replay the track")
 								reject(err)
 							}

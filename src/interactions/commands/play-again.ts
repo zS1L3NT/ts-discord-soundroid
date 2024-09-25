@@ -1,13 +1,13 @@
 import { Colors } from "discord.js"
-import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
+import type GuildCache from "../../data/GuildCache"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 
 export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
@@ -39,7 +39,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const [countStr] = helper.args()
 		return {
-			count: countStr === undefined ? 1 : isNaN(+countStr) ? 0 : +countStr,
+			count: countStr === undefined ? 1 : Number.isNaN(+countStr) ? 0 : +countStr,
 		}
 	}
 
@@ -54,7 +54,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		}
 
 		if (count > 1000) {
-			return helper.respond(ResponseBuilder.bad(`Play again count cannot exceed 1000`))
+			return helper.respond(ResponseBuilder.bad("Play again count cannot exceed 1000"))
 		}
 
 		service.queue.splice(1, 0, ...Array(count).fill(song))
@@ -65,7 +65,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		)
 		helper.cache.logger.log({
 			member: helper.member,
-			title: `Current song played again`,
+			title: "Current song played again",
 			description: `<@${helper.member.id}> played the current song again\n**Times**: ${count}`,
 			command: "play-again",
 			color: Colors.Green,

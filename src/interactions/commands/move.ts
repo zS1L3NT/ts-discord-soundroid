@@ -1,12 +1,12 @@
 import { Colors } from "discord.js"
-import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
+import type GuildCache from "../../data/GuildCache"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 
 export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
@@ -42,8 +42,8 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const [fromStr, toStr] = helper.args()
 		return {
-			from: fromStr === undefined ? 0 : isNaN(+fromStr) ? 0 : +fromStr,
-			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr,
+			from: fromStr === undefined ? 0 : Number.isNaN(+fromStr) ? 0 : +fromStr,
+			to: toStr === undefined ? null : Number.isNaN(+toStr) ? 0 : +toStr,
 		}
 	}
 
@@ -73,13 +73,13 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		helper.respond(
 			ResponseBuilder.good(
 				`Moved "${song.title} - ${song.artiste}" from ${from} to ${
-					to ?? `the top of the queue`
+					to ?? "the top of the queue"
 				}`,
 			),
 		)
 		helper.cache.logger.log({
 			member: helper.member,
-			title: `Moved song in queue`,
+			title: "Moved song in queue",
 			description: [
 				`<@${helper.member.id}> moved a song's position in the queue`,
 				`**Song**: ${song.title} - ${song.artiste}`,

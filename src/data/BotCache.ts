@@ -1,10 +1,10 @@
 import { BaseBotCache } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import prisma from "../prisma"
+import type prisma from "../prisma"
 import ApiHelper from "../utils/ApiHelper"
-import GuildCache from "./GuildCache"
+import type GuildCache from "./GuildCache"
 
 export default class BotCache extends BaseBotCache<typeof prisma, Entry, GuildCache> {
 	private apiHelper = new ApiHelper()

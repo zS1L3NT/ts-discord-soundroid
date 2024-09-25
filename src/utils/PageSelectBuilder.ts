@@ -1,5 +1,5 @@
-import { ActionRowBuilder, Embed, EmbedBuilder, StringSelectMenuBuilder } from "discord.js"
-import { CommandPayload } from "nova-bot"
+import { ActionRowBuilder, type Embed, EmbedBuilder, StringSelectMenuBuilder } from "discord.js"
+import type { CommandPayload } from "nova-bot"
 
 export default class PageSelectBuilder {
 	private currentPage = 0
@@ -14,7 +14,7 @@ export default class PageSelectBuilder {
 	) {}
 
 	build(startPage?: number): CommandPayload {
-		const pageInfo = this.embed.fields.find(field => field.name === `Page`)!.value
+		const pageInfo = this.embed.fields.find(field => field.name === "Page")!.value
 		const [pageStr, maxPagesStr] = pageInfo.split("/")
 		this.currentPage = startPage || +pageStr!
 		this.maxPages = +maxPagesStr!
@@ -45,7 +45,7 @@ export default class PageSelectBuilder {
 		}
 
 		return {
-			embeds: [new EmbedBuilder().setTitle(`Which page of the queue do you want to go to?`)],
+			embeds: [new EmbedBuilder().setTitle("Which page of the queue do you want to go to?")],
 			components: [
 				new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
 					new StringSelectMenuBuilder().setCustomId("select-page").addOptions(pages),

@@ -1,14 +1,14 @@
 import { EmbedBuilder } from "discord.js"
-import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
-import { Entry } from "@prisma/client"
+import type { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
+import type GuildCache from "../../data/GuildCache"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 import DominantColorGetter from "../../utils/DominantColorGetter"
 import DurationHelper from "../../utils/DurationHelper"
 
@@ -42,7 +42,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		const state = service.player.state as AudioPlayerPlayingState | AudioPlayerPausedState
 
 		if (!song) {
-			return helper.respond(ResponseBuilder.bad(`No song currently playing!`), 5000)
+			return helper.respond(ResponseBuilder.bad("No song currently playing!"), 5000)
 		}
 
 		const percent = (state.playbackDuration / 1000 / song.duration) * 100

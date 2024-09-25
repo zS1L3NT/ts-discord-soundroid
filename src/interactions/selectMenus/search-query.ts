@@ -1,14 +1,14 @@
 import { Colors, MessageType, VoiceChannel } from "discord.js"
-import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
+import { BaseSelectMenu, ResponseBuilder, type SelectMenuHelper } from "nova-bot"
 
-import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { Entry } from "@prisma/client"
+import { type DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
+import type GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
 import Song from "../../data/Song"
 import logger from "../../logger"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 
 export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 	override defer = false
@@ -58,7 +58,7 @@ export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 				})
 				helper.cache.logger.log({
 					member: helper.member,
-					title: `Enqueued 1 song by search query`,
+					title: "Enqueued 1 song by search query",
 					description: `<@${helper.member.id}> enqueued [${song.title} - ${song.artiste}](${song.url})`,
 					command: "play",
 					color: Colors.Green,
@@ -71,7 +71,7 @@ export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 				})
 				helper.cache.logger.log({
 					member: helper.member,
-					title: `Error playing song from url`,
+					title: "Error playing song from url",
 					description: (err as Error).stack || "No stack trace available",
 					command: "play",
 					color: Colors.Red,

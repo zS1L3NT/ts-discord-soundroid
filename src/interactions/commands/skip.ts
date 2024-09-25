@@ -1,14 +1,14 @@
 import { Colors } from "discord.js"
-import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
+import type GuildCache from "../../data/GuildCache"
 import { StopStatus } from "../../data/MusicService"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 
 export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
@@ -40,7 +40,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
 		const [countStr] = helper.args()
 		return {
-			count: countStr === undefined ? 1 : isNaN(+countStr) ? 1 : +countStr,
+			count: countStr === undefined ? 1 : Number.isNaN(+countStr) ? 1 : +countStr,
 		}
 	}
 
@@ -72,8 +72,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		helper.cache.updateMinutely()
 		helper.respond(
 			ResponseBuilder.good(
-				"Skipped the current song" +
-					(count > 1 ? ` and ${count - 1} songs in the queue` : ""),
+				`Skipped the current song${count > 1 ? ` and ${count - 1} songs in the queue` : ""}`,
 			),
 		)
 		helper.cache.logger.log({

@@ -1,16 +1,16 @@
 import { Colors, TextChannel } from "discord.js"
 import {
 	BaseCommand,
-	CommandHelper,
+	type CommandHelper,
 	CommandType,
 	IsAdminMiddleware,
 	ResponseBuilder,
 } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
-import prisma from "../../prisma"
+import type GuildCache from "../../data/GuildCache"
+import type prisma from "../../prisma"
 
 export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
@@ -52,7 +52,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				)
 				helper.cache.logger.log({
 					member: helper.member,
-					title: `Music channel changed`,
+					title: "Music channel changed",
 					description: [
 						`<@${helper.member.id}> changed the music channel`,
 						oldChannelId ? `**Old Music Channel**: <#${oldChannelId}>` : null,
@@ -64,16 +64,16 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			}
 		} else if (channel === null) {
 			await helper.cache.update({ music_channel_id: null })
-			helper.respond(ResponseBuilder.good(`Music channel unassigned`))
+			helper.respond(ResponseBuilder.good("Music channel unassigned"))
 			helper.cache.logger.log({
 				member: helper.member,
-				title: `Music channel unassigned`,
+				title: "Music channel unassigned",
 				description: `<@${helper.member.id}> unassigned the music channel\b**Old Music Channel**: <#${oldChannelId}>`,
 				command: "set-music-channel",
 				color: Colors.Blue,
 			})
 		} else {
-			helper.respond(ResponseBuilder.bad(`Please select a text channel`))
+			helper.respond(ResponseBuilder.bad("Please select a text channel"))
 		}
 	}
 }

@@ -94,7 +94,7 @@ export default class ApiHelper {
 			info.author.name,
 			info.thumbnails.at(-1)?.url || "",
 			info.video_url,
-			parseInt(info.lengthSeconds) || 0,
+			Number.parseInt(info.lengthSeconds) || 0,
 			requester,
 		)
 	}
@@ -113,7 +113,7 @@ export default class ApiHelper {
 						video.title,
 						video.author.name,
 						video.bestThumbnail.url || "",
-						"https://youtu.be/" + video.id,
+						`https://youtu.be/${video.id}`,
 						video.durationSec || 0,
 						requester,
 					),
@@ -143,7 +143,10 @@ export default class ApiHelper {
 		while (left > 0) {
 			const limit = left > 100 ? 100 : left
 
-			const results = await this.spotify.getPlaylistTracks(playlistId, { limit, offset })
+			const results = await this.spotify.getPlaylistTracks(playlistId, {
+				limit,
+				offset,
+			})
 			tracks.push(
 				...results.body.items
 					.filter(i => i.track !== null)
@@ -225,17 +228,19 @@ export default class ApiHelper {
 			.filter(j => !!j)
 			.at(0).songPage.lyricsData.body
 
-		const getLyrics = (lyrics: any): string => {
+		const getLyrics = (lyrics: unknown): string => {
 			if (typeof lyrics === "string") {
 				return lyrics
 			}
 
-			if ("children" in lyrics) {
-				return lyrics.children.map(getLyrics).join("")
-			}
+			if (typeof lyrics === "object" && lyrics) {
+				if ("children" in lyrics && Array.isArray(lyrics.children)) {
+					return lyrics.children.map(getLyrics).join("")
+				}
 
-			if ("tag" in lyrics && lyrics.tag === "br") {
-				return "\n"
+				if ("tag" in lyrics && lyrics.tag === "br") {
+					return "\n"
+				}
 			}
 
 			return ""

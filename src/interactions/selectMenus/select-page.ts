@@ -1,11 +1,11 @@
-import { Message, TextChannel } from "discord.js"
+import type { Message, TextChannel } from "discord.js"
 import { useTryAsync } from "no-try"
-import { BaseSelectMenu, ResponseBuilder, SelectMenuHelper } from "nova-bot"
+import { BaseSelectMenu, ResponseBuilder, type SelectMenuHelper } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
-import prisma from "../../prisma"
+import type GuildCache from "../../data/GuildCache"
+import type prisma from "../../prisma"
 import PageSelectBuilder from "../../utils/PageSelectBuilder"
 import QueueBuilder from "../../utils/QueueBuilder"
 
@@ -33,7 +33,7 @@ export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
 			() => channel.messages.fetch(messageId!) as Promise<Message>,
 		)
 
-		if (messageErr || message.embeds.length === 0) {
+		if (messageErr || message?.embeds.length === 0) {
 			return helper.respond(ResponseBuilder.bad("Queue message not found"))
 		}
 

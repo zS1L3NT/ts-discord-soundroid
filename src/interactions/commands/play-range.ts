@@ -1,14 +1,14 @@
 import { Colors } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
-import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { Entry } from "@prisma/client"
+import { type DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
+import type GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
 import IsInAVoiceChannelMiddleware from "../../middleware/IsInAVoiceChannelMiddleware"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 
 export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 	override defer = true
@@ -57,8 +57,8 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		const [linkStr, fromStr, toStr] = helper.args()
 		return {
 			link: linkStr || "",
-			from: fromStr === undefined ? 1 : isNaN(+fromStr) ? 0 : +fromStr,
-			to: toStr === undefined ? null : isNaN(+toStr) ? 0 : +toStr,
+			from: fromStr === undefined ? 1 : Number.isNaN(+fromStr) ? 0 : +fromStr,
+			to: toStr === undefined ? null : Number.isNaN(+toStr) ? 0 : +toStr,
 		}
 	}
 
@@ -113,7 +113,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			if (to - from > 1000) {
 				return helper.respond(
 					ResponseBuilder.bad(
-						`Cannot add more than 1000 songs, bot will take too long to respond`,
+						"Cannot add more than 1000 songs, bot will take too long to respond",
 					),
 				)
 			}

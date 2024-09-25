@@ -1,5 +1,5 @@
 import logger from "../logger"
-import ApiHelper from "./ApiHelper"
+import type ApiHelper from "./ApiHelper"
 
 export default class ConversionHelper {
 	constructor(
@@ -20,14 +20,18 @@ export default class ConversionHelper {
 				return await this.handleYoutubeShort()
 		}
 
-		logger.alert!(`Song didn't belong to any of the host URLs`, { host: this.url.host })
+		logger.alert!(`Song didn't belong to any of the host URLs`, {
+			host: this.url.host,
+		})
 		throw new Error("Error playing resource from url")
 	}
 
 	private async handleSpotify() {
 		const [type, id] = this.url.pathname.split("/").slice(1)
 		if (!id) {
-			logger.alert!(`Spotify url didn't contain an id`, { url: this.url.pathname })
+			logger.alert!(`Spotify url didn't contain an id`, {
+				url: this.url.pathname,
+			})
 			throw new Error("Error playing item from Spotify url")
 		}
 
@@ -36,7 +40,7 @@ export default class ConversionHelper {
 				try {
 					return await this.apiHelper.findSpotifyPlaylist(id, 1, 1000, this.requester)
 				} catch (err) {
-					logger.alert!(`Error playing playlist from Spotify url`, {
+					logger.alert!("Error playing playlist from Spotify url", {
 						url: this.url.pathname,
 						err,
 					})
@@ -46,7 +50,7 @@ export default class ConversionHelper {
 				try {
 					return await this.apiHelper.findSpotifyAlbum(id, this.requester)
 				} catch (err) {
-					logger.alert!(`Error playing album from Spotify url`, {
+					logger.alert!("Error playing album from Spotify url", {
 						url: this.url.pathname,
 						err,
 					})
@@ -56,7 +60,7 @@ export default class ConversionHelper {
 				try {
 					return [await this.apiHelper.findSpotifySong(id, this.requester)]
 				} catch (err) {
-					logger.alert!(`Error playing track from Spotify url`, {
+					logger.alert!("Error playing track from Spotify url", {
 						url: this.url.pathname,
 						err,
 					})
@@ -64,12 +68,14 @@ export default class ConversionHelper {
 				}
 		}
 
-		logger.alert!(`Spotify url was not a playlist or track url`, { url: this.url.pathname })
+		logger.alert!("Spotify url was not a playlist or track url", {
+			url: this.url.pathname,
+		})
 		throw new Error("Could not find Spotify resource from url")
 	}
 
 	private async handleYoutube() {
-		let id
+		let id: string | null = null
 		switch (this.url.pathname) {
 			case "/playlist":
 				id = this.url.searchParams.get("list")
@@ -77,7 +83,7 @@ export default class ConversionHelper {
 					try {
 						return await this.apiHelper.findYoutubePlaylist(id, 1, 1000, this.requester)
 					} catch (err) {
-						logger.alert!(`Error playing playlist from YouTube url`, {
+						logger.alert!("Error playing playlist from YouTube url", {
 							url: this.url.pathname,
 							err,
 						})
@@ -91,7 +97,7 @@ export default class ConversionHelper {
 					try {
 						return [await this.apiHelper.findYoutubeVideo(id, this.requester)]
 					} catch (err) {
-						logger.alert!(`Error playing track from YouTube url`, {
+						logger.alert!("Error playing track from YouTube url", {
 							url: this.url.pathname,
 							err,
 						})
@@ -100,7 +106,9 @@ export default class ConversionHelper {
 				}
 		}
 
-		logger.alert!(`YouTube url was not a playlist or video url`, { url: this.url.pathname })
+		logger.alert!("YouTube url was not a playlist or video url", {
+			url: this.url.pathname,
+		})
 		throw new Error("Could not find Youtube resource from url")
 	}
 
@@ -110,7 +118,7 @@ export default class ConversionHelper {
 				await this.apiHelper.findYoutubeVideo(this.url.pathname.slice(1), this.requester),
 			]
 		} catch (err) {
-			logger.alert!(`Error playing track from YouTube url`, {
+			logger.alert!("Error playing track from YouTube url", {
 				url: this.url.pathname,
 				err,
 			})

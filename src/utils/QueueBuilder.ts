@@ -4,12 +4,12 @@ import {
 	ButtonStyle,
 	Colors,
 	EmbedBuilder,
-	GuildMember,
+	type GuildMember,
 } from "discord.js"
-import { CommandPayload } from "nova-bot"
+import type { CommandPayload } from "nova-bot"
 
-import GuildCache from "../data/GuildCache"
-import Song from "../data/Song"
+import type GuildCache from "../data/GuildCache"
+import type Song from "../data/Song"
 import DominantColorGetter from "./DominantColorGetter"
 import DurationHelper from "./DurationHelper"
 
@@ -19,7 +19,7 @@ export default class QueueBuilder {
 		private member?: GuildMember,
 	) {}
 
-	async build(page: number = 1): Promise<CommandPayload> {
+	async build(page = 1): Promise<CommandPayload> {
 		if (this.cache.service) {
 			const embed = new EmbedBuilder()
 			const playingDuration = this.cache.service.queue
@@ -29,6 +29,7 @@ export default class QueueBuilder {
 			const maxPages = Math.ceil((this.cache.service.queue.length - 1) / 10) || 1
 
 			if (page > maxPages) {
+				// biome-ignore lint/style/noParameterAssign: -
 				page = maxPages
 			}
 
@@ -39,8 +40,8 @@ export default class QueueBuilder {
 
 			const song = this.cache.service.queue[0]
 			embed.addFields({
-				name: `\u200B`,
-				value: `__Now Playing:__`,
+				name: "\u200B",
+				value: "__Now Playing:__",
 			})
 
 			if (song) {
@@ -53,14 +54,14 @@ export default class QueueBuilder {
 				}
 			} else {
 				embed.addFields({
-					name: `Not playing anything at the moment`,
-					value: `\u200B`,
+					name: "Not playing anything at the moment",
+					value: "\u200B",
 				})
 			}
 
 			if (this.cache.service) {
 				if (queue.length > 0) {
-					embed.addFields([{ name: `\u200B`, value: `__Queue:__` }])
+					embed.addFields([{ name: "\u200B", value: "__Queue:__" }])
 					queue.forEach((song, i) => {
 						const songIndex = `\`${pageOffset + i + 1}.\` `
 						const fieldFormat = this.songFormat(song)
@@ -70,7 +71,7 @@ export default class QueueBuilder {
 						})
 					})
 					embed.addFields({
-						name: `\u200B`,
+						name: "\u200B",
 						value: `**${
 							this.cache.service.queue.length - 1
 						} songs in queue | ${new DurationHelper(

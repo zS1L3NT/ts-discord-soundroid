@@ -1,14 +1,14 @@
 import { Colors } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
-import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import { DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import { Entry } from "@prisma/client"
+import { type DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
+import type GuildCache from "../../data/GuildCache"
 import MusicService from "../../data/MusicService"
 import IsInAVoiceChannelMiddleware from "../../middleware/IsInAVoiceChannelMiddleware"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 import ConversionHelper from "../../utils/ConversionHelper"
 import SearchSelectBuilder from "../../utils/SearchSelectBuilder"
 

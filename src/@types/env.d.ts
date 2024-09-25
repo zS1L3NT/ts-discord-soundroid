@@ -1,4 +1,4 @@
-declare module NodeJS {
+declare namespace NodeJS {
 	interface ProcessEnv {
 		readonly DATABASE_URL: string
 		readonly DISCORD__TOKEN: string

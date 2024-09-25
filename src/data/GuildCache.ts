@@ -2,13 +2,13 @@ import { Colors, EmbedBuilder } from "discord.js"
 import { useTry, useTryAsync } from "no-try"
 import { BaseGuildCache, ChannelCleaner } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
 import logger from "../logger"
-import prisma from "../prisma"
-import ApiHelper from "../utils/ApiHelper"
+import type prisma from "../prisma"
+import type ApiHelper from "../utils/ApiHelper"
 import QueueBuilder from "../utils/QueueBuilder"
-import MusicService from "./MusicService"
+import type MusicService from "./MusicService"
 
 export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, GuildCache> {
 	apiHelper!: ApiHelper
@@ -55,7 +55,7 @@ export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, Gui
 				return
 			}
 			if (messageErr.name === "HTTPError") {
-				logger.warn(`Failed to clean channel:`, messageErr)
+				logger.warn("Failed to clean channel:", messageErr)
 				return
 			}
 			throw messageErr
@@ -63,7 +63,7 @@ export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, Gui
 
 		const [pageErr, page] = useTry(() => {
 			const embed = message.embeds[0]!
-			const pageInfo = embed.fields.find(field => field.name === `Page`)!.value
+			const pageInfo = embed.fields.find(field => field.name === "Page")!.value
 			return +pageInfo.split("/")[0]!
 		})
 
@@ -74,7 +74,7 @@ export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, Gui
 			message.edit({
 				embeds: [
 					new EmbedBuilder()
-						.setTitle(`No song currently playing`)
+						.setTitle("No song currently playing")
 						.setDescription(
 							"Use `/play <Youtube link, Spotify link, or Search query>` to use me!",
 						)

@@ -1,10 +1,10 @@
-import { BaseCommand, CommandHelper } from "nova-bot"
+import { BaseCommand, type CommandHelper } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
+import type GuildCache from "../../data/GuildCache"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 import QueueBuilder from "../../utils/QueueBuilder"
 
 export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {

@@ -1,9 +1,9 @@
-import { BaseButton, ButtonHelper } from "nova-bot"
+import { BaseButton, type ButtonHelper } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
-import prisma from "../../prisma"
+import type GuildCache from "../../data/GuildCache"
+import type prisma from "../../prisma"
 import QueueBuilder from "../../utils/QueueBuilder"
 
 export default class extends BaseButton<typeof prisma, Entry, GuildCache> {

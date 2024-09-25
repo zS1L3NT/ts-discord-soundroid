@@ -1,10 +1,10 @@
 import { Colors, EmbedBuilder } from "discord.js"
-import { BaseCommand, CommandHelper, ResponseBuilder } from "nova-bot"
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import GuildCache from "../../data/GuildCache"
-import prisma from "../../prisma"
+import type GuildCache from "../../data/GuildCache"
+import type prisma from "../../prisma"
 import DominantColorGetter from "../../utils/DominantColorGetter"
 
 export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {

@@ -1,12 +1,12 @@
-import { Colors, VoiceState } from "discord.js"
+import { Colors, type VoiceState } from "discord.js"
 import { BaseEvent } from "nova-bot"
 
-import { Entry } from "@prisma/client"
+import type { Entry } from "@prisma/client"
 
-import BotCache from "../../data/BotCache"
-import GuildCache from "../../data/GuildCache"
+import type BotCache from "../../data/BotCache"
+import type GuildCache from "../../data/GuildCache"
 import logger from "../../logger"
-import prisma from "../../prisma"
+import type prisma from "../../prisma"
 
 export default class extends BaseEvent<
 	typeof prisma,
@@ -33,8 +33,8 @@ export default class extends BaseEvent<
 				clearTimeout(cache.service.disconnectTimeout)
 				cache.service.disconnectTimeout = null
 				cache.logger.log({
-					title: `Stopped disconnect timer`,
-					description: `A track was played within a minute of the disconnect timeout`,
+					title: "Stopped disconnect timer",
+					description: "A track was played within a minute of the disconnect timeout",
 					color: Colors.Grey,
 				})
 			}
@@ -50,16 +50,17 @@ export default class extends BaseEvent<
 			) {
 				logger.log("No one in VC, setting one minute disconnect timeout")
 				cache.logger.log({
-					title: `Waiting 1 minute before disconnecting`,
-					description: `If no one is listening, the bot will disconnect after 1 minute`,
+					title: "Waiting 1 minute before disconnecting",
+					description: "If no one is listening, the bot will disconnect after 1 minute",
 					color: Colors.Grey,
 				})
 				cache.service.disconnectTimeout = setTimeout(() => {
 					logger.log("One minute without any users in VC, disconnecting")
 					cache.service?.destroy()
 					cache.logger.log({
-						title: `One minute without activity`,
-						description: `No activity within a minute, destroying music service and disconnecting...`,
+						title: "One minute without activity",
+						description:
+							"No activity within a minute, destroying music service and disconnecting...",
 						color: 0x000000,
 					})
 				}, 60_000)
@@ -67,8 +68,8 @@ export default class extends BaseEvent<
 				logger.log("Bot was disconnected from voice channel")
 				cache.service?.destroy()
 				cache.logger.log({
-					title: `Bot was disconnected`,
-					description: `Immediately destroying music service`,
+					title: "Bot was disconnected",
+					description: "Immediately destroying music service",
 					color: 0x000000,
 				})
 			}
