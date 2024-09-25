@@ -3,11 +3,11 @@ import { Colors } from "discord.js"
 import {
 	AudioPlayer,
 	AudioPlayerStatus,
-	createAudioPlayer,
-	entersState,
 	VoiceConnection,
 	VoiceConnectionDisconnectReason,
 	VoiceConnectionStatus,
+	createAudioPlayer,
+	entersState,
 } from "@discordjs/voice"
 
 import logger from "../logger"

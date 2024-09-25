@@ -1,6 +1,6 @@
+import path from "path"
 import { ActivityType, GatewayIntentBits } from "discord.js"
 import NovaBot from "nova-bot"
-import path from "path"
 
 import { Entry } from "@prisma/client"
 

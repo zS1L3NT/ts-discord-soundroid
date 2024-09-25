@@ -16,7 +16,7 @@ export default class DominantColorGetter {
 			if (bs.length == 1) bs = "0" + bs
 
 			return `#${rs + gs + bs}` as `#${string}`
-		} catch (err) {
+		} catch (_e) {
 			return "#FFFFFF"
 		}
 	}
