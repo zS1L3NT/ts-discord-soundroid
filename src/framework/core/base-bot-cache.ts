@@ -71,7 +71,6 @@ export default abstract class BaseBotCache<
 	 *
 	 * @param cache The GuildCache that was just created.
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onSetGuildCache(cache: GC) {}
 
 	/**

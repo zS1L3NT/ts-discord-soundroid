@@ -1,30 +1,30 @@
 import fs from "node:fs"
 import path from "node:path"
 import { Collection } from "discord.js"
-import { useTry } from "no-try"
 
 import type { PrismaClient } from "@prisma/client"
 
-import type {
-	BaseBotCache,
-	BaseButton,
-	BaseCommand,
-	BaseEntry,
-	BaseEvent,
-	BaseGuildCache,
-	BaseModal,
-	BaseSelectMenu,
+import {
+	type BaseBotCache,
+	type BaseButton,
+	type BaseCommand,
+	type BaseEntry,
+	type BaseEvent,
+	type BaseGuildCache,
+	type BaseModal,
+	type BaseSelectMenu,
+	trysync,
 } from "@framework"
-import ButtonHelpMaximum from "../defaults/interactions/buttons/help-maximum"
-import ButtonHelpMinimum from "../defaults/interactions/buttons/help-minimum"
-import CommandHelp from "../defaults/interactions/commands/help"
-import CommandSetAlias from "../defaults/interactions/commands/set-alias"
-import CommandSetLogChannel from "../defaults/interactions/commands/set-log-channel"
-import CommandSetPrefix from "../defaults/interactions/commands/set-prefix"
-import EventGuildCreate from "../defaults/interactions/events/guild-create"
-import EventGuildDelete from "../defaults/interactions/events/guild-delete"
-import EventRoleUpdate from "../defaults/interactions/events/role-update"
-import SelectMenuHelpItem from "../defaults/interactions/select-menus/help-item"
+import ButtonHelpMaximum from "../../defaults/interactions/buttons/help-maximum"
+import ButtonHelpMinimum from "../../defaults/interactions/buttons/help-minimum"
+import CommandHelp from "../../defaults/interactions/commands/help"
+import CommandSetAlias from "../../defaults/interactions/commands/set-alias"
+import CommandSetLogChannel from "../../defaults/interactions/commands/set-log-channel"
+import CommandSetPrefix from "../../defaults/interactions/commands/set-prefix"
+import EventGuildCreate from "../../defaults/interactions/events/guild-create"
+import EventGuildDelete from "../../defaults/interactions/events/guild-delete"
+import EventRoleUpdate from "../../defaults/interactions/events/role-update"
+import SelectMenuHelpItem from "../../defaults/interactions/select-menus/help-item"
 
 export default class FilesSetupHelper<
 	P extends PrismaClient,
@@ -64,13 +64,12 @@ export default class FilesSetupHelper<
 	}
 
 	private readEntities(name: string) {
-		const [err, files] = useTry(() => fs.readdirSync(path.join(this.directory, name)))
-		if (err) return null
+		const [files, ferror] = trysync(() => fs.readdirSync(path.join(this.directory, name)))
+		if (ferror) return null
 		return files
 	}
 
 	private require<T>(location: string): T {
-		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const file = require(path.join(this.directory, location))
 		if ("default" in file) {
 			return file.default

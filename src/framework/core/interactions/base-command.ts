@@ -81,6 +81,7 @@ export default abstract class BaseCommand<
 	 *
 	 * @param helper The CommandHelper containing information about the message or slash interaction
 	 */
+	// biome-ignore lint/suspicious/noConfusingVoidType: -
 	abstract condition(helper: CommandHelper<P, E, GC>): boolean | void
 	/**
 	 * The function that turns a string into a json object with all the command arguments.

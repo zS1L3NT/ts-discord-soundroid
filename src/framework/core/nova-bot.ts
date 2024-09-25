@@ -5,7 +5,6 @@ import {
 	type GatewayIntentsString,
 	PermissionFlagsBits,
 } from "discord.js"
-import { useTryAsync } from "no-try"
 
 import type { PrismaClient } from "@prisma/client"
 
@@ -18,7 +17,8 @@ import {
 	SlashCommandDeployer,
 	type iBaseBotCache,
 	type iBaseGuildCache,
-} from "."
+	tryasync,
+} from "@framework"
 
 export default abstract class NovaBot<
 	P extends PrismaClient,
@@ -102,7 +102,6 @@ export default abstract class NovaBot<
 	 *
 	 * @param botCache The bot cache that is used by your bot
 	 */
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	onSetup(botCache: BC) {}
 
 	/**
@@ -127,8 +126,8 @@ export default abstract class NovaBot<
 			const getTag = () => `[${`${++i}`.padStart(`${count}`.length, "0")}/${count}]`
 			Promise.allSettled(
 				bot.guilds.cache.map(async guild => {
-					const [cacheErr, cache] = await useTryAsync(() => botCache.getGuildCache(guild))
-					if (cacheErr) {
+					const [cache, cerror] = await tryasync(() => botCache.getGuildCache(guild))
+					if (cerror) {
 						blacklist.push(guild.id)
 						return logger.error(
 							getTag(),
@@ -136,10 +135,10 @@ export default abstract class NovaBot<
 						)
 					}
 
-					const [deployErr] = await useTryAsync(() =>
+					const [, derror] = await tryasync(() =>
 						new SlashCommandDeployer(guild.id, esh.fsh.commandFiles).deploy(),
 					)
-					if (deployErr) {
+					if (derror) {
 						blacklist.push(guild.id)
 						return logger.error(
 							getTag(),

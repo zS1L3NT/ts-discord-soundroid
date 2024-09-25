@@ -1,7 +1,37 @@
 import { SlashCommandBuilder } from "discord.js"
 
-import type { iSlashData } from "@framework"
+export interface iSlashData {
+	description: string
+	options?: (iSlashDefaultOption | iSlashStringOption | iSlashNumberOption)[]
+}
 
+interface iSlashOption {
+	name: string
+	description: string
+	requirements: string
+	required: boolean
+	default?: string
+}
+
+interface iSlashDefaultOption extends iSlashOption {
+	type: "boolean" | "user" | "role" | "channel" | "mentionable"
+}
+
+interface iSlashStringOption extends iSlashOption {
+	type: "string"
+	choices?: {
+		name: string
+		value: string
+	}[]
+}
+
+interface iSlashNumberOption extends iSlashOption {
+	type: "number"
+	choices?: {
+		name: string
+		value: number
+	}[]
+}
 export default class SlashBuilder {
 	constructor(
 		private readonly name: string,
