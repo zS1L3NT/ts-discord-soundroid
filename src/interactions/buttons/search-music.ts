@@ -1,27 +1,22 @@
-import { useTry } from "no-try"
-import { BaseButton, type ButtonHelper, ResponseBuilder } from "nova-bot"
+import { BaseButton, type ButtonHelper, ResponseBuilder, trysync } from "@framework"
 
-import type { Entry } from "@prisma/client"
+import SearchSelectBuilder from "../../builders/search-select-builder"
 
-import type GuildCache from "../../data/GuildCache"
-import type prisma from "../../prisma"
-import SearchSelectBuilder from "../../utils/SearchSelectBuilder"
-
-export default class extends BaseButton<typeof prisma, Entry, GuildCache> {
+export default class extends BaseButton {
 	override defer = false
 	override ephemeral = false
 
 	override middleware = []
 
-	override async execute(helper: ButtonHelper<typeof prisma, Entry, GuildCache>) {
-		const [err, query] = useTry(() => {
+	override async execute(helper: ButtonHelper) {
+		const [query, qerror] = trysync(() => {
 			const embed = helper.message.embeds[0]
 			const author = embed!.author!.name
 			const [, query] = author.match(/results for: "(.*)"$/)!
 			return query
 		})
 
-		if (err) {
+		if (qerror) {
 			return helper.respond(
 				ResponseBuilder.bad("Failed to get information about previous search"),
 			)

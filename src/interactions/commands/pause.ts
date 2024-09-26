@@ -1,15 +1,11 @@
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "@framework"
 import { Colors } from "discord.js"
-import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import type { Entry } from "@prisma/client"
-
-import type GuildCache from "../../data/GuildCache"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
-import type prisma from "../../prisma"
 
-export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
+export default class extends BaseCommand {
 	override defer = true
 	override ephemeral = true
 
@@ -23,13 +19,13 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		new IsPlayingMiddleware(),
 	]
 
-	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override condition(helper: CommandHelper) {
 		return helper.isMessageCommand(false)
 	}
 
 	override converter() {}
 
-	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: CommandHelper) {
 		const service = helper.cache.service!
 
 		service.player.pause()

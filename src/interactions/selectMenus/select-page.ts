@@ -1,39 +1,34 @@
+import { BaseSelectMenu, ResponseBuilder, type SelectMenuHelper, tryasync } from "@framework"
 import type { Message, TextChannel } from "discord.js"
-import { useTryAsync } from "no-try"
-import { BaseSelectMenu, ResponseBuilder, type SelectMenuHelper } from "nova-bot"
 
-import type { Entry } from "@prisma/client"
+import PageSelectBuilder from "../../builders/page-select-builder"
+import QueueBuilder from "../../builders/queue-builder"
 
-import type GuildCache from "../../data/GuildCache"
-import type prisma from "../../prisma"
-import PageSelectBuilder from "../../utils/PageSelectBuilder"
-import QueueBuilder from "../../utils/QueueBuilder"
-
-export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
+export default class extends BaseSelectMenu {
 	override defer = false
 	override ephemeral = false
 
 	override middleware = []
 
-	override async execute(helper: SelectMenuHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: SelectMenuHelper) {
 		const [channelId, messageId, pageStr, moreStr] = helper.value!.split("-")
 		const guild = helper.cache.guild
 		const more = +moreStr!
 		const page = +pageStr!
 
-		const [channelErr, channel] = await useTryAsync<TextChannel>(
+		const [channel, cerror] = await tryasync<TextChannel>(
 			() => guild.channels.fetch(channelId!) as Promise<TextChannel>,
 		)
 
-		if (channelErr) {
+		if (cerror) {
 			return helper.respond(ResponseBuilder.bad("Channel with the message not found"))
 		}
 
-		const [messageErr, message] = await useTryAsync<Message>(
+		const [message, merror] = await tryasync<Message>(
 			() => channel.messages.fetch(messageId!) as Promise<Message>,
 		)
 
-		if (messageErr || message?.embeds.length === 0) {
+		if (merror || message?.embeds.length === 0) {
 			return helper.respond(ResponseBuilder.bad("Queue message not found"))
 		}
 

@@ -1,15 +1,12 @@
+import { Database } from "bun:sqlite"
 import path from "node:path"
+import NovaBot from "@framework"
 import { ActivityType, GatewayIntentBits } from "discord.js"
-import NovaBot from "nova-bot"
+import { drizzle } from "drizzle-orm/bun-sqlite"
 
-import type { Entry } from "@prisma/client"
-
-import BotCache from "./data/BotCache"
-import GuildCache from "./data/GuildCache"
+import BotCache from "./core/bot-cache"
+import GuildCache from "./core/guild-cache"
 import logger from "./logger"
-import prisma from "./prisma"
-
-import "dotenv/config"
 
 process.on("uncaughtException", err => {
 	if (err.message !== "The user aborted a request.") {
@@ -17,7 +14,7 @@ process.on("uncaughtException", err => {
 	}
 })
 
-class SounDroidBot extends NovaBot<typeof prisma, Entry, GuildCache, BotCache> {
+class SounDroidBot extends NovaBot {
 	override name = "SounDroid#9390"
 	override icon = "https://res.cloudinary.com/zs1l3nt/image/upload/icons/soundroid.png"
 	override directory = path.join(__dirname, "interactions")
@@ -37,12 +34,12 @@ class SounDroidBot extends NovaBot<typeof prisma, Entry, GuildCache, BotCache> {
 				: "No message command prefix for this server",
 		].join("\n")
 
-	override GuildCache = GuildCache
-	override BotCache = BotCache
+	override GuildCacheClass = GuildCache
+	override BotCacheClass = BotCache
 
 	override logger = logger
 
-	override prisma = prisma
+	override drizzle = drizzle(new Database("soundroid.db", { create: true }))
 
 	override onSetup(botCache: BotCache) {
 		botCache.bot.user!.setPresence({

@@ -1,18 +1,13 @@
-import { Colors, TextChannel } from "discord.js"
 import {
 	BaseCommand,
 	type CommandHelper,
 	CommandType,
 	IsAdminMiddleware,
 	ResponseBuilder,
-} from "nova-bot"
+} from "@framework"
+import { Colors, TextChannel } from "discord.js"
 
-import type { Entry } from "@prisma/client"
-
-import type GuildCache from "../../data/GuildCache"
-import type prisma from "../../prisma"
-
-export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
+export default class extends BaseCommand {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -36,12 +31,12 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 	override converter() {}
 
-	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: CommandHelper) {
 		const channel = helper.channel("channel")
-		const oldChannelId = helper.cache.entry.log_channel_id
+		const oldChannelId = helper.cache.server.log_channel_id
 
 		if (channel instanceof TextChannel) {
-			if (channel.id === helper.cache.entry.music_channel_id) {
+			if (channel.id === helper.cache.server.music_channel_id) {
 				helper.respond(ResponseBuilder.bad("This channel is already the Music channel!"))
 			} else {
 				await helper.cache.update({ music_channel_id: channel.id })

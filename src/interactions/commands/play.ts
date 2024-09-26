@@ -1,18 +1,14 @@
+import { BaseCommand, type CommandHelper, ResponseBuilder, tryasync, trysync } from "@framework"
 import { Colors } from "discord.js"
-import { useTry, useTryAsync } from "no-try"
-import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
 import { type DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import type { Entry } from "@prisma/client"
 
-import type GuildCache from "../../data/GuildCache"
-import MusicService from "../../data/MusicService"
+import SearchSelectBuilder from "../../builders/search-select-builder"
+import MusicService from "../../core/music-service"
 import IsInAVoiceChannelMiddleware from "../../middleware/IsInAVoiceChannelMiddleware"
-import type prisma from "../../prisma"
-import ConversionHelper from "../../utils/ConversionHelper"
-import SearchSelectBuilder from "../../utils/SearchSelectBuilder"
+import ConversionHelper from "../../utils/conversion-helper"
 
-export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
+export default class extends BaseCommand {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -30,22 +26,22 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 	override middleware = [new IsInAVoiceChannelMiddleware()]
 
-	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override condition(helper: CommandHelper) {
 		return helper.isMessageCommand(true)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override converter(helper: CommandHelper) {
 		return {
 			query: helper.args().join(" ") || "",
 		}
 	}
 
-	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: CommandHelper) {
 		const query = helper.string("query")!
 
-		const [, url] = useTry(() => new URL(query))
+		const [url] = trysync(() => new URL(query))
 		if (url) {
-			const [err] = await useTryAsync(async () => {
+			const [, error] = await tryasync(async () => {
 				const songs = await new ConversionHelper(
 					helper.cache.apiHelper,
 					url,
@@ -100,12 +96,12 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 				}
 			})
 
-			if (err) {
-				helper.respond(ResponseBuilder.bad(err.message))
+			if (error) {
+				helper.respond(ResponseBuilder.bad(error.message))
 				helper.cache.logger.log({
 					member: helper.member,
 					title: "Error playing songs from url",
-					description: err.stack || "No stack trace available",
+					description: error.stack || "No stack trace available",
 					command: "play",
 					color: Colors.Red,
 				})

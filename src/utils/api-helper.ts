@@ -1,12 +1,12 @@
 import axios from "axios"
 import googleIt from "google-it"
-import { useTry } from "no-try"
 import SpotifyWebApi from "spotify-web-api-node"
 import ytdl from "ytdl-core"
 import YTMusic from "ytmusic-api"
 import ytpl from "ytpl"
 
-import Song from "../data/Song"
+import { trysync } from "@framework"
+import Song from "../core/song"
 import logger from "../logger"
 
 export default class ApiHelper {
@@ -52,7 +52,7 @@ export default class ApiHelper {
 		}
 
 		// Check if query is a URL
-		if (!useTry(() => new URL(query))[0]) {
+		if (!trysync(() => new URL(query))[1]) {
 			const queryInfo = await ytdl.getBasicInfo(query)
 			const resultInfo = await ytdl.getBasicInfo(song.videoId)
 			if (resultInfo.videoDetails.videoId !== queryInfo.videoDetails.videoId) {
@@ -224,7 +224,7 @@ export default class ApiHelper {
 			.map(j => j.replaceAll("\\\\", "\\"))
 			.map(j => j.replaceAll('\\"', '"'))
 			.map(j => j.replaceAll("\\'", "'"))
-			.map(j => useTry(() => JSON.parse(j))[1])
+			.map(j => trysync(() => JSON.parse(j))[0])
 			.filter(j => !!j)
 			.at(0).songPage.lyricsData.body
 

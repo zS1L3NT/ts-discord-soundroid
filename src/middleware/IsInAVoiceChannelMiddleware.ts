@@ -1,13 +1,8 @@
+import { type CommandHelper, CommandMiddleware, ResponseBuilder } from "@framework"
 import { VoiceChannel } from "discord.js"
-import { type CommandHelper, CommandMiddleware, ResponseBuilder } from "nova-bot"
 
-import type { Entry } from "@prisma/client"
-
-import type GuildCache from "../data/GuildCache"
-import type prisma from "../prisma"
-
-export default class extends CommandMiddleware<typeof prisma, Entry, GuildCache> {
-	override handler(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+export default class extends CommandMiddleware {
+	override handler(helper: CommandHelper) {
 		if (!(helper.member.voice.channel instanceof VoiceChannel)) {
 			helper.respond(
 				ResponseBuilder.bad("You have to be a voice channel to use this command"),

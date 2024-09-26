@@ -1,3 +1,4 @@
+import type { CommandPayload } from "@framework"
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -5,9 +6,8 @@ import {
 	EmbedBuilder,
 	StringSelectMenuBuilder,
 } from "discord.js"
-import type { CommandPayload } from "nova-bot"
 
-import type ApiHelper from "./ApiHelper"
+import type ApiHelper from "../utils/api-helper"
 
 export default class SearchSelectBuilder {
 	private static emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]

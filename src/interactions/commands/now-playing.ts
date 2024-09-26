@@ -1,21 +1,18 @@
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "@framework"
 import { EmbedBuilder } from "discord.js"
-import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
 import type { AudioPlayerPausedState, AudioPlayerPlayingState } from "@discordjs/voice"
-import type { Entry } from "@prisma/client"
 
-import type GuildCache from "../../data/GuildCache"
 import HasMusicServiceMiddleware from "../../middleware/HasMusicServiceMiddleware"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
 import IsPlayingMiddleware from "../../middleware/IsPlayingMiddleware"
-import type prisma from "../../prisma"
-import DominantColorGetter from "../../utils/DominantColorGetter"
-import DurationHelper from "../../utils/DurationHelper"
+import DominantColorGetter from "../../utils/dominant-color-getter"
+import DurationHelper from "../../utils/duration-helper"
 
 const thumb = "🔘"
 const track = "▬"
 
-export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
+export default class extends BaseCommand {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -29,13 +26,13 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		new IsPlayingMiddleware(),
 	]
 
-	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override condition(helper: CommandHelper) {
 		return helper.isMessageCommand(false)
 	}
 
 	override converter() {}
 
-	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: CommandHelper) {
 		const service = helper.cache.service!
 
 		const song = service.queue[0]

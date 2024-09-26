@@ -1,41 +1,42 @@
+import { BaseGuildCache, ChannelCleaner, aliases } from "@framework"
 import { Colors, EmbedBuilder } from "discord.js"
-import { useTry, useTryAsync } from "no-try"
-import { BaseGuildCache, ChannelCleaner } from "nova-bot"
 
-import type { Entry } from "@prisma/client"
-
+import { eq } from "drizzle-orm"
+import QueueBuilder from "../builders/queue-builder"
+import { tryasync, trysync } from "../framework/utils/try-catch"
 import logger from "../logger"
-import type prisma from "../prisma"
-import type ApiHelper from "../utils/ApiHelper"
-import QueueBuilder from "../utils/QueueBuilder"
-import type MusicService from "./MusicService"
+import { servers } from "../tables"
+import type ApiHelper from "../utils/api-helper"
+import type MusicService from "./music-service"
 
-export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, GuildCache> {
+export default class GuildCache extends BaseGuildCache {
 	apiHelper!: ApiHelper
 	service?: MusicService
 
 	override async refresh(): Promise<void> {
-		this.entry = await this.prisma.entry.findFirstOrThrow({
-			where: {
-				guild_id: this.guild.id,
-			},
-		})
-		this.aliases = await this.prisma.alias.findMany({
-			where: {
-				guild_id: this.guild.id,
-			},
-		})
+		const server = (
+			await this.db.select().from(servers).where(eq(servers.guild_id, this.guild.id))
+		)[0]
+		if (!server) {
+			throw new Error("Could not find guild by id")
+		}
+
+		this.server = server
+		this.aliases = await this.db
+			.select()
+			.from(aliases)
+			.where(eq(aliases.guild_id, this.guild.id))
 	}
 
 	/**
 	 * Method run every minute
 	 */
 	override async updateMinutely() {
-		const musicChannelId = this.entry.music_channel_id
+		const musicChannelId = this.server.music_channel_id
 		if (!musicChannelId) return
 
-		const [messageErr, message] = await useTryAsync(async () => {
-			const musicMessageId = this.entry.music_message_id
+		const [message, merror] = await tryasync(async () => {
+			const musicMessageId = this.server.music_message_id
 			const cleaner = new ChannelCleaner(this, musicChannelId, [musicMessageId ?? ""])
 			await cleaner.clean()
 
@@ -48,27 +49,27 @@ export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, Gui
 			return message
 		})
 
-		if (messageErr) {
-			if (messageErr.message === "no-channel") {
+		if (merror) {
+			if (merror.message === "no-channel") {
 				logger.alert!(`Guild(${this.guild.name}) has no Channel(${musicChannelId})`)
 				await this.update({ music_channel_id: null })
 				return
 			}
-			if (messageErr.name === "HTTPError") {
-				logger.warn("Failed to clean channel:", messageErr)
+			if (merror.name === "HTTPError") {
+				logger.warn("Failed to clean channel:", merror)
 				return
 			}
-			throw messageErr
+			throw merror
 		}
 
-		const [pageErr, page] = useTry(() => {
+		const [page, perror] = trysync(() => {
 			const embed = message.embeds[0]!
 			const pageInfo = embed.fields.find(field => field.name === "Page")!.value
 			return +pageInfo.split("/")[0]!
 		})
 
 		if (this.service) {
-			message.edit(await new QueueBuilder(this).build(pageErr ? 1 : page))
+			message.edit(await new QueueBuilder(this).build(perror ? 1 : page))
 		} else {
 			this.setNickname()
 			message.edit({
@@ -85,7 +86,7 @@ export default class GuildCache extends BaseGuildCache<typeof prisma, Entry, Gui
 		}
 	}
 
-	override getEmptyEntry(): Entry {
+	override getEmptyServer(): Server {
 		return {
 			guild_id: "",
 			prefix: null,

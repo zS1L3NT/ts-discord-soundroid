@@ -1,4 +1,4 @@
-export const trysync = <T, E extends Error>(fn: () => T): [T, null] | [null, E] => {
+export const trysync = <T, E extends Error = Error>(fn: () => T): [T, null] | [null, E] => {
 	try {
 		return [fn(), null]
 	} catch (e) {
@@ -6,7 +6,7 @@ export const trysync = <T, E extends Error>(fn: () => T): [T, null] | [null, E] 
 	}
 }
 
-export const tryasync = async <T, E extends Error>(
+export const tryasync = async <T, E extends Error = Error>(
 	fn: () => Promise<T>,
 ): Promise<[T, null] | [null, E]> => {
 	try {

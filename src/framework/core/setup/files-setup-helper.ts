@@ -1,6 +1,6 @@
 import fs from "node:fs"
 import path from "node:path"
-import { type ClientEvents, Collection } from "discord.js"
+import { Collection } from "discord.js"
 
 import {
 	type BaseButton,

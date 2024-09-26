@@ -1,20 +1,10 @@
+import { BaseEvent } from "@framework"
 import { Colors, type VoiceState } from "discord.js"
-import { BaseEvent } from "nova-bot"
 
-import type { Entry } from "@prisma/client"
-
-import type BotCache from "../../data/BotCache"
-import type GuildCache from "../../data/GuildCache"
+import type BotCache from "../../core/bot-cache"
 import logger from "../../logger"
-import type prisma from "../../prisma"
 
-export default class extends BaseEvent<
-	typeof prisma,
-	Entry,
-	GuildCache,
-	BotCache,
-	"voiceStateUpdate"
-> {
+export default class extends BaseEvent<"voiceStateUpdate"> {
 	override name = "voiceStateUpdate" as const
 
 	override middleware = []

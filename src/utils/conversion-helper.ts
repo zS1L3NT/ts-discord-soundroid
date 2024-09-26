@@ -1,5 +1,5 @@
 import logger from "../logger"
-import type ApiHelper from "./ApiHelper"
+import type ApiHelper from "./api-helper"
 
 export default class ConversionHelper {
 	constructor(

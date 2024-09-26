@@ -1,18 +1,14 @@
-import { BaseButton, type ButtonHelper, ResponseBuilder } from "nova-bot"
+import { BaseButton, type ButtonHelper, ResponseBuilder } from "@framework"
 
-import type { Entry } from "@prisma/client"
+import PageSelectBuilder from "../../builders/page-select-builder"
 
-import type GuildCache from "../../data/GuildCache"
-import type prisma from "../../prisma"
-import PageSelectBuilder from "../../utils/PageSelectBuilder"
-
-export default class extends BaseButton<typeof prisma, Entry, GuildCache> {
+export default class extends BaseButton {
 	override defer = true
 	override ephemeral = true
 
 	override middleware = []
 
-	override async execute(helper: ButtonHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: ButtonHelper) {
 		const embed = helper.message.embeds[0]
 
 		if (!embed) {

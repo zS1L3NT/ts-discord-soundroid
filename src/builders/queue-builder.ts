@@ -1,3 +1,4 @@
+import type { CommandPayload } from "@framework"
 import {
 	ActionRowBuilder,
 	ButtonBuilder,
@@ -6,12 +7,11 @@ import {
 	EmbedBuilder,
 	type GuildMember,
 } from "discord.js"
-import type { CommandPayload } from "nova-bot"
 
-import type GuildCache from "../data/GuildCache"
-import type Song from "../data/Song"
-import DominantColorGetter from "./DominantColorGetter"
-import DurationHelper from "./DurationHelper"
+import type GuildCache from "../core/guild-cache"
+import type Song from "../core/song"
+import DominantColorGetter from "../utils/dominant-color-getter"
+import DurationHelper from "../utils/duration-helper"
 
 export default class QueueBuilder {
 	constructor(

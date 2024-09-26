@@ -1,5 +1,5 @@
+import type { CommandPayload } from "@framework"
 import { ActionRowBuilder, type Embed, EmbedBuilder, StringSelectMenuBuilder } from "discord.js"
-import type { CommandPayload } from "nova-bot"
 
 export default class PageSelectBuilder {
 	private currentPage = 0

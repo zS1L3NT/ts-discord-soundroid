@@ -1,16 +1,12 @@
+import { BaseCommand, type CommandHelper, ResponseBuilder, tryasync, trysync } from "@framework"
 import { Colors } from "discord.js"
-import { useTry, useTryAsync } from "no-try"
-import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
 import { type DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import type { Entry } from "@prisma/client"
 
-import type GuildCache from "../../data/GuildCache"
-import MusicService from "../../data/MusicService"
+import MusicService from "../../core/music-service"
 import IsInAVoiceChannelMiddleware from "../../middleware/IsInAVoiceChannelMiddleware"
-import type prisma from "../../prisma"
 
-export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
+export default class extends BaseCommand {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -49,11 +45,11 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 	override middleware = [new IsInAVoiceChannelMiddleware()]
 
-	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override condition(helper: CommandHelper) {
 		return helper.isMessageCommand(true)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override converter(helper: CommandHelper) {
 		const [linkStr, fromStr, toStr] = helper.args()
 		return {
 			link: linkStr || "",
@@ -62,7 +58,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		}
 	}
 
-	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: CommandHelper) {
 		if (!helper.cache.service) {
 			const channel = helper.member.voice.channel!
 			helper.cache.service = new MusicService(
@@ -81,7 +77,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 		const from = helper.integer("from") ?? 1
 		let to = helper.integer("to")
 
-		const [err, playlistId] = useTry(() => {
+		const [playlistId, perror] = trysync(() => {
 			const url = new URL(link)
 			if (url.host === "open.spotify.com" && url.pathname.startsWith("/playlist/")) {
 				return url.pathname.slice("/playlist/".length)
@@ -93,7 +89,7 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			throw new Error()
 		})
 
-		if (err) {
+		if (perror) {
 			return helper.respond(
 				ResponseBuilder.bad("Link must be a Spotify/Youtube playlist link!"),
 			)
@@ -119,13 +115,19 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 			}
 		}
 
-		const [, spotifyPlaylistLength] = await useTryAsync(() =>
+		const [spotifyPlaylistLength] = await tryasync(() =>
 			helper.cache.apiHelper.findSpotifyPlaylistLength(playlistId),
 		)
-		const [, youtubePlaylistLength] = await useTryAsync(() =>
+		const [youtubePlaylistLength] = await tryasync(() =>
 			helper.cache.apiHelper.findYoutubePlaylistLength(playlistId),
 		)
 		const length = spotifyPlaylistLength || youtubePlaylistLength
+
+		if (length === null) {
+			return helper.respond(
+				ResponseBuilder.bad("Could not determine the length of the playlist"),
+			)
+		}
 
 		if (to && to > length) {
 			return helper.respond(
@@ -139,13 +141,17 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 		helper.respond(ResponseBuilder.good(`Adding songs from #${from} to #${to}...`))
 
-		const [, spotifyPlaylistSongs] = await useTryAsync(() =>
+		const [spotifyPlaylistSongs] = await tryasync(() =>
 			helper.cache.apiHelper.findSpotifyPlaylist(playlistId, from, to!, helper.member.id),
 		)
-		const [, youtubePlaylistSongs] = await useTryAsync(() =>
+		const [youtubePlaylistSongs] = await tryasync(() =>
 			helper.cache.apiHelper.findYoutubePlaylist(playlistId, from, to!, helper.member.id),
 		)
 		const songs = spotifyPlaylistSongs || youtubePlaylistSongs
+
+		if (songs === null) {
+			return ResponseBuilder.bad("Could not fetch the list of songs")
+		}
 
 		helper.cache.service!.enqueue(songs.shift()!)
 		helper.cache.service!.queue.push(...songs)

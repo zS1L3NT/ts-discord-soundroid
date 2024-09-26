@@ -1,13 +1,9 @@
+import { BaseCommand, type CommandHelper, ResponseBuilder } from "@framework"
 import { Colors, EmbedBuilder } from "discord.js"
-import { BaseCommand, type CommandHelper, ResponseBuilder } from "nova-bot"
 
-import type { Entry } from "@prisma/client"
+import DominantColorGetter from "../../utils/dominant-color-getter"
 
-import type GuildCache from "../../data/GuildCache"
-import type prisma from "../../prisma"
-import DominantColorGetter from "../../utils/DominantColorGetter"
-
-export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
+export default class extends BaseCommand {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -28,17 +24,17 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 	override middleware = []
 
-	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override condition(helper: CommandHelper) {
 		return helper.isMessageCommand(null)
 	}
 
-	override converter(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override converter(helper: CommandHelper) {
 		return {
 			query: helper.args().join(" "),
 		}
 	}
 
-	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: CommandHelper) {
 		const query = helper.string("query")
 		const service = helper.cache.service
 

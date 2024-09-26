@@ -11,8 +11,8 @@ import {
 } from "@discordjs/voice"
 
 import logger from "../logger"
-import type GuildCache from "./GuildCache"
-import type Song from "./Song"
+import type GuildCache from "./guild-cache"
+import type Song from "./song"
 
 const time = async (ms: number) => new Promise(res => setTimeout(res, ms))
 
@@ -25,7 +25,7 @@ export enum StopStatus {
 
 export default class MusicService {
 	readonly player: AudioPlayer
-	disconnectTimeout: NodeJS.Timeout | null = null
+	disconnectTimeout: Timer | null = null
 	queue: Song[]
 	queueLock = false
 	readyLock = false

@@ -1,13 +1,9 @@
-import { BaseCommand, type CommandHelper } from "nova-bot"
+import { BaseCommand, type CommandHelper } from "@framework"
 
-import type { Entry } from "@prisma/client"
-
-import type GuildCache from "../../data/GuildCache"
+import QueueBuilder from "../../builders/queue-builder"
 import IsInMyVoiceChannelMiddleware from "../../middleware/IsInMyVoiceChannelMiddleware"
-import type prisma from "../../prisma"
-import QueueBuilder from "../../utils/QueueBuilder"
 
-export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
+export default class extends BaseCommand {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -16,13 +12,13 @@ export default class extends BaseCommand<typeof prisma, Entry, GuildCache> {
 
 	override middleware = [new IsInMyVoiceChannelMiddleware()]
 
-	override condition(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override condition(helper: CommandHelper) {
 		return helper.isMessageCommand(false)
 	}
 
 	override converter() {}
 
-	override async execute(helper: CommandHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: CommandHelper) {
 		helper.respond(await new QueueBuilder(helper.cache, helper.member).build(), 15_000)
 	}
 }

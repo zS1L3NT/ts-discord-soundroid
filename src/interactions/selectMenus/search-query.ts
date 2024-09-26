@@ -1,22 +1,19 @@
+import { BaseSelectMenu, ResponseBuilder, type SelectMenuHelper } from "@framework"
 import { Colors, MessageType, VoiceChannel } from "discord.js"
-import { BaseSelectMenu, ResponseBuilder, type SelectMenuHelper } from "nova-bot"
 
 import { type DiscordGatewayAdapterCreator, joinVoiceChannel } from "@discordjs/voice"
-import type { Entry } from "@prisma/client"
 
-import type GuildCache from "../../data/GuildCache"
-import MusicService from "../../data/MusicService"
-import Song from "../../data/Song"
+import MusicService from "../../core/music-service"
+import Song from "../../core/song"
 import logger from "../../logger"
-import type prisma from "../../prisma"
 
-export default class extends BaseSelectMenu<typeof prisma, Entry, GuildCache> {
+export default class extends BaseSelectMenu {
 	override defer = false
 	override ephemeral = false
 
 	override middleware = []
 
-	override async execute(helper: SelectMenuHelper<typeof prisma, Entry, GuildCache>) {
+	override async execute(helper: SelectMenuHelper) {
 		const channel = helper.member.voice.channel
 
 		if (!(channel instanceof VoiceChannel)) {
