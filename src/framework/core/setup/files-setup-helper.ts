@@ -2,15 +2,10 @@ import fs from "node:fs"
 import path from "node:path"
 import { type ClientEvents, Collection } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
-
 import {
-	type BaseBotCache,
 	type BaseButton,
 	type BaseCommand,
-	type BaseEntry,
 	type BaseEvent,
-	type BaseGuildCache,
 	type BaseModal,
 	type BaseSelectMenu,
 	trysync,
@@ -26,22 +21,17 @@ import EventGuildDelete from "../../defaults/interactions/events/guild-delete"
 import EventRoleUpdate from "../../defaults/interactions/events/role-update"
 import SelectMenuHelpItem from "../../defaults/interactions/select-menus/help-item"
 
-export default class FilesSetupHelper<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-> {
-	readonly commandFiles = new Collection<string, BaseCommand<P, E, GC>>()
-	readonly buttonFiles = new Collection<string, BaseButton<P, E, GC>>()
-	readonly selectMenuFiles = new Collection<string, BaseSelectMenu<P, E, GC>>()
-	readonly modalFiles = new Collection<string, BaseModal<P, E, GC>>()
-	readonly eventFiles = new Collection<string, BaseEvent<P, E, GC, BC, keyof ClientEvents>>()
+export default class FilesSetupHelper {
+	readonly commandFiles = new Collection<string, BaseCommand>()
+	readonly buttonFiles = new Collection<string, BaseButton>()
+	readonly selectMenuFiles = new Collection<string, BaseSelectMenu>()
+	readonly modalFiles = new Collection<string, BaseModal>()
+	readonly eventFiles = new Collection<string, BaseEvent>()
 
 	constructor(
 		public readonly directory: string,
 		public readonly icon: string,
-		public readonly helpMessage: (cache: GC) => string,
+		public readonly helpMessage: (cache: GuildCache) => string,
 	) {
 		this.setupCommands()
 		this.setupButtons()
@@ -75,7 +65,7 @@ export default class FilesSetupHelper<
 
 		for (const fileName of fileNames) {
 			const name = fileName.split(".")[0]!
-			const Command = this.require<new () => BaseCommand<P, E, GC>>(`commands/${fileName}`)
+			const Command = this.require<new () => BaseCommand>(`commands/${fileName}`)
 			this.commandFiles.set(name, new Command())
 		}
 	}
@@ -89,7 +79,7 @@ export default class FilesSetupHelper<
 
 		for (const fileName of fileNames) {
 			const name = fileName.split(".")[0]!
-			const Button = this.require<new () => BaseButton<P, E, GC>>(`buttons/${fileName}`)
+			const Button = this.require<new () => BaseButton>(`buttons/${fileName}`)
 			this.buttonFiles.set(name, new Button())
 		}
 	}
@@ -102,9 +92,7 @@ export default class FilesSetupHelper<
 
 		for (const fileName of fileNames) {
 			const name = fileName.split(".")[0]!
-			const SelectMenu = this.require<new () => BaseSelectMenu<P, E, GC>>(
-				`selectMenus/${fileName}`,
-			)
+			const SelectMenu = this.require<new () => BaseSelectMenu>(`selectMenus/${fileName}`)
 			this.selectMenuFiles.set(name, new SelectMenu())
 		}
 	}
@@ -115,24 +103,22 @@ export default class FilesSetupHelper<
 
 		for (const fileName of fileNames) {
 			const name = fileName.split(".")[0]!
-			const Modal = this.require<new () => BaseModal<P, E, GC>>(`modals/${fileName}`)
+			const Modal = this.require<new () => BaseModal>(`modals/${fileName}`)
 			this.modalFiles.set(name, new Modal())
 		}
 	}
 
 	private setupEvents() {
 		this.eventFiles.set("guild-create", new EventGuildCreate(this))
-		this.eventFiles.set("guild-delete", new EventGuildDelete<P, E, GC, BC>())
-		this.eventFiles.set("role-update", new EventRoleUpdate<P, E, GC, BC>())
+		this.eventFiles.set("guild-delete", new EventGuildDelete())
+		this.eventFiles.set("role-update", new EventRoleUpdate())
 
 		const fileNames = this.readEntities("events")
 		if (fileNames === null) return
 
 		for (const fileName of fileNames) {
 			const name = fileName.split(".")[0]!
-			const Event = this.require<new () => BaseEvent<P, E, GC, BC, keyof ClientEvents>>(
-				`events/${fileName}`,
-			)
+			const Event = this.require<new () => BaseEvent>(`events/${fileName}`)
 			this.eventFiles.set(name, new Event())
 		}
 	}

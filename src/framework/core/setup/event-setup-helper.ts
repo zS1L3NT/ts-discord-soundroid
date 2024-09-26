@@ -7,12 +7,7 @@ import {
 	type StringSelectMenuInteraction,
 } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
-
 import {
-	type BaseBotCache,
-	type BaseEntry,
-	type BaseGuildCache,
 	ButtonHelper,
 	CommandHelper,
 	CommandType,
@@ -22,15 +17,10 @@ import {
 	SelectMenuHelper,
 } from "@framework"
 
-export default class EventSetupHelper<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-> {
+export default class EventSetupHelper {
 	constructor(
-		private readonly botCache: BC,
-		public readonly fsh: FilesSetupHelper<P, E, GC, BC>,
+		private readonly botCache: BotCache,
+		public readonly fsh: FilesSetupHelper,
 	) {
 		for (const eventFile of this.fsh.eventFiles.values()) {
 			this.botCache.bot.on(eventFile.name, async (...args) => {
@@ -72,8 +62,8 @@ export default class EventSetupHelper<
 		})
 	}
 
-	private async onMessage(cache: GC, message: Message) {
-		if (!cache.entry.prefix) return
+	private async onMessage(cache: GuildCache, message: Message) {
+		if (!cache.server.prefix) return
 
 		for (const [name, commandFile] of this.fsh.commandFiles) {
 			const helper = new CommandHelper(name, CommandType.Message, cache, undefined, message)
@@ -122,7 +112,7 @@ export default class EventSetupHelper<
 		}
 	}
 
-	private async onSlashInteraction(cache: GC, interaction: ChatInputCommandInteraction) {
+	private async onSlashInteraction(cache: GuildCache, interaction: ChatInputCommandInteraction) {
 		const helper = new CommandHelper(
 			interaction.commandName,
 			CommandType.Slash,
@@ -174,7 +164,7 @@ export default class EventSetupHelper<
 		)
 	}
 
-	private async onButtonInteraction(cache: GC, interaction: ButtonInteraction) {
+	private async onButtonInteraction(cache: GuildCache, interaction: ButtonInteraction) {
 		const helper = new ButtonHelper(cache, interaction)
 		const buttonFile = this.fsh.buttonFiles.get(interaction.customId)
 		if (!buttonFile) return
@@ -216,7 +206,10 @@ export default class EventSetupHelper<
 		)
 	}
 
-	private async onSelectMenuInteraction(cache: GC, interaction: StringSelectMenuInteraction) {
+	private async onSelectMenuInteraction(
+		cache: GuildCache,
+		interaction: StringSelectMenuInteraction,
+	) {
 		const helper = new SelectMenuHelper(cache, interaction)
 		const selectMenuFile = this.fsh.selectMenuFiles.get(interaction.customId)
 		if (!selectMenuFile) return
@@ -258,7 +251,10 @@ export default class EventSetupHelper<
 		)
 	}
 
-	private async onModalInteraction(cache: GC, interaction: ModalMessageModalSubmitInteraction) {
+	private async onModalInteraction(
+		cache: GuildCache,
+		interaction: ModalMessageModalSubmitInteraction,
+	) {
 		const helper = new ModalHelper(cache, interaction)
 		const modalFile = this.fsh.modalFiles.get(interaction.customId)
 		if (!modalFile) return

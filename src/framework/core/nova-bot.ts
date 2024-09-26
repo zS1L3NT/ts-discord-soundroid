@@ -6,26 +6,16 @@ import {
 	PermissionFlagsBits,
 } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
-
 import {
-	type BaseBotCache,
-	type BaseEntry,
-	type BaseGuildCache,
+	type BotCacheClass,
 	EventSetupHelper,
 	FilesSetupHelper,
+	type GuildCacheClass,
 	SlashCommandDeployer,
-	type iBaseBotCache,
-	type iBaseGuildCache,
 	tryasync,
 } from "@framework"
 
-export default abstract class NovaBot<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-> {
+export default abstract class NovaBot {
 	/**
 	 * The display name of the bot.
 	 * This will be logged when the bot is started
@@ -62,16 +52,16 @@ export default abstract class NovaBot<
 	 *
 	 * @example cache => `Welcome to SounDroid! My prefix is ${cache.prefix}`
 	 */
-	abstract helpMessage: (cache: GC) => string
+	abstract helpMessage: (cache: GuildCache) => string
 
 	/**
 	 * The GuildCache class that is used by your bot
 	 */
-	abstract GuildCache: iBaseGuildCache<P, E, GC>
+	abstract GuildCacheClass: GuildCacheClass
 	/**
 	 * The BotCache class that is used by your bot
 	 */
-	abstract BotCache: iBaseBotCache<P, E, GC, BC>
+	abstract BotCacheClass: BotCacheClass
 
 	/**
 	 * A logger that can be used by Nova to log events to the console.
@@ -93,16 +83,11 @@ export default abstract class NovaBot<
 	}
 
 	/**
-	 * Instance of the prisma database client
-	 */
-	abstract prisma: P
-
-	/**
 	 * This method will get called once your bot receives the "ready" event from Discord
 	 *
 	 * @param botCache The bot cache that is used by your bot
 	 */
-	onSetup(botCache: BC) {}
+	onSetup(botCache: BotCache) {}
 
 	/**
 	 * Method to start the bot
@@ -111,9 +96,9 @@ export default abstract class NovaBot<
 		const bot = new Client({ intents: this.intents })
 		global.logger = this.logger
 
-		const botCache = new this.BotCache(this.GuildCache, bot, this.prisma)
-		const fsh = new FilesSetupHelper<P, E, GC, BC>(this.directory, this.icon, this.helpMessage)
-		const esh = new EventSetupHelper<P, E, GC, BC>(botCache, fsh)
+		const botCache = new this.BotCacheClass(this.GuildCacheClass, bot)
+		const fsh = new FilesSetupHelper(this.directory, this.icon, this.helpMessage)
+		const esh = new EventSetupHelper(botCache, fsh)
 
 		const blacklist: string[] = []
 

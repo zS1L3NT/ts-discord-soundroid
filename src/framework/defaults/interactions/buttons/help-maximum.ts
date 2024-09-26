@@ -1,31 +1,16 @@
-import type { PrismaClient } from "@prisma/client"
+import { BaseButton, type ButtonHelper, type FilesSetupHelper, HelpBuilder } from "@framework"
 
-import {
-	type BaseBotCache,
-	BaseButton,
-	type BaseEntry,
-	type BaseGuildCache,
-	type ButtonHelper,
-	type FilesSetupHelper,
-	HelpBuilder,
-} from "@framework"
-
-export default class<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-> extends BaseButton<P, E, GC> {
+export default class extends BaseButton {
 	override defer = false
 	override ephemeral = false
 
 	override middleware = []
 
-	constructor(public fsh: FilesSetupHelper<P, E, GC, BC>) {
+	constructor(public fsh: FilesSetupHelper) {
 		super()
 	}
 
-	override async execute(helper: ButtonHelper<P, E, GC>) {
+	override async execute(helper: ButtonHelper) {
 		helper.update(new HelpBuilder(this.fsh, helper.cache).buildMaximum())
 	}
 }

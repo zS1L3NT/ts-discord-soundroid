@@ -1,16 +1,6 @@
 import type { ClientEvents } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
-
-import type { BaseBotCache, BaseEntry, BaseGuildCache } from "@framework"
-
-export default abstract class BaseEvent<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-	N extends keyof ClientEvents,
-> {
+export default abstract class BaseEvent<N extends keyof ClientEvents = keyof ClientEvents> {
 	/**
 	 * The name of the event
 	 *
@@ -20,7 +10,7 @@ export default abstract class BaseEvent<
 	/**
 	 * Middleware to run before the {@link execute} method is called
 	 */
-	abstract middleware: EventMiddleware<P, E, GC, BC, N>[]
+	abstract middleware: EventMiddleware[]
 
 	/**
 	 * The method that is called when the event is emitted
@@ -28,30 +18,15 @@ export default abstract class BaseEvent<
 	 * @param botCache The BotCache to possibly fetch a GuildCache
 	 * @param args The args of the client event
 	 */
-	abstract execute(botCache: BC, ...args: ClientEvents[N]): Promise<unknown>
+	abstract execute(botCache: BotCache, ...args: ClientEvents[N]): Promise<unknown>
 }
 
-export type iEventMiddleware<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-	N extends keyof ClientEvents,
-	EM extends EventMiddleware<P, E, GC, BC, N>,
-> = new () => EM
-
-export abstract class EventMiddleware<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-	N extends keyof ClientEvents,
-> {
+export abstract class EventMiddleware<N extends keyof ClientEvents = keyof ClientEvents> {
 	/**
 	 * The function that should handle the event
 	 *
 	 * @param botCache The BotCache to possibly fetch a GuildCache
 	 * @param args The args of the client event
 	 */
-	abstract handler(botCache: BC, ...args: ClientEvents[N]): boolean | Promise<boolean>
+	abstract handler(botCache: BotCache, ...args: ClientEvents[N]): boolean | Promise<boolean>
 }

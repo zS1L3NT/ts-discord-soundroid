@@ -1,19 +1,8 @@
 import type { GuildMember, Message, StringSelectMenuInteraction } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
+import { type CommandPayload, ResponseBuilder } from "@framework"
 
-import {
-	type BaseEntry,
-	type BaseGuildCache,
-	type CommandPayload,
-	ResponseBuilder,
-} from "@framework"
-
-export default abstract class BaseSelectMenu<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export default abstract class BaseSelectMenu {
 	/**
 	 * If the select menu interaction should be deferred
 	 *
@@ -29,37 +18,29 @@ export default abstract class BaseSelectMenu<
 	/**
 	 * Middleware to run before the {@link execute} method is called
 	 */
-	abstract middleware: SelectMenuMiddleware<P, E, GC>[]
+	abstract middleware: SelectMenuMiddleware[]
 
 	/**
 	 * The method that is called when a select menu item is chosen
 	 *
 	 * @param helper The SelectMenuHelper containing information about the select menu interaction
 	 */
-	abstract execute(helper: SelectMenuHelper<P, E, GC>): Promise<unknown>
+	abstract execute(helper: SelectMenuHelper): Promise<unknown>
 }
 
-export abstract class SelectMenuMiddleware<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export abstract class SelectMenuMiddleware {
 	/**
 	 * The function that should handle the select menu interaction
 	 *
 	 * @param helper The SelectMenuHelper containing information about the select menu interaction
 	 * @returns If the next middleware / execute method should be called
 	 */
-	abstract handler(helper: SelectMenuHelper<P, E, GC>): boolean | Promise<boolean>
+	abstract handler(helper: SelectMenuHelper): boolean | Promise<boolean>
 }
 
-export class SelectMenuHelper<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export class SelectMenuHelper {
 	constructor(
-		public readonly cache: GC,
+		public readonly cache: GuildCache,
 		public readonly interaction: StringSelectMenuInteraction,
 	) {}
 

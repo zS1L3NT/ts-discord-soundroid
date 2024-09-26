@@ -6,10 +6,6 @@ import {
 	TextChannel,
 } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
-
-import type { BaseEntry, BaseGuildCache } from "@framework"
-
 type LogData = {
 	member?: GuildMember
 	title: string
@@ -19,12 +15,8 @@ type LogData = {
 	embeds?: EmbedBuilder[]
 }
 
-export default class LogManager<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
-	constructor(private readonly cache: BaseGuildCache<P, E, GC>) {}
+export default class LogManager {
+	constructor(private readonly cache: GuildCache) {}
 
 	/**
 	 * Log the data to the log channel if the `log_channel_id` is set.
@@ -32,7 +24,7 @@ export default class LogManager<
 	 * @param data Payload to log to the log channel if it is set
 	 */
 	async log(data: LogData) {
-		const logChannelId = this.cache.entry.log_channel_id
+		const logChannelId = this.cache.server.log_channel_id
 		if (!logChannelId) return
 
 		const logChannel = this.cache.guild.channels.cache.get(logChannelId)

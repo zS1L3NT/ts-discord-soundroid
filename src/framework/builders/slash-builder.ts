@@ -1,11 +1,11 @@
 import { SlashCommandBuilder } from "discord.js"
 
-export interface iSlashData {
+export type iSlashData = {
 	description: string
 	options?: (iSlashDefaultOption | iSlashStringOption | iSlashNumberOption)[]
 }
 
-interface iSlashOption {
+export type iSlashOption = {
 	name: string
 	description: string
 	requirements: string
@@ -13,11 +13,11 @@ interface iSlashOption {
 	default?: string
 }
 
-interface iSlashDefaultOption extends iSlashOption {
+export type iSlashDefaultOption = iSlashOption & {
 	type: "boolean" | "user" | "role" | "channel" | "mentionable"
 }
 
-interface iSlashStringOption extends iSlashOption {
+export type iSlashStringOption = iSlashOption & {
 	type: "string"
 	choices?: {
 		name: string
@@ -25,13 +25,14 @@ interface iSlashStringOption extends iSlashOption {
 	}[]
 }
 
-interface iSlashNumberOption extends iSlashOption {
+export type iSlashNumberOption = iSlashOption & {
 	type: "number"
 	choices?: {
 		name: string
 		value: number
 	}[]
 }
+
 export default class SlashBuilder {
 	constructor(
 		private readonly name: string,

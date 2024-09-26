@@ -7,29 +7,15 @@ import {
 	StringSelectMenuBuilder,
 } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
+import { type CommandPayload, CommandType, type FilesSetupHelper } from "@framework"
 
-import {
-	type BaseBotCache,
-	type BaseEntry,
-	type BaseGuildCache,
-	type CommandPayload,
-	CommandType,
-	type FilesSetupHelper,
-} from "@framework"
-
-class HelpBuilder<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-> {
+class HelpBuilder {
 	private readonly QUESTION = "https://res.cloudinary.com/zs1l3nt/image/upload/icons/question.png"
 	private readonly WARNING = "https://res.cloudinary.com/zs1l3nt/image/upload/icons/warning.png"
 
 	constructor(
-		private readonly fsh: FilesSetupHelper<P, E, GC, BC>,
-		private readonly cache: GC,
+		private readonly fsh: FilesSetupHelper,
+		private readonly cache: GuildCache,
 	) {}
 
 	buildMaximum(): CommandPayload {

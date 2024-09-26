@@ -1,22 +1,14 @@
 import { Colors } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
-
 import {
 	BaseCommand,
-	type BaseEntry,
-	type BaseGuildCache,
 	type CommandHelper,
 	CommandType,
 	IsAdminMiddleware,
 	ResponseBuilder,
 } from "@framework"
 
-export default class<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> extends BaseCommand<P, E, GC> {
+export default class extends BaseCommand {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -42,7 +34,7 @@ export default class<
 
 	override converter() {}
 
-	override async execute(helper: CommandHelper<P, E, GC>) {
+	override async execute(helper: CommandHelper) {
 		const prefix = helper.string("prefix")
 		const oldPrefix = helper.cache.prefix
 

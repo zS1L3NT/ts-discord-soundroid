@@ -2,20 +2,15 @@ import { Routes } from "discord-api-types/v10"
 import { type Collection, SlashCommandBuilder } from "discord.js"
 
 import { REST } from "@discordjs/rest"
-import type { PrismaClient } from "@prisma/client"
 
-import { type BaseCommand, type BaseEntry, type BaseGuildCache, SlashBuilder } from "@framework"
+import { type BaseCommand, SlashBuilder } from "@framework"
 
-export default class SlashCommandDeployer<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export default class SlashCommandDeployer {
 	private readonly commands: SlashCommandBuilder[]
 
 	constructor(
 		private readonly guildId: string,
-		commandFiles: Collection<string, BaseCommand<P, E, GC>>,
+		commandFiles: Collection<string, BaseCommand>,
 	) {
 		this.guildId = guildId
 		this.commands = Array.from(commandFiles.entries()).map(([name, file]) =>

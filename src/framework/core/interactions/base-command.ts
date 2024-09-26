@@ -9,26 +9,14 @@ import {
 } from "discord.js"
 import escapeStringRegexp from "escape-string-regexp"
 
-import type { PrismaClient } from "@prisma/client"
-
-import {
-	type BaseEntry,
-	type BaseGuildCache,
-	type CommandPayload,
-	ResponseBuilder,
-	type iSlashData,
-} from "@framework"
+import { type CommandPayload, ResponseBuilder, type iSlashData } from "@framework"
 
 export enum CommandType {
 	Slash = "slash",
 	Message = "message",
 }
 
-export default abstract class BaseCommand<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export default abstract class BaseCommand {
 	/**
 	 * If the slash command should be deferred
 	 *
@@ -70,7 +58,7 @@ export default abstract class BaseCommand<
 	/**
 	 * Middleware to run before the {@link execute} method is called
 	 */
-	abstract middleware: CommandMiddleware<P, E, GC>[]
+	abstract middleware: CommandMiddleware[]
 
 	/**
 	 * The condition under which a message send will trigger this command.
@@ -82,7 +70,7 @@ export default abstract class BaseCommand<
 	 * @param helper The CommandHelper containing information about the message or slash interaction
 	 */
 	// biome-ignore lint/suspicious/noConfusingVoidType: -
-	abstract condition(helper: CommandHelper<P, E, GC>): boolean | void
+	abstract condition(helper: CommandHelper): boolean | void
 	/**
 	 * The function that turns a string into a json object with all the command arguments.
 	 *
@@ -90,34 +78,26 @@ export default abstract class BaseCommand<
 	 *
 	 * @param helper The CommandHelper containing information about the message or slash interaction
 	 */
-	abstract converter(helper: CommandHelper<P, E, GC>): unknown
+	abstract converter(helper: CommandHelper): unknown
 	/**
 	 * The method that is called when a message or slash command is triggered
 	 *
 	 * @param helper The CommandHelper containing information about the message or slash interaction
 	 */
-	abstract execute(helper: CommandHelper<P, E, GC>): Promise<unknown>
+	abstract execute(helper: CommandHelper): Promise<unknown>
 }
 
-export abstract class CommandMiddleware<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export abstract class CommandMiddleware {
 	/**
 	 * The function that should handle the message or slash interaction
 	 *
 	 * @param helper The CommandHelper containing information about the message or slash interaction
 	 * @returns If the next middleware / execute method should be called
 	 */
-	abstract handler(helper: CommandHelper<P, E, GC>): boolean | Promise<boolean>
+	abstract handler(helper: CommandHelper): boolean | Promise<boolean>
 }
 
-export class CommandHelper<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export class CommandHelper {
 	private responded = false
 	private response: Message | undefined
 	private timeout: NodeJS.Timeout | undefined
@@ -134,7 +114,7 @@ export class CommandHelper<
 		 * Either {@link CommandType.Slash} or {@link CommandType.Message}
 		 */
 		public readonly type: CommandType,
-		public readonly cache: GC,
+		public readonly cache: GuildCache,
 		public readonly interaction?: ChatInputCommandInteraction,
 		public readonly message?: Message,
 	) {}

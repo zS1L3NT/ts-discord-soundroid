@@ -1,19 +1,8 @@
 import type { GuildMember, Message, ModalMessageModalSubmitInteraction } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
+import { type CommandPayload, ResponseBuilder } from "@framework"
 
-import {
-	type BaseEntry,
-	type BaseGuildCache,
-	type CommandPayload,
-	ResponseBuilder,
-} from "@framework"
-
-export default abstract class BaseModal<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export default abstract class BaseModal {
 	/**
 	 * If the modal submission should be deferred
 	 *
@@ -29,37 +18,29 @@ export default abstract class BaseModal<
 	/**
 	 * Middleware to run before the {@link execute} method is called
 	 */
-	abstract middleware: ModalMiddleware<P, E, GC>[]
+	abstract middleware: ModalMiddleware[]
 
 	/**
 	 * The method that is called when a modal is submitted
 	 *
 	 * @param helper The ModalHelper containing information about the modal submission
 	 */
-	abstract execute(helper: ModalHelper<P, E, GC>): Promise<unknown>
+	abstract execute(helper: ModalHelper): Promise<unknown>
 }
 
-export abstract class ModalMiddleware<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export abstract class ModalMiddleware {
 	/**
 	 * The function that should handle the modal interaction
 	 *
 	 * @param helper The ModalHelper containing information about the modal interaction
 	 * @returns If the next middleware / execute method should be called
 	 */
-	abstract handler(helper: ModalHelper<P, E, GC>): boolean | Promise<boolean>
+	abstract handler(helper: ModalHelper): boolean | Promise<boolean>
 }
 
-export class ModalHelper<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export class ModalHelper {
 	constructor(
-		public readonly cache: GC,
+		public readonly cache: GuildCache,
 		public readonly interaction: ModalMessageModalSubmitInteraction,
 	) {}
 

@@ -1,31 +1,21 @@
-import type { PrismaClient } from "@prisma/client"
-
 import {
-	type BaseBotCache,
-	type BaseEntry,
-	type BaseGuildCache,
 	BaseSelectMenu,
 	type FilesSetupHelper,
 	HelpBuilder,
 	type SelectMenuHelper,
 } from "@framework"
 
-export default class<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-> extends BaseSelectMenu<P, E, GC> {
+export default class extends BaseSelectMenu {
 	override defer = false
 	override ephemeral = false
 
 	override middleware = []
 
-	constructor(public fsh: FilesSetupHelper<P, E, GC, BC>) {
+	constructor(public fsh: FilesSetupHelper) {
 		super()
 	}
 
-	override async execute(helper: SelectMenuHelper<P, E, GC>) {
+	override async execute(helper: SelectMenuHelper) {
 		helper.update(new HelpBuilder(this.fsh, helper.cache).buildCommand(helper.value!))
 	}
 }

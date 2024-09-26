@@ -1,22 +1,14 @@
 import { Colors, TextChannel } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
-
 import {
 	BaseCommand,
-	type BaseEntry,
-	type BaseGuildCache,
 	type CommandHelper,
 	CommandType,
 	IsAdminMiddleware,
 	ResponseBuilder,
 } from "@framework"
 
-export default class<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> extends BaseCommand<P, E, GC> {
+export default class extends BaseCommand {
 	override defer = true
 	override ephemeral = true
 	override data = {
@@ -42,12 +34,12 @@ export default class<
 
 	override converter() {}
 
-	override async execute(helper: CommandHelper<P, E, GC>) {
+	override async execute(helper: CommandHelper) {
 		const channel = helper.channel("channel")
-		const oldChannelId = helper.cache.entry.log_channel_id
+		const oldChannelId = helper.cache.server.log_channel_id
 
 		if (channel instanceof TextChannel) {
-			if (channel.id === helper.cache.entry.log_channel_id) {
+			if (channel.id === helper.cache.server.log_channel_id) {
 				helper.respond(ResponseBuilder.bad("This channel is already the Log channel!"))
 			} else {
 				await helper.cache.update({ log_channel_id: channel.id })

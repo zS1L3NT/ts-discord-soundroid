@@ -1,19 +1,8 @@
 import type { ButtonInteraction, GuildMember, Message } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
+import { type CommandPayload, ResponseBuilder } from "@framework"
 
-import {
-	type BaseEntry,
-	type BaseGuildCache,
-	type CommandPayload,
-	ResponseBuilder,
-} from "@framework"
-
-export default abstract class BaseButton<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export default abstract class BaseButton {
 	/**
 	 * If the button interaction should be deferred
 	 *
@@ -29,44 +18,29 @@ export default abstract class BaseButton<
 	/**
 	 * Middleware to run before the {@link execute} method is called
 	 */
-	abstract middleware: ButtonMiddleware<P, E, GC>[]
+	abstract middleware: ButtonMiddleware[]
 
 	/**
 	 * The method that is called when a button interaction is triggered
 	 *
 	 * @param helper The ButtonHelper containing information about the button interaction
 	 */
-	abstract execute(helper: ButtonHelper<P, E, GC>): Promise<unknown>
+	abstract execute(helper: ButtonHelper): Promise<unknown>
 }
 
-export type iButtonMiddleware<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BM extends ButtonMiddleware<P, E, GC>,
-> = new () => BM
-
-export abstract class ButtonMiddleware<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export abstract class ButtonMiddleware {
 	/**
 	 * The function that should handle the button interaction
 	 *
 	 * @param helper The ButtonHelper containing information about the button interaction
 	 * @returns If the next middleware / execute method should be called
 	 */
-	abstract handler(helper: ButtonHelper<P, E, GC>): boolean | Promise<boolean>
+	abstract handler(helper: ButtonHelper): boolean | Promise<boolean>
 }
 
-export class ButtonHelper<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export class ButtonHelper {
 	constructor(
-		public readonly cache: GC,
+		public readonly cache: GuildCache,
 		public readonly interaction: ButtonInteraction,
 	) {}
 

@@ -1,20 +1,13 @@
 import { Colors, PermissionFlagsBits, type Role } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
+import { BaseEvent } from "@framework"
 
-import { type BaseBotCache, type BaseEntry, BaseEvent, type BaseGuildCache } from "@framework"
-
-export default class<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-> extends BaseEvent<P, E, GC, BC, "roleUpdate"> {
+export default class extends BaseEvent<"roleUpdate"> {
 	override name = "roleUpdate" as const
 
 	override middleware = []
 
-	override async execute(botCache: BC, oldRole: Role, newRole: Role) {
+	override async execute(botCache: BotCache, oldRole: Role, newRole: Role) {
 		if (!oldRole.managed) return
 		const member = oldRole.members.find(m => m.user.id === botCache.bot.user!.id)
 		if (!member) return

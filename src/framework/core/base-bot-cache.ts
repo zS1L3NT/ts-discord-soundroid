@@ -1,15 +1,7 @@
+import type { GuildCacheClass } from "@framework"
 import { type Client, Collection, type Guild } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
-
-import type { BaseEntry, BaseGuildCache, iBaseGuildCache } from "@framework"
-
-export type iBaseBotCache<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-	BC extends BaseBotCache<P, E, GC>,
-> = new (GCClass: iBaseGuildCache<P, E, GC>, bot: Client, prisma: P) => BC
+export type BotCacheClass = new (GuildCacheClass: GuildCacheClass, bot: Client) => BotCache
 
 /**
  * A class that contains global information about the Discord Bot.
@@ -17,23 +9,18 @@ export type iBaseBotCache<
  *
  * Only one instance of this class should exist.
  */
-export default abstract class BaseBotCache<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export default abstract class BaseBotCache {
 	/**
 	 * The collection that contains all GuildCaches.
 	 */
-	readonly caches = new Collection<string, GC>()
+	readonly caches = new Collection<string, GuildCache>()
 
 	constructor(
-		private readonly GCClass: iBaseGuildCache<P, E, GC>,
+		private readonly GuildCacheClass: GuildCacheClass,
 		/**
 		 * The Discord Client that is used to interact with the Discord API.
 		 */
 		public readonly bot: Client,
-		public readonly prisma: P,
 	) {
 		this.onConstruct()
 	}
@@ -45,10 +32,10 @@ export default abstract class BaseBotCache<
 	 * @returns A promise that returns the GuildCache of the guild
 	 */
 	getGuildCache(guild: Guild) {
-		return new Promise<GC>((resolve, reject) => {
+		return new Promise<GuildCache>((resolve, reject) => {
 			const cache = this.caches.get(guild.id)
 			if (!cache) {
-				const cache = new this.GCClass(this.bot, guild, this.prisma)
+				const cache = new this.GuildCacheClass(this.bot, guild)
 				this.caches.set(guild.id, cache)
 				this.onSetGuildCache(cache)
 				cache
@@ -71,7 +58,7 @@ export default abstract class BaseBotCache<
 	 *
 	 * @param cache The GuildCache that was just created.
 	 */
-	onSetGuildCache(cache: GC) {}
+	onSetGuildCache(cache: GuildCache) {}
 
 	/**
 	 * Setup the GuildCache and entry for a new guild

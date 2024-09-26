@@ -1,35 +1,24 @@
 import { type Client, Colors, type Guild } from "discord.js"
 
-import type { PrismaClient } from "@prisma/client"
+import { LogManager } from "@framework"
 
-import { type BaseEntry, LogManager } from "@framework"
-import type { Alias } from "./base-entry"
-
-export type iBaseGuildCache<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> = new (bot: Client, guild: Guild, prisma: P) => GC
+export type GuildCacheClass = new (bot: Client, guild: Guild) => GuildCache
 
 /**
  * A class containing information related to each Guild.
  *
  * Each Guild that the bot is in will have its own GuildCache.
  */
-export default abstract class BaseGuildCache<
-	P extends PrismaClient,
-	E extends BaseEntry,
-	GC extends BaseGuildCache<P, E, GC>,
-> {
+export default abstract class BaseGuildCache {
 	/**
 	 * The instance of the logger for this Guild
 	 */
-	readonly logger: LogManager<P, E, GC> = new LogManager(this)
+	readonly logger = new LogManager(this)
 
 	/**
-	 * Cached entry value
+	 * Cached server value
 	 */
-	entry: E = this.getEmptyEntry()
+	server = this.getEmptyServer()
 
 	/**
 	 * Command aliases
@@ -50,7 +39,6 @@ export default abstract class BaseGuildCache<
 		 * The Discord Guild that this GuildCache is for.
 		 */
 		public readonly guild: Guild,
-		public readonly prisma: P,
 	) {
 		this.onConstruct()
 		setInterval(() => this.refresh(), 15_000)
@@ -60,18 +48,18 @@ export default abstract class BaseGuildCache<
 	 * The prefix of this Guild
 	 */
 	get prefix() {
-		return this.entry.prefix
+		return this.server.prefix
 	}
 
 	/**
-	 * Update the entry data
+	 * Update the server data
 	 *
-	 * @param data The data that changed in the entry
+	 * @param data The data that changed in the server
 	 */
-	async update(data: Partial<E>) {
-		this.entry = { ...JSON.parse(JSON.stringify(this.entry)), ...data }
+	async update(data: Partial<Server>) {
+		this.server = { ...JSON.parse(JSON.stringify(this.server)), ...data }
 		try {
-			this.entry = await (<any>this.prisma).entry.update({
+			this.server = await (<any>this.prisma).entry.update({
 				data,
 				where: { guild_id: this.guild.id },
 			})
@@ -102,7 +90,7 @@ export default abstract class BaseGuildCache<
 	abstract updateMinutely(): void
 
 	/**
-	 * Get an empty entry
+	 * Get an empty server
 	 */
-	abstract getEmptyEntry(): E
+	abstract getEmptyServer(): Server
 }
