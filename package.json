@@ -5,8 +5,8 @@
 	"author": "zS1L3NT",
 	"license": "GPL-3.0",
 	"scripts": {
-		"start": "node -r ts-node/register --watch --no-warnings src/app.ts",
-		"lint": "tsc --noEmit && eslint src --fix && prettier src --write"
+		"start": "bun src/app.ts",
+		"lint": "biome check --fix"
 	},
 	"dependencies": {
 		"@discordjs/opus": "^0.9.0",

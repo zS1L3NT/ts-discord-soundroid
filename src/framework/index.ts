@@ -6,11 +6,11 @@ export { default as HelpBuilder } from "./builders/help-builder"
 export { default as ResponseBuilder } from "./builders/response-builder"
 export {
 	default as SlashBuilder,
-	iSlashData,
-	iSlashOption,
-	iSlashDefaultOption,
-	iSlashStringOption,
-	iSlashNumberOption,
+	type iSlashData,
+	type iSlashOption,
+	type iSlashDefaultOption,
+	type iSlashStringOption,
+	type iSlashNumberOption,
 } from "./builders/slash-builder"
 
 export {
@@ -39,8 +39,8 @@ export {
 	SelectMenuMiddleware,
 } from "./core/interactions/base-select-menu"
 
-export { default as BaseBotCache, BotCacheClass } from "./core/base-bot-cache"
-export { default as BaseGuildCache, GuildCacheClass } from "./core/base-guild-cache"
+export { default as BaseBotCache, type BotCacheClass } from "./core/base-bot-cache"
+export { default as BaseGuildCache, type GuildCacheClass } from "./core/base-guild-cache"
 export { aliases } from "./tables"
 export * from "./core/nova-bot"
 
