@@ -1,8 +1,12 @@
 import { type Client, Colors, type Guild } from "discord.js"
 
-import { LogManager } from "@framework"
+import { LogManager, type SQLiteDatabase } from "@framework"
+import { eq } from "drizzle-orm"
+import { servers } from "../tables"
 
-export type GuildCacheClass = new (bot: Client, guild: Guild) => GuildCache
+export type GuildCacheClass = new (
+	...args: ConstructorParameters<typeof BaseGuildCache>
+) => GuildCache
 
 /**
  * A class containing information related to each Guild.
@@ -39,6 +43,7 @@ export default abstract class BaseGuildCache {
 		 * The Discord Guild that this GuildCache is for.
 		 */
 		public readonly guild: Guild,
+		public readonly db: SQLiteDatabase,
 	) {
 		this.onConstruct()
 		setInterval(() => this.refresh(), 15_000)
@@ -59,10 +64,7 @@ export default abstract class BaseGuildCache {
 	async update(data: Partial<Server>) {
 		this.server = { ...JSON.parse(JSON.stringify(this.server)), ...data }
 		try {
-			this.server = await (<any>this.prisma).entry.update({
-				data,
-				where: { guild_id: this.guild.id },
-			})
+			await this.db.update(servers).set(data).where(eq(servers.guild_id, this.guild.id))
 		} catch (err) {
 			this.refresh()
 			logger.error(err)

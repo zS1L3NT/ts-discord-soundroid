@@ -1,7 +1,7 @@
-import type { GuildCacheClass } from "@framework"
+import type { GuildCacheClass, SQLiteDatabase } from "@framework"
 import { type Client, Collection, type Guild } from "discord.js"
 
-export type BotCacheClass = new (GuildCacheClass: GuildCacheClass, bot: Client) => BotCache
+export type BotCacheClass = new (...args: ConstructorParameters<typeof BaseBotCache>) => BotCache
 
 /**
  * A class that contains global information about the Discord Bot.
@@ -21,6 +21,7 @@ export default abstract class BaseBotCache {
 		 * The Discord Client that is used to interact with the Discord API.
 		 */
 		public readonly bot: Client,
+		public readonly db: SQLiteDatabase,
 	) {
 		this.onConstruct()
 	}
@@ -35,7 +36,7 @@ export default abstract class BaseBotCache {
 		return new Promise<GuildCache>((resolve, reject) => {
 			const cache = this.caches.get(guild.id)
 			if (!cache) {
-				const cache = new this.GuildCacheClass(this.bot, guild)
+				const cache = new this.GuildCacheClass(this.bot, guild, this.db)
 				this.caches.set(guild.id, cache)
 				this.onSetGuildCache(cache)
 				cache
@@ -61,14 +62,14 @@ export default abstract class BaseBotCache {
 	onSetGuildCache(cache: GuildCache) {}
 
 	/**
-	 * Setup the GuildCache and entry for a new guild
+	 * Setup the GuildCache and server for a new guild
 	 *
 	 * @param guildId The ID of the guild that was created
 	 */
 	abstract registerGuildCache(guildId: string): void
 
 	/**
-	 * Destroy the GuildCache and entry for the deleted guild
+	 * Destroy the GuildCache and server for the deleted guild
 	 *
 	 * @param guildId The ID of the guild that was deleted
 	 */

@@ -1,4 +1,4 @@
-import type { BaseBotCache, BaseGuildCache, aliases, servers } from "./"
+import type { BaseBotCache, BaseGuildCache, aliases, servers } from "@framework"
 
 declare global {
 	type Alias = typeof aliases.$inferSelect

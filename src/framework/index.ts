@@ -41,7 +41,7 @@ export {
 
 export { default as BaseBotCache, BotCacheClass } from "./core/base-bot-cache"
 export { default as BaseGuildCache, GuildCacheClass } from "./core/base-guild-cache"
-export * from "./core/base-server"
+export { aliases } from "./tables"
 export * from "./core/nova-bot"
 
 export { default as IsAdminMiddleware } from "./defaults/middleware/is-admin-middleware"

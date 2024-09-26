@@ -6,8 +6,10 @@ import {
 	CommandType,
 	IsAdminMiddleware,
 	ResponseBuilder,
+	aliases,
 	type iSlashStringOption,
 } from "@framework"
+import { and, eq } from "drizzle-orm"
 
 export default class extends BaseCommand {
 	override defer = true
@@ -64,9 +66,9 @@ export default class extends BaseCommand {
 				return helper.respond(ResponseBuilder.bad("Alias is already in use!"))
 			}
 
-			await (<any>helper.cache.prisma).alias.create({
-				data: { alias, command, guild_id: helper.cache.guild.id },
-			})
+			await helper.cache.db
+				.insert(aliases)
+				.values({ alias, command, guild_id: helper.cache.guild.id })
 			helper.respond(ResponseBuilder.good(`Set Alias for \`${command}\` to \`${alias}\``))
 			helper.cache.logger.log({
 				member: helper.member,
@@ -84,9 +86,9 @@ export default class extends BaseCommand {
 				return helper.respond(ResponseBuilder.bad("There is no Alias for this command!"))
 			}
 
-			await (<any>helper.cache.prisma).alias.delete({
-				where: { alias_command: { alias: alias_.alias, command } },
-			})
+			await helper.cache.db
+				.delete(aliases)
+				.where(and(eq(aliases.alias, alias_.alias), eq(aliases.command, command)))
 			helper.respond(ResponseBuilder.good(`Removed Alias for \`${command}\``))
 			helper.cache.logger.log({
 				member: helper.member,

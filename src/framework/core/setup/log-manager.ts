@@ -1,3 +1,4 @@
+import type { BaseGuildCache } from "@framework"
 import {
 	type Colors,
 	EmbedBuilder,
@@ -16,7 +17,7 @@ type LogData = {
 }
 
 export default class LogManager {
-	constructor(private readonly cache: GuildCache) {}
+	constructor(private readonly cache: BaseGuildCache) {}
 
 	/**
 	 * Log the data to the log channel if the `log_channel_id` is set.

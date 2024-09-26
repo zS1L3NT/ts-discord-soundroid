@@ -14,6 +14,9 @@ import {
 	SlashCommandDeployer,
 	tryasync,
 } from "@framework"
+import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
+
+export type SQLiteDatabase = BaseSQLiteDatabase<"sync" | "async", void, Record<string, never>>
 
 export default abstract class NovaBot {
 	/**
@@ -83,6 +86,11 @@ export default abstract class NovaBot {
 	}
 
 	/**
+	 * Instance of the drizzle database client
+	 */
+	abstract drizzle: SQLiteDatabase
+
+	/**
 	 * This method will get called once your bot receives the "ready" event from Discord
 	 *
 	 * @param botCache The bot cache that is used by your bot
@@ -96,7 +104,7 @@ export default abstract class NovaBot {
 		const bot = new Client({ intents: this.intents })
 		global.logger = this.logger
 
-		const botCache = new this.BotCacheClass(this.GuildCacheClass, bot)
+		const botCache = new this.BotCacheClass(this.GuildCacheClass, bot, this.drizzle)
 		const fsh = new FilesSetupHelper(this.directory, this.icon, this.helpMessage)
 		const esh = new EventSetupHelper(botCache, fsh)
 
@@ -116,7 +124,7 @@ export default abstract class NovaBot {
 						blacklist.push(guild.id)
 						return logger.error(
 							getTag(),
-							`❌ Couldn't find an entry for Guild(${guild.name})`,
+							`❌ Couldn't find a database record for Guild(${guild.name})`,
 						)
 					}
 

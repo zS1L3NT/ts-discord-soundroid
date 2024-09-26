@@ -100,7 +100,7 @@ export abstract class CommandMiddleware {
 export class CommandHelper {
 	private responded = false
 	private response: Message | undefined
-	private timeout: NodeJS.Timeout | undefined
+	private timeout: Timer | undefined
 	params: Record<
 		string,
 		GuildChannel | GuildMember | User | Role | string | number | boolean | null
