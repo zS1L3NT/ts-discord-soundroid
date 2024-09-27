@@ -14,9 +14,6 @@ import {
 	SlashCommandDeployer,
 	tryasync,
 } from "@framework"
-import type { BaseSQLiteDatabase } from "drizzle-orm/sqlite-core"
-
-export type SQLiteDatabase = BaseSQLiteDatabase<"sync" | "async", void, Record<string, never>>
 
 export default abstract class NovaBot {
 	/**
@@ -88,7 +85,7 @@ export default abstract class NovaBot {
 	/**
 	 * Instance of the drizzle database client
 	 */
-	abstract drizzle: SQLiteDatabase
+	abstract drizzle: Database
 
 	/**
 	 * This method will get called once your bot receives the "ready" event from Discord
@@ -125,6 +122,7 @@ export default abstract class NovaBot {
 						return logger.error(
 							getTag(),
 							`❌ Couldn't find a database record for Guild(${guild.name})`,
+							cerror.message,
 						)
 					}
 
@@ -136,6 +134,7 @@ export default abstract class NovaBot {
 						return logger.error(
 							getTag(),
 							`❌ Couldn't get Slash Command permission for Guild(${guild.name})`,
+							derror.message,
 						)
 					}
 

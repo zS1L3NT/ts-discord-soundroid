@@ -1,6 +1,6 @@
 import { type Client, Colors, type Guild } from "discord.js"
 
-import { LogManager, type SQLiteDatabase } from "@framework"
+import { LogManager } from "@framework"
 import { eq } from "drizzle-orm"
 import { servers } from "../tables"
 
@@ -14,6 +14,8 @@ export type GuildCacheClass = new (
  * Each Guild that the bot is in will have its own GuildCache.
  */
 export default abstract class BaseGuildCache {
+	private refreshTimer: Timer | undefined
+
 	/**
 	 * The instance of the logger for this Guild
 	 */
@@ -43,10 +45,9 @@ export default abstract class BaseGuildCache {
 		 * The Discord Guild that this GuildCache is for.
 		 */
 		public readonly guild: Guild,
-		public readonly db: SQLiteDatabase,
+		public readonly db: Database,
 	) {
 		this.onConstruct()
-		setInterval(() => this.refresh(), 15_000)
 	}
 
 	/**
@@ -79,7 +80,16 @@ export default abstract class BaseGuildCache {
 	/**
 	 * A method that is called when the GuildCache is constructed.
 	 */
-	onConstruct() {}
+	onConstruct() {
+		this.refreshTimer = setInterval(() => this.refresh(), 15_000)
+	}
+
+	/**
+	 * A method that is called when the GuildCache is destructed
+	 */
+	onDestruct() {
+		clearInterval(this.refreshTimer)
+	}
 
 	/**
 	 * This method is where the GuildCache's data is refetched from the database.

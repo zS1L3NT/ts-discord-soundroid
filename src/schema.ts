@@ -1,5 +1,7 @@
 import { sqliteTable, text, unique } from "drizzle-orm/sqlite-core"
 
+export { aliases } from "@framework"
+
 export const servers = sqliteTable(
 	"servers",
 	{

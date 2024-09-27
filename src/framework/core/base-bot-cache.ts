@@ -1,4 +1,4 @@
-import type { GuildCacheClass, SQLiteDatabase } from "@framework"
+import type { GuildCacheClass } from "@framework"
 import { type Client, Collection, type Guild } from "discord.js"
 
 export type BotCacheClass = new (...args: ConstructorParameters<typeof BaseBotCache>) => BotCache
@@ -21,7 +21,7 @@ export default abstract class BaseBotCache {
 		 * The Discord Client that is used to interact with the Discord API.
 		 */
 		public readonly bot: Client,
-		public readonly db: SQLiteDatabase,
+		public readonly db: Database,
 	) {
 		this.onConstruct()
 	}
@@ -42,7 +42,10 @@ export default abstract class BaseBotCache {
 				cache
 					.refresh()
 					.then(() => resolve(cache))
-					.catch(reject)
+					.catch(e => {
+						cache.onDestruct()
+						reject(e)
+					})
 			} else {
 				resolve(cache)
 			}

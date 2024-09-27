@@ -1,7 +1,6 @@
-import { BaseGuildCache, ChannelCleaner, aliases } from "@framework"
+import { BaseGuildCache, ChannelCleaner } from "@framework"
 import { Colors, EmbedBuilder } from "discord.js"
 
-import { eq } from "drizzle-orm"
 import QueueBuilder from "../builders/queue-builder"
 import { tryasync, trysync } from "../framework/utils/try-catch"
 import logger from "../logger"
@@ -14,18 +13,32 @@ export default class GuildCache extends BaseGuildCache {
 	service?: MusicService
 
 	override async refresh(): Promise<void> {
-		const server = (
-			await this.db.select().from(servers).where(eq(servers.guild_id, this.guild.id))
-		)[0]
+		let server = await this.db.query.servers.findFirst({
+			where: (servers, { eq }) => eq(servers.guild_id, this.guild.id),
+		})
+
 		if (!server) {
-			throw new Error("Could not find guild by id")
+			await this.db.insert(servers).values({
+				guild_id: this.guild.id,
+				prefix: null,
+				log_channel_id: null,
+				music_channel_id: null,
+				music_message_id: null,
+			})
+
+			server = await this.db.query.servers.findFirst({
+				where: (servers, { eq }) => eq(servers.guild_id, this.guild.id),
+			})
+		}
+
+		if (!server) {
+			throw new Error("Could not find record in database, nor create a record in database")
 		}
 
 		this.server = server
-		this.aliases = await this.db
-			.select()
-			.from(aliases)
-			.where(eq(aliases.guild_id, this.guild.id))
+		this.aliases = await this.db.query.aliases.findMany({
+			where: (aliases, { eq }) => eq(aliases.guild_id, this.guild.id),
+		})
 	}
 
 	/**
