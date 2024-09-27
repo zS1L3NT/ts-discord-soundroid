@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm"
 import QueueBuilder from "../builders/queue-builder"
 import { tryasync, trysync } from "../framework/utils/try-catch"
 import logger from "../logger"
-import { servers } from "../tables"
+import { servers } from "../schema"
 import type ApiHelper from "../utils/api-helper"
 import type MusicService from "./music-service"
 

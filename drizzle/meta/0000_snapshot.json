@@ -1,0 +1,67 @@
+{
+	"version": "6",
+	"dialect": "sqlite",
+	"id": "07e59d7f-fe37-4259-bdfc-8d7ce296e24c",
+	"prevId": "00000000-0000-0000-0000-000000000000",
+	"tables": {
+		"servers": {
+			"name": "servers",
+			"columns": {
+				"guild_id": {
+					"name": "guild_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": true,
+					"autoincrement": false
+				},
+				"prefix": {
+					"name": "prefix",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"log_channel_id": {
+					"name": "log_channel_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"music_channel_id": {
+					"name": "music_channel_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				},
+				"music_message_id": {
+					"name": "music_message_id",
+					"type": "text",
+					"primaryKey": false,
+					"notNull": false,
+					"autoincrement": false
+				}
+			},
+			"indexes": {
+				"servers_guild_id_unique": {
+					"name": "servers_guild_id_unique",
+					"columns": ["guild_id"],
+					"isUnique": true
+				}
+			},
+			"foreignKeys": {},
+			"compositePrimaryKeys": {},
+			"uniqueConstraints": {}
+		}
+	},
+	"enums": {},
+	"_meta": {
+		"schemas": {},
+		"tables": {},
+		"columns": {}
+	},
+	"internal": {
+		"indexes": {}
+	}
+}

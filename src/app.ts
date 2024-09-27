@@ -1,11 +1,10 @@
-import { Database } from "bun:sqlite"
 import path from "node:path"
 import NovaBot from "@framework"
 import { ActivityType, GatewayIntentBits } from "discord.js"
-import { drizzle } from "drizzle-orm/bun-sqlite"
 
 import BotCache from "./core/bot-cache"
 import GuildCache from "./core/guild-cache"
+import { db } from "./db"
 import logger from "./logger"
 
 process.on("uncaughtException", err => {
@@ -39,7 +38,7 @@ class SounDroidBot extends NovaBot {
 
 	override logger = logger
 
-	override drizzle = drizzle(new Database("soundroid.db", { create: true }))
+	override drizzle = db
 
 	override onSetup(botCache: BotCache) {
 		botCache.bot.user!.setPresence({

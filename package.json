@@ -6,6 +6,7 @@
 	"license": "GPL-3.0",
 	"scripts": {
 		"start": "bun src/app.ts",
+		"migrate": "bun src/migrate.ts",
 		"lint": "biome check --fix"
 	},
 	"dependencies": {

@@ -1,7 +1,7 @@
 import { BaseBotCache, aliases } from "@framework"
 
 import { eq } from "drizzle-orm"
-import { servers } from "../tables"
+import { servers } from "../schema"
 import ApiHelper from "../utils/api-helper"
 import type GuildCache from "./guild-cache"
 
