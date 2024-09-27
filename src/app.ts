@@ -7,12 +7,6 @@ import GuildCache from "./core/guild-cache"
 import { db } from "./db"
 import logger from "./logger"
 
-process.on("uncaughtException", err => {
-	if (err.message !== "The user aborted a request.") {
-		logger.error("Uncaught Exception:", { err })
-	}
-})
-
 class SounDroidBot extends NovaBot {
 	override name = "SounDroid#9390"
 	override icon = "https://res.cloudinary.com/zs1l3nt/image/upload/icons/soundroid.png"

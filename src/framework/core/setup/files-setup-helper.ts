@@ -87,12 +87,12 @@ export default class FilesSetupHelper {
 	private setupSelectMenus() {
 		this.selectMenuFiles.set("help-item", new SelectMenuHelpItem(this))
 
-		const fileNames = this.readEntities("selectMenus")
+		const fileNames = this.readEntities("select-menus")
 		if (fileNames === null) return
 
 		for (const fileName of fileNames) {
 			const name = fileName.split(".")[0]!
-			const SelectMenu = this.require<new () => BaseSelectMenu>(`selectMenus/${fileName}`)
+			const SelectMenu = this.require<new () => BaseSelectMenu>(`select-menus/${fileName}`)
 			this.selectMenuFiles.set(name, new SelectMenu())
 		}
 	}
