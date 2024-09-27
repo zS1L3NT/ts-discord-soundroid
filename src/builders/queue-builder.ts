@@ -24,7 +24,7 @@ export default class QueueBuilder {
 			const embed = new EmbedBuilder()
 			const playingDuration = this.cache.service.queue
 				.slice(1)
-				.map(song => song.duration)
+				.map(song => song.duration ?? 0)
 				.reduce((t, d) => t + d, 0)
 			const maxPages = Math.ceil((this.cache.service.queue.length - 1) / 10) || 1
 
@@ -141,7 +141,7 @@ export default class QueueBuilder {
 		value: string
 	} {
 		return {
-			name: `${song.title} - ${song.artiste} | ${new DurationHelper(song.duration).format()}`,
+			name: `${song.title} - ${song.artiste} | ${song.duration !== null ? new DurationHelper(song.duration).format() : "?"}`,
 			value: `Requested by <@!${song.requester}> | [Open song](${song.url})`,
 		}
 	}

@@ -42,6 +42,10 @@ export default class extends BaseCommand {
 			return helper.respond(ResponseBuilder.bad("No song currently playing!"), 5000)
 		}
 
+		if (song.duration === null) {
+			return helper.respond(ResponseBuilder.bad("Unknown duration for current song"), 5000)
+		}
+
 		const percent = (state.playbackDuration / 1000 / song.duration) * 100
 		const index = percent === 100 ? 24 : Math.floor(percent / 4)
 		const seekbar = track.repeat(index) + thumb + track.repeat(24 - index)

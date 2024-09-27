@@ -5,15 +5,13 @@ WORKDIR /app
 COPY . .
 
 RUN apt-get update
-RUN apt-get install ffmpeg -y
+RUN apt-get install python3 -y
 RUN apt-get clean
 
-RUN echo "await fetch('https://github.com/ytdl-org/ytdl-nightly/releases/download/2023.08.07/youtube-dl').then(r => r.arrayBuffer()).then(b => require('fs/promises').writeFile('/usr/local/bin/youtube-dl', Buffer.from(b)))" | bun run -
-RUN chmod a+rx /usr/local/bin/youtube-dl
-RUN bun i --ignore-scripts
+RUN echo "await fetch('https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp').then(r => r.arrayBuffer()).then(b => require('fs/promises').writeFile('/usr/local/bin/yt-dlp', Buffer.from(b)))" | bun run -
+RUN chmod a+rx /usr/local/bin/yt-dlp
 
-ENV YOUTUBE_DL_DIR=/usr/local/bin/
-ENV YOUTUBE_DL_FILENAME=youtube-dl
+RUN bun i --ignore-scripts
 
 EXPOSE 8080
 CMD bun start

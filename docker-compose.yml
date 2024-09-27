@@ -2,6 +2,7 @@ services:
   ts-discord-soundroid:
     build: .
     container_name: ts-discord-soundroid
+    image: ts-discord-soundroid
     volumes: 
       - ./soundroid.db:/app/soundroid.db:rw
     env_file:

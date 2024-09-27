@@ -32,7 +32,7 @@ export default class ApiHelper {
 				async result =>
 					new Song(
 						result.name,
-						result.artists.map(a => a.name).join(", "),
+						result.artist.name,
 						result.thumbnails.at(-1)?.url || "",
 						`https://youtu.be/${result.videoId}`,
 						result.duration,
@@ -62,7 +62,7 @@ export default class ApiHelper {
 
 		return new Song(
 			song.name,
-			song.artists.map(a => a.name).join(", "),
+			song.artist.name,
 			song.thumbnails.at(-1)?.url || "",
 			`https://youtu.be/${song.videoId}`,
 			song.duration,
@@ -77,7 +77,7 @@ export default class ApiHelper {
 				video =>
 					new Song(
 						video.name,
-						video.artists.map(a => a.name).join(", "),
+						video.artist.name,
 						video.thumbnails.at(-1)?.url || "",
 						`https://youtu.be/${video.videoId}`,
 						video.duration,
